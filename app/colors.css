@@ -1,0 +1,58 @@
+/* colors.css */
+
+/* ================= LIGHT THEME (Default) ================= */
+:root,
+[data-theme="light"] {
+  /* Backgrounds */
+  --bg-primary: var(--color-ivory);
+  --bg-surface: var(--color-white-pure);
+  --bg-dark-section: var(--color-black);
+
+  /* Text */
+  --text-primary: var(--color-black);
+  --text-secondary: color-mix(in srgb, var(--color-black) 72%, var(--color-ivory));
+  --text-inverse: var(--color-ivory);
+
+  /* Brand Accents */
+  --accent-primary: var(--color-gold-base);
+  --accent-primary-hover: var(--color-gold-light);
+  --accent-secondary: var(--color-green-base);
+  --accent-text: var(--color-gold-dark);      /* chhota text/links (ivory par readable) */
+  --on-accent: var(--color-black);            /* gold button ke upar text */
+  --on-secondary: var(--color-ivory);         /* green button hover par text */
+
+  /* Gradient text (logo jaisa metallic gold) */
+  --gradient-brand: linear-gradient(135deg, var(--color-gold-deep), var(--color-gold-base) 45%, var(--color-gold-light));
+
+  /* Borders & UI */
+  --border-color: color-mix(in srgb, var(--color-black) 16%, transparent);
+  --shadow-color: rgba(0, 0, 0, 0.14);
+}
+
+/* ================= DARK THEME (logo ka original look) ================= */
+[data-theme="dark"] {
+  /* Backgrounds */
+  --bg-primary: var(--color-black);
+  --bg-surface: var(--color-black-soft);
+  --bg-dark-section: var(--color-black);
+
+  /* Text */
+  --text-primary: #f3ead0;
+  --text-secondary: color-mix(in srgb, #f3ead0 72%, var(--color-black));
+  --text-inverse: var(--color-black);
+
+  /* Brand Accents */
+  --accent-primary: var(--color-gold-base);
+  --accent-primary-hover: var(--color-gold-light);
+  --accent-secondary: var(--color-green-olive);
+  --accent-text: var(--color-gold-base);
+  --on-accent: var(--color-black);
+  --on-secondary: var(--color-black);
+
+  /* Gradient text */
+  --gradient-brand: linear-gradient(135deg, var(--color-gold-deep), var(--color-gold-base) 45%, var(--color-gold-light));
+
+  /* Borders & UI */
+  --border-color: color-mix(in srgb, var(--color-gold-base) 28%, transparent);
+  --shadow-color: rgba(212, 169, 58, 0.18);
+}

@@ -1,0 +1,13 @@
+.topBar {
+  background: linear-gradient(90deg, var(--color-green-dark), var(--color-gold-dark));
+  color: var(--color-white-pure);
+  text-align: center;
+  padding: var(--space-xs) var(--space-sm);
+  font-size: var(--font-size-xs);
+  letter-spacing: 1px;
+}
+
+.topBar span {
+  color: var(--color-gold-light);
+  font-weight: var(--font-weight-bold);
+}

@@ -1,0 +1,348 @@
+/* ================= SECTION (hamesha dark, logo jaisa) ================= */
+.section {
+  /* Is section ke andar global classes (btn etc.) dark theme jaise dikhen */
+  --accent-primary: var(--color-gold-base);
+  --accent-primary-hover: var(--color-gold-light);
+  --accent-secondary: var(--color-green-olive);
+  --accent-text: var(--color-gold-base);
+  --on-accent: var(--color-black);
+  --on-secondary: var(--color-black);
+
+  --nav-offset: 92px;       /* fixed navbar ke liye */
+  --progress-offset: 76px;  /* neeche progress bar ke liye */
+
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  height: 100svh;
+  min-height: 600px;
+  overflow: hidden;
+  /* background-color: var(--color-black); */
+  color: var(--color-ivory);
+}
+
+.stage {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+/* Har product ek slide, sab ek doosre ke upar stacked */
+.slide {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding: var(--nav-offset) var(--container-pad) var(--progress-offset);
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+  gap: var(--space-2xl);
+  align-items: stretch;
+  pointer-events: none;
+}
+
+/* JS chalne se pehle sirf pehla product dikhe (flash na ho) */
+.slide:not(:first-child) .imageWrap,
+.slide:not(:first-child) .content {
+  opacity: 0;
+  visibility: hidden;
+}
+
+/* ================= LEFT: IMAGE ================= */
+.imagePanel {
+  position: relative;
+  min-height: 0;
+}
+
+/* Gold glow + patli ring product ke peechay */
+.imagePanel::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  height: 92%;
+  aspect-ratio: 1;
+  max-width: 100%;
+  transform: translate(-50%, -50%);
+  border-radius: var(--radius-full);
+  background: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--color-gold-base) 24%, transparent) 0%,
+    transparent 65%
+  );
+}
+
+.imageWrap {
+  position: absolute;
+  inset: 4%;
+  will-change: transform, opacity;
+}
+
+.image {
+  object-fit: contain;
+  filter: drop-shadow(0 24px 40px rgba(0, 0, 0, 0.6));
+}
+
+/* ================= RIGHT: CONTENT ================= */
+.contentPanel {
+  position: relative;
+  z-index: 2;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+}
+
+.content {
+  width: 100%;
+  max-width: 560px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-md);
+  pointer-events: auto;
+  will-change: transform, opacity;
+}
+
+.eyebrow {
+  font-size: var(--font-size-sm);
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  font-weight: var(--font-weight-medium);
+  color: var(--color-gold-base);
+  margin-bottom: 0;
+}
+
+.name {
+  font-family: var(--font-heading);
+  font-size: clamp(2.1rem, 4.2vw, 3.75rem);
+  font-weight: var(--font-weight-bold);
+  line-height: 1.1;
+  color: var(--color-ivory);
+  margin-bottom: 0;
+}
+
+.tagline {
+  font-family: var(--font-heading);
+  font-style: italic;
+  font-size: var(--font-size-lg);
+  color: var(--color-gold-light);
+  margin-bottom: 0;
+}
+
+.description {
+  font-size: var(--font-size-base);
+  line-height: 1.7;
+  color: color-mix(in srgb, var(--color-ivory) 78%, var(--color-black));
+  margin-bottom: 0;
+}
+
+/* Notes (Top / Heart / Base) */
+.notes {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-md);
+}
+
+/* Specs (2 x 2) */
+.specs {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-sm) var(--space-lg);
+}
+
+.notes > div,
+.specs > div {
+  border-top: 1px solid color-mix(in srgb, var(--color-gold-base) 28%, transparent);
+  padding-top: var(--space-sm);
+}
+
+.notes dt,
+.specs dt {
+  font-size: var(--font-size-xs);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--color-gold-base);
+}
+
+.notes dd,
+.specs dd {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  color: var(--color-ivory);
+}
+
+.buyRow {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-lg);
+  margin-top: var(--space-xs);
+}
+
+.price {
+  font-family: var(--font-heading);
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  background: var(--gradient-brand);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ================= PROGRESS ================= */
+.progress {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: var(--space-lg);
+  z-index: 3;
+  width: 100%;
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: var(--container-pad);
+  display: flex;
+  align-items: center;
+  gap: var(--space-lg);
+}
+
+.counter {
+  font-family: var(--font-heading);
+  font-size: var(--font-size-sm);
+  letter-spacing: 3px;
+  color: var(--color-gold-base);
+  white-space: nowrap;
+}
+
+.bars {
+  flex: 1;
+  display: flex;
+  gap: var(--space-sm);
+}
+
+.bar {
+  position: relative;
+  flex: 1;
+  height: 3px;
+  border-radius: var(--radius-full);
+  background: color-mix(in srgb, var(--color-ivory) 18%, transparent);
+  overflow: hidden;
+}
+
+.bar::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--gradient-brand);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.5s ease;
+}
+
+.barFilled::after {
+  transform: scaleX(1);
+}
+
+/* ================= SHORT LAPTOP SCREENS ================= */
+@media (min-width: 901px) and (max-height: 720px) {
+  .tagline {
+    display: none;
+  }
+  .content {
+    gap: var(--space-sm);
+  }
+}
+
+/* ================= TABLET & MOBILE (image upar, content neeche) ================= */
+@media (max-width: 900px) {
+  .section {
+    --nav-offset: 76px;
+    --progress-offset: 60px;
+  }
+
+  .slide {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: minmax(0, 36%) minmax(0, 1fr);
+    gap: var(--space-md);
+  }
+
+  .imageWrap {
+    inset: 0;
+  }
+
+  .contentPanel {
+    align-items: flex-start;
+  }
+
+  .content {
+    max-width: 100%;
+    gap: var(--space-sm);
+  }
+
+  .tagline {
+    display: none;
+  }
+
+  .description {
+    font-size: var(--font-size-sm);
+    line-height: 1.55;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}
+
+@media (max-width: 600px) {
+  .notes {
+    display: none; /* chhoti screen par jagah ke liye */
+  }
+
+  .eyebrow {
+    letter-spacing: 3px;
+  }
+
+  .buyRow {
+    gap: var(--space-md);
+  }
+}
+
+/* ================= REDUCED MOTION (static fallback) ================= */
+.static {
+  height: auto;
+  min-height: 0;
+}
+
+.static .stage {
+  height: auto;
+}
+
+.static .slide {
+  position: relative;
+  height: auto;
+  min-height: 80svh;
+  pointer-events: auto;
+}
+
+.static .slide:not(:first-child) .imageWrap,
+.static .slide:not(:first-child) .content {
+  opacity: 1;
+  visibility: visible;
+}
+
+.static .progress {
+  display: none;
+}
+
+@media (max-width: 900px) {
+  .static .slide {
+    grid-template-rows: 300px auto;
+  }
+}
+

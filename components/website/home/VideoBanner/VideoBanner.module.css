@@ -1,0 +1,154 @@
+.section {
+  --accent-primary: var(--color-gold-base);
+  --accent-primary-hover: var(--color-gold-light);
+  --accent-text: var(--color-gold-base);
+  --on-accent: var(--color-black);
+
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  height: 100svh;
+  min-height: 600px;
+  overflow: hidden;
+  background-color: var(--color-black);
+  color: var(--color-ivory);
+}
+
+.media {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  clip-path: inset(14% 32% 14% 32% round 20px);
+  will-change: clip-path;
+}
+
+.picture {
+  position: absolute;
+  inset: 0;
+  will-change: transform;
+}
+
+.image {
+  object-fit: cover;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  visibility: hidden;
+  background:
+    radial-gradient(
+      ellipse at center,
+      color-mix(in srgb, var(--color-black) 45%, transparent) 0%,
+      color-mix(in srgb, var(--color-black) 78%, transparent) 100%
+    );
+}
+
+.steps {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  padding: 0 var(--container-pad);
+  pointer-events: none;
+}
+
+.step {
+  grid-area: 1 / 1;
+  width: 100%;
+  max-width: 760px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-md);
+  text-align: center;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: auto;
+  will-change: transform, opacity;
+}
+
+.eyebrow {
+  font-size: var(--font-size-sm);
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  font-weight: var(--font-weight-medium);
+  color: var(--color-gold-base);
+  margin-bottom: 0;
+}
+
+.title {
+  font-family: var(--font-heading);
+  font-size: clamp(2.1rem, 5vw, 4.25rem);
+  font-weight: var(--font-weight-bold);
+  line-height: 1.1;
+  color: var(--color-ivory);
+  margin-bottom: 0;
+}
+
+.description {
+  max-width: 600px;
+  font-size: var(--font-size-lg);
+  line-height: 1.7;
+  color: color-mix(in srgb, var(--color-ivory) 85%, var(--color-black));
+  margin-bottom: var(--space-sm);
+}
+
+.progress {
+  position: absolute;
+  left: var(--container-pad);
+  right: var(--container-pad);
+  bottom: var(--space-lg);
+  z-index: 3;
+  height: 2px;
+  background: color-mix(in srgb, var(--color-ivory) 18%, transparent);
+}
+
+.bar {
+  width: 100%;
+  height: 100%;
+  background: var(--gradient-brand);
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+
+@media (max-width: 900px) {
+  .description {
+    font-size: var(--font-size-base);
+    line-height: 1.6;
+  }
+}
+
+.static {
+  height: auto;
+  min-height: 0;
+}
+
+.static .media {
+  clip-path: none;
+}
+
+.static .steps {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3xl);
+  padding-block: var(--space-3xl);
+}
+
+.static .step {
+  opacity: 1;
+  visibility: visible;
+}
+
+.static .overlay {
+  opacity: 1;
+  visibility: visible;
+}
+
+.static .progress {
+  display: none;
+}
