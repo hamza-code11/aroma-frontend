@@ -1,13 +1,40 @@
+/* ================= THEME-AWARE VIEWER VARIABLES ================= */
+/* Default: DARK theme (viewer ka original look) */
 .section {
+  /* ---------- Viewer tokens (default = dark) ---------- */
+  --viewer-bg: var(--color-black);
+  --viewer-text: var(--color-ivory);
+  --viewer-text-soft: color-mix(in srgb, var(--color-ivory) 78%, var(--color-black));
+  --viewer-label: var(--color-gold-base);
+  --viewer-line: color-mix(in srgb, var(--color-ivory) 14%, transparent);
+  --viewer-feature-line: color-mix(in srgb, var(--color-gold-base) 28%, transparent);
+  --viewer-glow: color-mix(in srgb, var(--color-gold-base) 24%, transparent);
+  --viewer-hint: color-mix(in srgb, var(--color-ivory) 55%, var(--color-black));
+  --viewer-focus: var(--color-gold-light);
+
   width: 100%;
   padding: var(--space-3xl) 0;
   overflow: hidden;
-  background-color: var(--color-black);
-  color: var(--color-ivory);
-  border-top: 1px solid color-mix(in srgb, var(--color-ivory) 14%, transparent);
-  border-bottom: 1px solid color-mix(in srgb, var(--color-ivory) 14%, transparent);
+  background-color: var(--viewer-bg);
+  color: var(--viewer-text);
+  border-top: 1px solid var(--viewer-line);
+  border-bottom: 1px solid var(--viewer-line);
 }
 
+/* ---------- LIGHT theme override ---------- */
+:global([data-theme="light"]) .section {
+  --viewer-bg: var(--bg-primary);
+  --viewer-text: var(--text-primary);
+  --viewer-text-soft: var(--text-secondary);
+  --viewer-label: var(--color-gold-dark);
+  --viewer-line: color-mix(in srgb, var(--color-black) 14%, transparent);
+  --viewer-feature-line: color-mix(in srgb, var(--color-gold-dark) 30%, transparent);
+  --viewer-glow: color-mix(in srgb, var(--color-gold-base) 20%, transparent);
+  --viewer-hint: color-mix(in srgb, var(--color-black) 55%, var(--color-ivory));
+  --viewer-focus: var(--color-gold-base);
+}
+
+/* ================= Baaki CSS (bilkul same, kuch nahi badla) ================= */
 .container {
   width: 100%;
   max-width: var(--container-max);
@@ -32,7 +59,7 @@
   letter-spacing: 4px;
   text-transform: uppercase;
   font-weight: var(--font-weight-medium);
-  color: var(--color-gold-base);
+  color: var(--viewer-label);
 }
 
 .title {
@@ -41,7 +68,7 @@
   font-size: clamp(2.1rem, 4.2vw, 3.75rem);
   font-weight: var(--font-weight-regular);
   line-height: 1.1;
-  color: var(--color-ivory);
+  color: var(--viewer-text);
 }
 
 .description {
@@ -49,7 +76,7 @@
   margin: 0;
   font-size: var(--font-size-lg);
   line-height: 1.7;
-  color: color-mix(in srgb, var(--color-ivory) 78%, var(--color-black));
+  color: var(--viewer-text-soft);
 }
 
 .features {
@@ -63,20 +90,20 @@
 
 .features > div {
   padding-top: var(--space-sm);
-  border-top: 1px solid color-mix(in srgb, var(--color-gold-base) 28%, transparent);
+  border-top: 1px solid var(--viewer-feature-line);
 }
 
 .features dt {
   font-size: var(--font-size-xs);
   letter-spacing: 2px;
   text-transform: uppercase;
-  color: var(--color-gold-base);
+  color: var(--viewer-label);
 }
 
 .features dd {
   margin: 0;
   font-size: var(--font-size-sm);
-  color: var(--color-ivory);
+  color: var(--viewer-text);
 }
 
 .actions {
@@ -100,7 +127,7 @@
   border-radius: var(--radius-full);
   background: radial-gradient(
     circle,
-    color-mix(in srgb, var(--color-gold-base) 24%, transparent) 0%,
+    var(--viewer-glow) 0%,
     transparent 65%
   );
 }
@@ -127,7 +154,7 @@
   text-transform: uppercase;
   white-space: nowrap;
   pointer-events: none;
-  color: color-mix(in srgb, var(--color-ivory) 55%, var(--color-black));
+  color: var(--viewer-hint);
 }
 
 @media (max-width: 900px) {
@@ -145,4 +172,3 @@
     font-size: var(--font-size-base);
   }
 }
-

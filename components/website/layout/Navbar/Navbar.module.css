@@ -177,6 +177,11 @@
   line-height: 1;
 }
 
+.badgeRed {
+  background: #ff4d4d;
+  color: #fff;
+}
+
 /* ============ TABLET & MOBILE (hamburger menu) ============ */
 @media (max-width: 900px) {
   .container {

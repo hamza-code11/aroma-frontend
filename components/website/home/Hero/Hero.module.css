@@ -32,15 +32,15 @@
 /* ================= OVERLAY ================= */
 .overlay {
   position: absolute;
-  inset: 0;
+  inset: 0; 
   z-index: 1;
   pointer-events: none;
-  background: linear-gradient(90deg, var(--bg-primary) 0%, transparent 70%);
+  background: linear-gradient(90deg, #000000 0%, transparent 70%);
   background: linear-gradient(
     90deg,
-    color-mix(in srgb, var(--bg-primary) 92%, transparent) 0%,
-    color-mix(in srgb, var(--bg-primary) 75%, transparent) 28%,
-    color-mix(in srgb, var(--bg-primary) 35%, transparent) 52%,
+    color-mix(in srgb, #000000 92%, transparent) 0%,
+    color-mix(in srgb, #000000 75%, transparent) 28%,
+    color-mix(in srgb, #000000 35%, transparent) 52%,
     transparent 78%
   );
   transition: background var(--transition-base);
@@ -69,7 +69,7 @@
   font-size: var(--font-size-sm);
   letter-spacing: 4px;
   text-transform: uppercase;
-  color: var(--accent-text);
+  color: var(--accent-text); 
   font-weight: var(--font-weight-medium);
   margin-bottom: 0;
 }
@@ -79,7 +79,7 @@
   font-size: clamp(2.5rem, 5.5vw, 4.5rem);
   font-weight: var(--font-weight-bold);
   line-height: 1.1;
-  color: var(--text-primary);
+  color: #f8f4e6; 
   margin-bottom: var(--space-sm);
 }
 

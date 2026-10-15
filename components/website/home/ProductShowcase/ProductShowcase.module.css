@@ -1,13 +1,5 @@
-/* ================= SECTION (hamesha dark, logo jaisa) ================= */
+/* ================= SECTION (theme-aware, colors sirf colors.css se) ================= */
 .section {
-  /* Is section ke andar global classes (btn etc.) dark theme jaise dikhen */
-  --accent-primary: var(--color-gold-base);
-  --accent-primary-hover: var(--color-gold-light);
-  --accent-secondary: var(--color-green-olive);
-  --accent-text: var(--color-gold-base);
-  --on-accent: var(--color-black);
-  --on-secondary: var(--color-black);
-
   --nav-offset: 92px;       /* fixed navbar ke liye */
   --progress-offset: 76px;  /* neeche progress bar ke liye */
 
@@ -17,8 +9,8 @@
   height: 100svh;
   min-height: 600px;
   overflow: hidden;
-  /* background-color: var(--color-black); */
-  color: var(--color-ivory);
+  /* background-color: var(--bg-primary); */
+  color: var(--showcase-title);
 }
 
 .stage {
@@ -58,7 +50,7 @@
   min-height: 0;
 }
 
-/* Gold glow + patli ring product ke peechay */
+/* Gold glow product ke peechay */
 .imagePanel::before {
   content: "";
   position: absolute;
@@ -71,7 +63,7 @@
   border-radius: var(--radius-full);
   background: radial-gradient(
     circle,
-    color-mix(in srgb, var(--color-gold-base) 24%, transparent) 0%,
+    var(--showcase-glow) 0%,
     transparent 65%
   );
 }
@@ -84,7 +76,7 @@
 
 .image {
   object-fit: contain;
-  filter: drop-shadow(0 24px 40px rgba(0, 0, 0, 0.6));
+  filter: drop-shadow(0 24px 40px var(--showcase-image-shadow));
 }
 
 /* ================= RIGHT: CONTENT ================= */
@@ -112,7 +104,7 @@
   letter-spacing: 4px;
   text-transform: uppercase;
   font-weight: var(--font-weight-medium);
-  color: var(--color-gold-base);
+  color: var(--showcase-label);
   margin-bottom: 0;
 }
 
@@ -121,7 +113,7 @@
   font-size: clamp(2.1rem, 4.2vw, 3.75rem);
   font-weight: var(--font-weight-bold);
   line-height: 1.1;
-  color: var(--color-ivory);
+  color: var(--showcase-title);
   margin-bottom: 0;
 }
 
@@ -129,14 +121,14 @@
   font-family: var(--font-heading);
   font-style: italic;
   font-size: var(--font-size-lg);
-  color: var(--color-gold-light);
+  color: var(--showcase-tagline);
   margin-bottom: 0;
 }
 
 .description {
   font-size: var(--font-size-base);
   line-height: 1.7;
-  color: color-mix(in srgb, var(--color-ivory) 78%, var(--color-black));
+  color: var(--showcase-text);
   margin-bottom: 0;
 }
 
@@ -158,7 +150,7 @@
 
 .notes > div,
 .specs > div {
-  border-top: 1px solid color-mix(in srgb, var(--color-gold-base) 28%, transparent);
+  border-top: 1px solid var(--showcase-line);
   padding-top: var(--space-sm);
 }
 
@@ -167,14 +159,14 @@
   font-size: var(--font-size-xs);
   letter-spacing: 2px;
   text-transform: uppercase;
-  color: var(--color-gold-base);
+  color: var(--showcase-label);
 }
 
 .notes dd,
 .specs dd {
   margin: 0;
   font-size: var(--font-size-sm);
-  color: var(--color-ivory);
+  color: var(--showcase-title);
 }
 
 .buyRow {
@@ -189,7 +181,7 @@
   font-family: var(--font-heading);
   font-size: var(--font-size-xl);
   font-weight: var(--font-weight-bold);
-  background: var(--gradient-brand);
+  background: var(--showcase-price);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -216,7 +208,7 @@
   font-family: var(--font-heading);
   font-size: var(--font-size-sm);
   letter-spacing: 3px;
-  color: var(--color-gold-base);
+  color: var(--showcase-label);
   white-space: nowrap;
 }
 
@@ -231,7 +223,7 @@
   flex: 1;
   height: 3px;
   border-radius: var(--radius-full);
-  background: color-mix(in srgb, var(--color-ivory) 18%, transparent);
+  background: var(--showcase-track);
   overflow: hidden;
 }
 
@@ -239,7 +231,7 @@
   content: "";
   position: absolute;
   inset: 0;
-  background: var(--gradient-brand);
+  background: var(--showcase-bar-fill);
   transform: scaleX(0);
   transform-origin: left center;
   transition: transform 0.5s ease;
@@ -345,4 +337,3 @@
     grid-template-rows: 300px auto;
   }
 }
-

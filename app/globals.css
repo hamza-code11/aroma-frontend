@@ -102,18 +102,3 @@ a:hover {
   padding: var(--space-3xl) 0;
 }
 
-/* ================= UTILITIES ================= */
-.text-brand { color: var(--accent-text); }
-.text-accent { color: var(--accent-primary); }
-.text-secondary-brand { color: var(--accent-secondary); }
-.text-center { text-align: center; }
-
-/* Gradient text (purani class ka naam bhi chalega, Hero.tsx badalne ki zaroorat nahi) */
-.text-gradient-brand,
-.text-gradient-gold {
-  background: var(--gradient-brand);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  color: transparent;
-}

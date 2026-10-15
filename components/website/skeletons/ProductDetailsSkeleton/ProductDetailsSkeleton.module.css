@@ -1,0 +1,246 @@
+/* ================= PAGE ================= */
+.page {
+  --nav-offset: 120px;
+  width: 100%;
+  padding-top: var(--nav-offset);
+  padding-bottom: var(--space-3xl);
+  background-color: var(--bg-primary);
+}
+
+.container {
+  width: 100%;
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding-inline: var(--container-pad);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xl);
+}
+
+/* ================= BREADCRUMB ================= */
+.crumb {
+  width: 180px;
+  height: 14px;
+}
+
+/* ================= MAIN ================= */
+.main {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+  gap: var(--space-2xl);
+  align-items: start;
+}
+
+/* Gallery */
+.gallery {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.mainImage {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: var(--radius-lg);
+}
+
+.thumbRow {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(72px, 88px));
+  gap: var(--space-sm);
+}
+
+.thumb {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: var(--radius-md);
+}
+
+/* Info */
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.sku {
+  width: 100px;
+  height: 12px;
+}
+
+.name {
+  width: 75%;
+  height: 34px;
+}
+
+.nameShort {
+  width: 45%;
+  height: 34px;
+}
+
+.desc {
+  width: 100%;
+  height: 14px;
+  margin-top: var(--space-xs);
+}
+
+.descShort {
+  width: 65%;
+  height: 14px;
+}
+
+.price {
+  width: 140px;
+  height: 28px;
+  margin-top: var(--space-sm);
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  margin-top: var(--space-md);
+}
+
+.qty {
+  width: 120px;
+  height: 44px;
+  border-radius: var(--radius-full);
+}
+
+.addBtn {
+  flex: 1;
+  min-width: 180px;
+  height: 44px;
+  border-radius: var(--radius-full);
+}
+
+.perks {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  margin-top: var(--space-md);
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--border-color);
+}
+
+.perk {
+  width: 80%;
+  height: 14px;
+}
+
+/* ================= TABS ================= */
+.tabsWrap {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  padding-top: var(--space-lg);
+  border-top: 1px solid var(--border-color);
+}
+
+.tabs {
+  display: flex;
+  gap: var(--space-md);
+}
+
+.tab {
+  width: 100px;
+  height: 18px;
+}
+
+.panel {
+  width: 100%;
+  height: 14px;
+}
+
+.panelShort {
+  width: 60%;
+  height: 14px;
+}
+
+/* ================= RELATED ================= */
+.related {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+  padding-top: var(--space-2xl);
+  border-top: 1px solid var(--border-color);
+}
+
+.relatedTitle {
+  width: 240px;
+  height: 26px;
+}
+
+.relatedGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-lg);
+}
+
+.card {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  border-radius: var(--radius-lg);
+}
+
+/* ================= SHIMMER ================= */
+.line,
+.block {
+  position: relative;
+  overflow: hidden;
+  background-color: color-mix(in srgb, var(--text-primary) 8%, transparent);
+  border-radius: var(--radius-sm);
+}
+
+.line::after,
+.block::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    color-mix(in srgb, var(--text-primary) 10%, transparent) 50%,
+    transparent 100%
+  );
+  animation: shimmer 1.6s infinite;
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 1100px) {
+  .relatedGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .page {
+    --nav-offset: 96px;
+  }
+
+  .main {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .relatedGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .page {
+    --nav-offset: 84px;
+  }
+
+  .relatedGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

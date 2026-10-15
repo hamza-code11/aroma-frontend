@@ -1,0 +1,261 @@
+/* ================= PAGE ================= */
+.page {
+  --nav-offset: 120px;
+  width: 100%;
+  padding-top: var(--nav-offset);
+  padding-bottom: var(--space-3xl);
+  background-color: var(--bg-primary);
+}
+
+.container {
+  width: 100%;
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding-inline: var(--container-pad);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xl);
+}
+
+/* ================= HEADER ================= */
+.header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-lg);
+  padding-bottom: var(--space-md);
+  border-bottom: 1px solid var(--border-color);
+  flex-wrap: wrap;
+}
+
+.headerLeft {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.eyebrow {
+  width: 100px;
+  height: 12px;
+}
+
+.title {
+  width: 240px;
+  height: 40px;
+}
+
+.subtitle {
+  width: 160px;
+  height: 12px;
+}
+
+.clearBtn {
+  width: 130px;
+  height: 34px;
+  border-radius: var(--radius-full);
+}
+
+/* ================= MAIN ================= */
+.main {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+  gap: var(--space-2xl);
+  align-items: start;
+}
+
+.itemsCol {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.items {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.item {
+  display: grid;
+  grid-template-columns: 120px minmax(0, 1fr);
+  gap: var(--space-lg);
+  padding: var(--space-lg);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  background-color: var(--bg-surface);
+}
+
+.itemImage {
+  width: 120px;
+  height: 120px;
+  border-radius: var(--radius-md);
+}
+
+.itemInfo {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--space-md);
+}
+
+.itemTop {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-md);
+}
+
+.itemName {
+  width: 60%;
+  height: 22px;
+}
+
+.removeBtn {
+  width: 34px;
+  height: 34px;
+  border-radius: var(--radius-full);
+}
+
+.itemBottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+}
+
+.itemPrice {
+  width: 80px;
+  height: 20px;
+}
+
+.qty {
+  width: 110px;
+  height: 36px;
+  border-radius: var(--radius-full);
+}
+
+.lineTotal {
+  width: 90px;
+  height: 20px;
+}
+
+/* ================= SUMMARY ================= */
+.summary {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  padding: var(--space-xl);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  background-color: var(--bg-surface);
+}
+
+.summaryTitle {
+  width: 60%;
+  height: 24px;
+}
+
+.summaryList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  padding-bottom: var(--space-md);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.summaryRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+}
+
+.summaryLabel {
+  width: 90px;
+  height: 14px;
+}
+
+.summaryValue {
+  width: 60px;
+  height: 14px;
+}
+
+.promo {
+  width: 100%;
+  height: 40px;
+  border-radius: var(--radius-md);
+}
+
+.grandTotal {
+  width: 100%;
+  height: 28px;
+}
+
+.checkout {
+  width: 100%;
+  height: 46px;
+  border-radius: var(--radius-full);
+}
+
+/* ================= SHIMMER ================= */
+.line,
+.block {
+  position: relative;
+  overflow: hidden;
+  background-color: color-mix(in srgb, var(--text-primary) 8%, transparent);
+  border-radius: var(--radius-sm);
+}
+
+.line::after,
+.block::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    color-mix(in srgb, var(--text-primary) 10%, transparent) 50%,
+    transparent 100%
+  );
+  animation: shimmer 1.6s infinite;
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 1000px) {
+  .main {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 900px) {
+  .page {
+    --nav-offset: 96px;
+  }
+}
+
+@media (max-width: 600px) {
+  .page {
+    --nav-offset: 84px;
+  }
+
+  .item {
+    grid-template-columns: 90px minmax(0, 1fr);
+    gap: var(--space-md);
+    padding: var(--space-md);
+  }
+
+  .itemImage {
+    width: 90px;
+    height: 90px;
+  }
+}

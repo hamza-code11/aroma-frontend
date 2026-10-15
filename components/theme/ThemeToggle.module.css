@@ -1,0 +1,140 @@
+/* ================= BASE ICON WRAP ================= */
+.iconWrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1em;
+  height: 1em;
+}
+
+.iconSun,
+.iconMoon {
+  position: absolute;
+  transition:
+    opacity var(--transition-base),
+    transform var(--transition-base);
+}
+
+/* When DARK: show Sun (to switch to light) */
+.iconWrap.dark .iconSun {
+  opacity: 1;
+  transform: rotate(0deg) scale(1);
+}
+.iconWrap.dark .iconMoon {
+  opacity: 0;
+  transform: rotate(-90deg) scale(0.5);
+}
+
+/* When LIGHT: show Moon (to switch to dark) */
+.iconWrap.light .iconSun {
+  opacity: 0;
+  transform: rotate(90deg) scale(0.5);
+}
+.iconWrap.light .iconMoon {
+  opacity: 1;
+  transform: rotate(0deg) scale(1);
+}
+
+/* ================= ICON BUTTON ================= */
+.iconBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 42px;
+  height: 42px;
+  border-radius: var(--radius-full);
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition:
+    background-color var(--transition-base),
+    border-color var(--transition-base),
+    color var(--transition-base),
+    transform var(--transition-base);
+}
+
+.iconBtn:hover {
+  background-color: color-mix(in srgb, var(--accent-primary) 12%, transparent);
+  color: var(--accent-primary);
+  border-color: color-mix(in srgb, var(--accent-primary) 30%, transparent);
+}
+
+.iconBtn:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 3px;
+}
+
+.iconBtn:active {
+  transform: scale(0.94);
+}
+
+/* Sizes */
+.iconBtn.sm {
+  width: 34px;
+  height: 34px;
+}
+
+.iconBtn.md {
+  width: 42px;
+  height: 42px;
+}
+
+/* ================= PILL BUTTON ================= */
+.pillBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: 8px 14px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-surface);
+  color: var(--text-primary);
+  font-size: var(--font-size-xs);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition:
+    background-color var(--transition-base),
+    border-color var(--transition-base),
+    color var(--transition-base);
+}
+
+.pillBtn:hover {
+  border-color: var(--accent-primary);
+  color: var(--accent-primary);
+}
+
+.pillBtn:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 3px;
+}
+
+.pillBtn.sm {
+  padding: 6px 10px;
+  font-size: 10px;
+}
+
+.pillBtn.md {
+  padding: 8px 14px;
+  font-size: var(--font-size-xs);
+}
+
+.pillLabel {
+  line-height: 1;
+}
+
+/* ================= REDUCED MOTION ================= */
+@media (prefers-reduced-motion: reduce) {
+  .iconSun,
+  .iconMoon,
+  .iconBtn,
+  .pillBtn {
+    transition: none;
+  }
+  .iconBtn:active {
+    transform: none;
+  }
+}

@@ -1,4 +1,26 @@
-/* colors.css */
+/* colors.css: saare colors sirf isi file mein */
+
+/* ================= BRAND PALETTE (i.Shine Aroma logo se) ================= */
+:root {
+  /* Gold (metallic gradient ke 4 stops) */
+  --color-gold-light: #f6e6ae;   /* highlight / shine */
+  --color-gold-base: #d4a93a;    /* main gold */
+  --color-gold-deep: #a67c1a;    /* shadow side */
+  --color-gold-dark: #7a5a12;    /* readable gold text on light bg */
+
+  /* Leaf green */
+  --color-green-olive: #9aa50f;  /* "AROMA" text / leaf highlight */
+  --color-green-base: #4a7c00;   /* main leaf green */
+  --color-green-deep: #2f5200;   /* dark leaf */
+
+  /* Black */
+  --color-black: #000000;
+  --color-black-soft: #0d0c09;   /* cards / surfaces on black */
+
+  /* Light surface */
+  --color-ivory: #f8f4e6;
+  --color-white-pure: #ffffff;
+}
 
 /* ================= LIGHT THEME (Default) ================= */
 :root,
@@ -17,9 +39,9 @@
   --accent-primary: var(--color-gold-base);
   --accent-primary-hover: var(--color-gold-light);
   --accent-secondary: var(--color-green-base);
-  --accent-text: var(--color-gold-dark);      /* chhota text/links (ivory par readable) */
-  --on-accent: var(--color-black);            /* gold button ke upar text */
-  --on-secondary: var(--color-ivory);         /* green button hover par text */
+  --accent-text: var(--color-gold-base);
+  --on-accent: var(--color-black);
+  --on-secondary: var(--color-ivory);
 
   /* Gradient text (logo jaisa metallic gold) */
   --gradient-brand: linear-gradient(135deg, var(--color-gold-deep), var(--color-gold-base) 45%, var(--color-gold-light));
@@ -27,6 +49,20 @@
   /* Borders & UI */
   --border-color: color-mix(in srgb, var(--color-black) 16%, transparent);
   --shadow-color: rgba(0, 0, 0, 0.14);
+
+  /* ---------- Product Showcase (light: ivory par dark text) ---------- */
+  --showcase-bg: var(--bg-primary);
+  --showcase-title: var(--text-primary);
+  --showcase-text: var(--text-secondary);
+  --showcase-label: var(--color-gold-dark);
+  --showcase-tagline: var(--color-gold-deep);
+  --showcase-line: color-mix(in srgb, var(--color-gold-deep) 35%, transparent);
+  --showcase-ring: color-mix(in srgb, var(--color-gold-deep) 30%, transparent);
+  --showcase-glow: color-mix(in srgb, var(--color-gold-base) 20%, transparent);
+  --showcase-image-shadow: rgba(60, 40, 5, 0.28);
+  --showcase-track: color-mix(in srgb, var(--color-black) 14%, transparent);
+  --showcase-price: linear-gradient(135deg, var(--color-gold-dark), var(--color-gold-deep));
+  --showcase-bar-fill: linear-gradient(90deg, var(--color-gold-dark), var(--color-gold-base));
 }
 
 /* ================= DARK THEME (logo ka original look) ================= */
@@ -55,4 +91,18 @@
   /* Borders & UI */
   --border-color: color-mix(in srgb, var(--color-gold-base) 28%, transparent);
   --shadow-color: rgba(212, 169, 58, 0.18);
+
+  /* ---------- Product Showcase (dark: black par ivory text) ---------- */
+  --showcase-bg: var(--bg-primary);
+  --showcase-title: var(--text-primary);
+  --showcase-text: var(--text-secondary);
+  --showcase-label: var(--color-gold-base);
+  --showcase-tagline: var(--color-gold-light);
+  --showcase-line: color-mix(in srgb, var(--color-gold-base) 28%, transparent);
+  --showcase-ring: color-mix(in srgb, var(--color-gold-base) 35%, transparent);
+  --showcase-glow: color-mix(in srgb, var(--color-gold-base) 24%, transparent);
+  --showcase-image-shadow: rgba(0, 0, 0, 0.6);
+  --showcase-track: color-mix(in srgb, var(--text-primary) 18%, transparent);
+  --showcase-price: var(--gradient-brand);
+  --showcase-bar-fill: var(--gradient-brand);
 }

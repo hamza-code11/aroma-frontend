@@ -1,0 +1,256 @@
+/* ================= SECTION ================= */
+.section {
+  --nav-offset: 120px;
+  width: 100%;
+  padding-top: var(--nav-offset);
+  padding-bottom: var(--space-3xl);
+  background-color: var(--bg-primary);
+}
+
+.container {
+  width: 100%;
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding-inline: var(--container-pad);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3xl);
+}
+
+/* ================= SHIMMER ================= */
+.line {
+  position: relative;
+  overflow: hidden;
+  background-color: color-mix(in srgb, var(--text-primary) 8%, transparent);
+  border-radius: var(--radius-sm);
+}
+
+.line::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    color-mix(in srgb, var(--text-primary) 10%, transparent) 50%,
+    transparent 100%
+  );
+  animation: shimmer 1.6s infinite;
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* ================= HERO ================= */
+.hero {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  max-width: 900px;
+}
+
+.eyebrow {
+  width: 140px;
+  height: 12px;
+}
+
+.title {
+  width: 70%;
+  height: 52px;
+}
+
+.titleShort {
+  width: 40%;
+  height: 52px;
+}
+
+.lead {
+  width: 90%;
+  height: 16px;
+  margin-top: var(--space-md);
+}
+
+.leadShort {
+  width: 60%;
+  height: 16px;
+}
+
+/* ================= INFO CARDS ================= */
+.infoGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-lg);
+}
+
+.infoCard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  padding: var(--space-lg);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+}
+
+.infoIcon {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-full);
+  margin-bottom: var(--space-xs);
+}
+
+.infoLabel {
+  width: 60px;
+  height: 12px;
+}
+
+.infoValue {
+  width: 80%;
+  height: 18px;
+}
+
+/* ================= FORM SECTION ================= */
+.formSection {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  gap: var(--space-2xl);
+  padding: var(--space-2xl);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+}
+
+.formIntro {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.heading {
+  width: 70%;
+  height: 34px;
+}
+
+.para {
+  width: 100%;
+  height: 14px;
+}
+
+.paraShort {
+  width: 75%;
+  height: 14px;
+}
+
+/* ================= FORM ================= */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--space-lg);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.fieldFull {
+  grid-column: 1 / -1;
+}
+
+.label {
+  width: 80px;
+  height: 12px;
+}
+
+.input {
+  width: 100%;
+  height: 46px;
+  border-radius: var(--radius-md);
+}
+
+.textarea {
+  width: 100%;
+  height: 140px;
+  border-radius: var(--radius-md);
+}
+
+.formFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+}
+
+.status {
+  width: 180px;
+  height: 14px;
+}
+
+.submit {
+  width: 180px;
+  height: 44px;
+  border-radius: var(--radius-full);
+}
+
+/* ================= FAQ ================= */
+.faqSection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+}
+
+.faqHeader {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  max-width: 720px;
+}
+
+.faqList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.faqItem {
+  width: 100%;
+  height: 64px;
+  border-radius: var(--radius-md);
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 1000px) {
+  .infoGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .formSection {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 900px) {
+  .section {
+    --nav-offset: 96px;
+  }
+}
+
+@media (max-width: 600px) {
+  .section {
+    --nav-offset: 84px;
+  }
+
+  .infoGrid,
+  .formGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

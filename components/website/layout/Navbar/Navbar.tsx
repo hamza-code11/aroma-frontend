@@ -4,10 +4,12 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { useTheme } from "next-themes";
-import { Search, ShoppingBag, Sun, Moon, Menu, X } from "lucide-react";
+import { ShoppingBag, Heart, User, Menu, X } from "lucide-react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import ThemeToggle from "@/components/theme/ThemeToggle";
+import { useCart } from "@/hooks/useCart";
+import { useWishlistContext } from "@/app/providers/WishlistProvider";
 import styles from "./Navbar.module.css";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -21,15 +23,12 @@ const NAV_LINKS = [
 
 export default function Navbar() {
   const navRef = useRef<HTMLElement>(null);
-  const [mounted, setMounted] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const { theme, setTheme } = useTheme();
   const pathname = usePathname();
 
-  // Hydration error se bachne ke liye
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const { totalItems, mounted: cartMounted } = useCart();
+  const { wishlist, mounted: wishMounted, open: openWishlist } =
+    useWishlistContext();
 
   // Route change par mobile menu band
   useEffect(() => {
@@ -57,10 +56,11 @@ export default function Navbar() {
     return () => ctx.revert();
   }, []);
 
-  const toggleTheme = () => setTheme(theme === "dark" ? "light" : "dark");
-
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname.startsWith(href);
+
+  const cartCount = cartMounted ? totalItems : 0;
+  const wishlistCount = wishMounted ? wishlist.length : 0;
 
   return (
     <nav
@@ -68,7 +68,7 @@ export default function Navbar() {
       className={`${styles.navbar} ${menuOpen ? styles.menuOpen : ""}`}
     >
       <div className={styles.container}>
-        {/* LEFT: Round logo with gold outline */}
+        {/* LEFT: Round logo */}
         <Link href="/" className={styles.logo} aria-label="i.Shine Aroma - Home">
           <Image
             src="/logo/01.jpeg"
@@ -89,7 +89,8 @@ export default function Navbar() {
             <li key={link.href}>
               <Link
                 href={link.href}
-                className={`${styles.link} ${isActive(link.href) ? styles.active : ""}`}
+                className={`${styles.link} ${isActive(link.href) ? styles.active : ""
+                  }`}
                 aria-current={isActive(link.href) ? "page" : undefined}
               >
                 {link.label}
@@ -100,28 +101,45 @@ export default function Navbar() {
 
         {/* RIGHT: Icons */}
         <div className={styles.icons}>
-          <button className={styles.iconBtn} aria-label="Search">
-            <Search size={20} strokeWidth={1.8} />
-          </button>
-
-          <button className={styles.iconBtn} aria-label="Cart">
-            <ShoppingBag size={20} strokeWidth={1.8} />
-            <span className={styles.badge}>2</span>
-          </button>
-
-          <button
+          {/* Sign in */}
+          <Link
+            href="/login"
             className={styles.iconBtn}
-            onClick={toggleTheme}
-            aria-label="Toggle Theme"
+            aria-label="Sign in"
           >
-            {mounted && theme === "dark" ? (
-              <Sun size={20} strokeWidth={1.8} />
-            ) : (
-              <Moon size={20} strokeWidth={1.8} />
+            <User size={20} strokeWidth={1.8} />
+          </Link>
+
+          {/* Wishlist */}
+          <button
+            type="button"
+            className={styles.iconBtn}
+            aria-label={`Wishlist${wishlistCount > 0 ? ` (${wishlistCount} items)` : ""
+              }`}
+            onClick={openWishlist}
+          >
+            <Heart size={20} strokeWidth={1.8} />
+            {wishlistCount > 0 && (
+              <span className={`${styles.badge} ${styles.badgeRed}`}>{wishlistCount}</span>
             )}
           </button>
 
-          {/* Hamburger (sirf mobile/tablet par) */}
+          {/* Cart */}
+          <Link
+            href="/cart"
+            className={styles.iconBtn}
+            aria-label={`Cart${cartCount > 0 ? ` (${cartCount} items)` : ""}`}
+          >
+            <ShoppingBag size={20} strokeWidth={1.8} />
+            {cartCount > 0 && (
+              <span className={styles.badge}>{cartCount}</span>
+            )}
+          </Link>
+
+          {/* Theme toggle */}
+          <ThemeToggle />
+
+          {/* Hamburger (mobile only) */}
           <button
             className={`${styles.iconBtn} ${styles.menuBtn}`}
             onClick={() => setMenuOpen((o) => !o)}

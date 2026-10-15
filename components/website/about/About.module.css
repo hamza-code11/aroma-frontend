@@ -1,0 +1,402 @@
+/* ================= SECTION ================= */
+.section {
+  --nav-offset: 120px;
+
+  width: 100%;
+  padding-top: var(--nav-offset);
+  padding-bottom: var(--space-3xl);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  overflow: hidden;
+}
+
+.container {
+  width: 100%;
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding-inline: var(--container-pad);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3xl);
+}
+
+/* ================= HERO BANNER ================= */
+.heroBanner {
+  position: relative;
+  width: 100%;
+  min-height: clamp(340px, 52vh, 480px);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background-color: var(--color-black);
+  border: 1px solid var(--border-color);
+  display: flex;
+  align-items: flex-end;
+}
+
+.heroBannerMedia {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.heroBannerImage {
+  object-fit: cover;
+}
+
+.heroBannerOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.9) 0%,
+    rgba(0, 0, 0, 0.65) 40%,
+    rgba(0, 0, 0, 0.25) 75%,
+    rgba(0, 0, 0, 0.05) 100%
+  );
+}
+
+.heroInner {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  padding: clamp(1.25rem, 3.5vw, 2.5rem);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  color: var(--color-ivory);
+}
+
+/* ---- Hero text ---- */
+.eyebrow {
+  margin: 0;
+  font-size: var(--font-size-xs);
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--color-gold-base);
+}
+
+.title {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: clamp(1.75rem, 3.6vw, 2.75rem);
+  font-weight: var(--font-weight-regular);
+  line-height: 1.1;
+  color: var(--color-ivory);
+  max-width: 720px;
+}
+
+.titleHighlight {
+  background: var(--gradient-brand);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+}
+
+.heroDescription {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  line-height: 1.65;
+  color: color-mix(in srgb, var(--color-ivory) 82%, transparent);
+  max-width: 620px;
+}
+
+/* ================= STATS (2x2 grid inside banner) ================= */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-sm) var(--space-lg);
+  max-width: 440px;
+  margin-top: var(--space-xs);
+}
+
+.statItem {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-top: var(--space-xs);
+  border-top: 1px solid color-mix(in srgb, var(--color-ivory) 18%, transparent);
+}
+
+.statValue {
+  font-family: var(--font-heading);
+  font-size: clamp(1rem, 1.6vw, 1.35rem);
+  line-height: 1;
+  background: var(--gradient-brand);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+}
+
+.statLabel {
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--color-ivory) 65%, transparent);
+}
+
+/* ================= BUTTONS ================= */
+.primaryBtn,
+.secondaryBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-xl);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-sm);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background-color var(--transition-base),
+    color var(--transition-base),
+    border-color var(--transition-base),
+    transform var(--transition-base);
+}
+
+.primaryBtn {
+  background-color: var(--accent-primary);
+  border: 1px solid var(--accent-primary);
+  color: var(--on-accent);
+  font-weight: var(--font-weight-medium);
+}
+
+.primaryBtn:hover {
+  background-color: var(--accent-primary-hover);
+  border-color: var(--accent-primary-hover);
+  transform: translateY(-2px);
+}
+
+.secondaryBtn {
+  background: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+}
+
+.secondaryBtn:hover {
+  border-color: var(--accent-primary);
+  color: var(--accent-primary);
+}
+
+.primaryBtn:focus-visible,
+.secondaryBtn:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 3px;
+}
+
+/* ================= STORY ================= */
+.story {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--space-2xl);
+  align-items: center;
+}
+
+.storyText {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.heading {
+  margin: 0 0 var(--space-sm);
+  font-family: var(--font-heading);
+  font-size: clamp(1.75rem, 3vw, 2.75rem);
+  font-weight: var(--font-weight-regular);
+  line-height: 1.12;
+  color: var(--text-primary);
+}
+
+.para {
+  margin: 0;
+  font-size: var(--font-size-base);
+  line-height: 1.75;
+  color: var(--text-secondary);
+}
+
+.storyImage {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-color);
+}
+
+.storyImg {
+  object-fit: cover;
+}
+
+/* ================= MISSION / VISION ================= */
+.missionVision {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--space-xl);
+}
+
+.mvCard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  padding: var(--space-2xl);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  background-color: var(--bg-surface);
+  transition:
+    border-color var(--transition-base),
+    box-shadow var(--transition-base);
+}
+
+.mvCard:hover {
+  border-color: color-mix(in srgb, var(--accent-primary) 55%, transparent);
+  box-shadow: 0 16px 40px color-mix(in srgb, var(--accent-primary) 12%, transparent);
+}
+
+.mvEyebrow {
+  margin: 0;
+  font-size: var(--font-size-xs);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--accent-text);
+}
+
+.mvTitle {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: clamp(1.5rem, 2.4vw, 2rem);
+  font-weight: var(--font-weight-regular);
+  line-height: 1.2;
+  color: var(--text-primary);
+}
+
+.mvText {
+  margin: 0;
+  font-size: var(--font-size-base);
+  line-height: 1.75;
+  color: var(--text-secondary);
+}
+
+/* ================= CTA ================= */
+.cta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-xl);
+  padding: var(--space-2xl);
+  border: 1px solid color-mix(in srgb, var(--accent-primary) 30%, transparent);
+  border-radius: var(--radius-lg);
+  background:
+    radial-gradient(
+      circle at 0% 0%,
+      color-mix(in srgb, var(--accent-primary) 12%, transparent) 0%,
+      transparent 55%
+    ),
+    var(--bg-surface);
+}
+
+.ctaContent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  max-width: 680px;
+}
+
+.ctaTitle {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: clamp(1.5rem, 2.4vw, 2.25rem);
+  font-weight: var(--font-weight-regular);
+  line-height: 1.2;
+  color: var(--text-primary);
+}
+
+.ctaText {
+  margin: 0;
+  font-size: var(--font-size-base);
+  line-height: 1.7;
+  color: var(--text-secondary);
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 900px) {
+  .section {
+    --nav-offset: 96px;
+  }
+
+  .container {
+    gap: var(--space-2xl);
+  }
+
+  .heroBanner {
+    min-height: clamp(320px, 48vh, 440px);
+  }
+
+  .heroInner {
+    padding: var(--space-lg);
+    gap: var(--space-sm);
+  }
+
+  .title {
+    font-size: clamp(1.5rem, 4vw, 2rem);
+  }
+
+  .heroDescription {
+    font-size: var(--font-size-xs);
+  }
+
+  .stats {
+    max-width: 100%;
+  }
+
+  .story,
+  .missionVision {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .section {
+    --nav-offset: 84px;
+  }
+
+  .heroBanner {
+    min-height: 300px;
+  }
+
+  .heroInner {
+    padding: var(--space-md);
+    gap: var(--space-xs);
+  }
+
+  .stats {
+    gap: var(--space-xs) var(--space-md);
+  }
+
+  .statValue {
+    font-size: var(--font-size-base);
+  }
+
+  .statLabel {
+    font-size: 9px;
+    letter-spacing: 1px;
+  }
+
+  .cta {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .mvCard {
+    padding: var(--space-xl);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mvCard {
+    transition: none;
+  }
+}

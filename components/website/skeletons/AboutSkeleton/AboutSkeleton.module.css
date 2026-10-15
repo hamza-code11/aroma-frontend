@@ -1,0 +1,220 @@
+/* ================= SECTION ================= */
+.section {
+  --nav-offset: 120px;
+  width: 100%;
+  padding-top: var(--nav-offset);
+  padding-bottom: var(--space-3xl);
+  background-color: var(--bg-primary);
+}
+
+.container {
+  width: 100%;
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding-inline: var(--container-pad);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3xl);
+}
+
+/* ================= SHIMMER ================= */
+.line,
+.block {
+  position: relative;
+  overflow: hidden;
+  background-color: color-mix(in srgb, var(--text-primary) 8%, transparent);
+  border-radius: var(--radius-sm);
+}
+
+.line::after,
+.block::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    color-mix(in srgb, var(--text-primary) 10%, transparent) 50%,
+    transparent 100%
+  );
+  animation: shimmer 1.6s infinite;
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* ================= HERO ================= */
+.hero {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  max-width: 900px;
+}
+
+.eyebrow {
+  width: 140px;
+  height: 12px;
+}
+
+.title {
+  width: 75%;
+  height: 52px;
+}
+
+.titleShort {
+  width: 45%;
+  height: 52px;
+}
+
+.lead {
+  width: 90%;
+  height: 16px;
+  margin-top: var(--space-md);
+}
+
+.leadShort {
+  width: 60%;
+  height: 16px;
+}
+
+.heroActions {
+  display: flex;
+  gap: var(--space-md);
+  margin-top: var(--space-sm);
+}
+
+.btn {
+  width: 180px;
+  height: 44px;
+  border-radius: var(--radius-full);
+  background-color: color-mix(in srgb, var(--text-primary) 8%, transparent);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    color-mix(in srgb, var(--text-primary) 10%, transparent) 50%,
+    transparent 100%
+  );
+  animation: shimmer 1.6s infinite;
+}
+
+/* ================= STATS ================= */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-lg);
+  padding: var(--space-xl);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.statValue {
+  width: 70px;
+  height: 32px;
+}
+
+.statLabel {
+  width: 100px;
+  height: 12px;
+}
+
+/* ================= BANNER ================= */
+.banner {
+  width: 100%;
+  height: clamp(280px, 46vh, 520px);
+  border-radius: var(--radius-lg);
+}
+
+/* ================= STORY ================= */
+.story {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--space-2xl);
+  align-items: center;
+}
+
+.storyText {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.heading {
+  width: 60%;
+  height: 32px;
+  margin-bottom: var(--space-sm);
+}
+
+.para {
+  width: 100%;
+  height: 14px;
+}
+
+.paraShort {
+  width: 75%;
+  height: 14px;
+}
+
+.storyImage {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: var(--radius-lg);
+}
+
+/* ================= MISSION / VISION ================= */
+.mv {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--space-xl);
+}
+
+.mvCard {
+  width: 100%;
+  height: 220px;
+  border-radius: var(--radius-lg);
+}
+
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 1000px) {
+  .stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+}
+
+@media (max-width: 900px) {
+  .section {
+    --nav-offset: 96px;
+  }
+
+  .story,
+  .mv {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .section {
+    --nav-offset: 84px;
+  }
+}

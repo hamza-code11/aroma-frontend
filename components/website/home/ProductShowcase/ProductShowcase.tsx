@@ -32,7 +32,7 @@ const PRODUCTS: Product[] = [
         tagline: "Deep, woody and unforgettable",
         description:
             "A rich blend of aged oud and warm spices, crafted for those who want a fragrance that speaks before they do.",
-        image: "/products/01.png",
+        image: "/products/01.jfif",
         notes: { top: "Saffron", heart: "Rose", base: "Oud, Amber" },
         specs: [
             { label: "Size", value: "50 ml" },
@@ -50,7 +50,7 @@ const PRODUCTS: Product[] = [
         tagline: "Warm, smooth and mysterious",
         description:
             "Golden amber wrapped in soft vanilla and a touch of spice. A comforting scent that lingers long after you leave.",
-        image: "/products/01.png",
+        image: "/products/02.jfif",
         notes: { top: "Bergamot", heart: "Cinnamon", base: "Amber, Vanilla" },
         specs: [
             { label: "Size", value: "50 ml" },
@@ -68,7 +68,7 @@ const PRODUCTS: Product[] = [
         tagline: "Soft, floral and graceful",
         description:
             "Fresh jasmine petals paired with creamy white musk for an elegant, feminine fragrance that feels effortless.",
-        image: "/products/01.png",
+        image: "/products/03.jfif",
         notes: { top: "Pear", heart: "Jasmine", base: "White Musk" },
         specs: [
             { label: "Size", value: "50 ml" },
@@ -86,7 +86,7 @@ const PRODUCTS: Product[] = [
         tagline: "Fresh, green and energising",
         description:
             "Sparkling citrus over a calm green tea heart, finished with clean cedar. Made for warm days and bright moods.",
-        image: "/products/01.png",
+        image: "/products/04.jfif",
         notes: { top: "Lemon, Mandarin", heart: "Green Tea", base: "Cedar" },
         specs: [
             { label: "Size", value: "100 ml" },

@@ -1,27 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display+SC:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto+Slab:wght@100..900&family=Signika:wght@300..700&display=swap');
 
-/* design-tokens.css */
+/* design-tokens.css (sirf spacing, layout, typography, radius, transitions) */
 :root {
-  /* ================= BRAND COLORS (i.Shine Aroma logo se) ================= */
-  /* Gold (metallic gradient ke 4 stops) */
-  --color-gold-light: #f6e6ae;   /* highlight / shine */
-  --color-gold-base: #d4a93a;    /* main gold */
-  --color-gold-deep: #a67c1a;    /* shadow side */
-  --color-gold-dark: #7a5a12;    /* readable gold text on light bg */
-
-  /* Leaf green */
-  --color-green-olive: #9aa50f;  /* "AROMA" text / leaf highlight */
-  --color-green-base: #4a7c00;   /* main leaf green */
-  --color-green-deep: #2f5200;   /* dark leaf */
-
-  /* Black */
-  --color-black: #000000;
-  --color-black-soft: #0d0c09;   /* cards / surfaces on black */
-
-  /* Light surface (sirf light theme ke liye) */
-  --color-ivory: #f8f4e6;
-  --color-white-pure: #ffffff;
-
   /* ================= SPACING ================= */
   --space-xs: 0.25rem;
   --space-sm: 0.5rem;

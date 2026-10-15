@@ -1,0 +1,346 @@
+/* ================= INFO ================= */
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+/* ================= BREADCRUMB (info ke andar) ================= */
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  flex-wrap: wrap;
+  font-size: var(--font-size-xs);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  margin-bottom: var(--space-xs);
+}
+
+.crumbLink {
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: color var(--transition-base);
+}
+
+.crumbLink:hover {
+  color: var(--accent-primary);
+}
+
+.crumbLink:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+.crumbSep {
+  opacity: 0.4;
+}
+
+.crumbCurrent {
+  color: var(--accent-text);
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: var(--font-size-xs);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 40ch;
+}
+
+/* ================= SKU ================= */
+.sku {
+  margin: 0;
+  font-size: var(--font-size-xs);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+/* ================= NAME ================= */
+.name {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: clamp(1.75rem, 3.6vw, 2.75rem);
+  font-weight: var(--font-weight-regular);
+  line-height: 1.1;
+  color: var(--text-primary);
+}
+
+/* ================= DESCRIPTION ================= */
+.shortDesc {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  line-height: 1.75;
+  color: var(--text-secondary);
+}
+
+/* ================= PRICE ================= */
+.priceRow {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-md);
+  flex-wrap: wrap;
+  margin-top: var(--space-xs);
+}
+
+.price,
+.priceSale {
+  font-family: var(--font-heading);
+  font-size: clamp(1.5rem, 2.4vw, 2rem);
+  font-weight: var(--font-weight-bold);
+  line-height: 1;
+}
+
+.price {
+  color: var(--text-primary);
+}
+
+.priceSale {
+  background: var(--gradient-brand);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+}
+
+.priceOld {
+  font-size: var(--font-size-base);
+  color: var(--text-secondary);
+  text-decoration: line-through;
+  opacity: 0.75;
+}
+
+.saveBadge {
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  background-color: color-mix(in srgb, var(--accent-secondary) 18%, transparent);
+  color: var(--accent-secondary);
+  border: 1px solid color-mix(in srgb, var(--accent-secondary) 40%, transparent);
+}
+
+/* ================= STOCK ================= */
+.stockRow {
+  display: flex;
+  align-items: center;
+}
+
+.stock {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-weight: var(--font-weight-medium);
+}
+
+.stockIn {
+  background-color: color-mix(in srgb, var(--accent-secondary) 15%, transparent);
+  color: var(--accent-secondary);
+  border: 1px solid color-mix(in srgb, var(--accent-secondary) 40%, transparent);
+}
+
+.stockLow {
+  background-color: color-mix(in srgb, var(--color-gold-base) 15%, transparent);
+  color: var(--color-gold-base);
+  border: 1px solid color-mix(in srgb, var(--color-gold-base) 45%, transparent);
+}
+
+.stockOut {
+  background-color: color-mix(in srgb, #ff6b6b 12%, transparent);
+  color: #ff6b6b;
+  border: 1px solid color-mix(in srgb, #ff6b6b 35%, transparent);
+}
+
+/* ================= ACTIONS ================= */
+.actionsRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  flex-wrap: wrap;
+  margin-top: var(--space-sm);
+}
+
+.qtyPicker {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-full);
+  background-color: var(--bg-surface);
+  overflow: hidden;
+}
+
+.qtyBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 44px;
+  border: none;
+  background: transparent;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition:
+    background-color var(--transition-base),
+    color var(--transition-base);
+}
+
+.qtyBtn:hover:not(:disabled) {
+  background-color: color-mix(in srgb, var(--accent-primary) 12%, transparent);
+  color: var(--accent-primary);
+}
+
+.qtyBtn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.qtyBtn:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: -2px;
+}
+
+.qtyValue {
+  min-width: 36px;
+  text-align: center;
+  font-family: var(--font-heading);
+  font-size: var(--font-size-base);
+  color: var(--text-primary);
+}
+
+.addBtn {
+  flex: 1;
+  min-width: 180px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  padding: 12px var(--space-xl);
+  border-radius: var(--radius-full);
+  border: 1px solid var(--accent-primary);
+  background-color: var(--accent-primary);
+  color: var(--on-accent);
+  font-size: var(--font-size-xs);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition:
+    background-color var(--transition-base),
+    border-color var(--transition-base),
+    transform var(--transition-base);
+}
+
+.addBtn:hover:not(:disabled) {
+  background-color: var(--accent-primary-hover);
+  border-color: var(--accent-primary-hover);
+  transform: translateY(-2px);
+}
+
+.addBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.addBtn:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 3px;
+}
+
+/* ================= WISHLIST ================= */
+.wishBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--border-color);
+  background: transparent;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition:
+    background-color var(--transition-base),
+    border-color var(--transition-base),
+    color var(--transition-base);
+}
+
+.wishBtn:hover {
+  border-color: var(--accent-primary);
+  color: var(--accent-primary);
+}
+
+.wishActive {
+  color: #ff4d4d;
+  border-color: var(--border-color);
+  background: transparent;
+}
+
+.wishActive:hover {
+  color: #ff3333;
+  border-color: color-mix(in srgb, #ff4d4d 50%, transparent);
+  background: transparent;
+}
+
+.wishBtn:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 3px;
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 600px) {
+  .addBtn {
+    min-width: 140px;
+    padding: 12px var(--space-lg);
+  }
+
+  .crumbCurrent {
+    max-width: 20ch;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .addBtn,
+  .wishBtn,
+  .qtyBtn,
+  .crumbLink {
+    transition: none;
+  }
+}
+
+/* ================= SPECS (neeche) ================= */
+.specGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 var(--space-xl);
+  margin: var(--space-md) 0 0;
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--border-color);
+}
+
+.specGrid > div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: var(--space-sm) 0;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.specGrid dt {
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--accent-text);
+}
+
+.specGrid dd {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  color: var(--text-primary);
+}

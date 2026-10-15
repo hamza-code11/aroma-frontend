@@ -1,0 +1,170 @@
+/* ================= WRAP ================= */
+.wrap {
+  min-height: 100vh;
+  min-height: 100svh;
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+  background-color: var(--bg-primary);
+}
+
+/* ================= SIDE ================= */
+.side {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: clamp(2rem, 4vw, 3.5rem);
+  background-color: var(--color-black);
+}
+
+.sideContent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  max-width: 460px;
+}
+
+.sideBrand {
+  width: 140px;
+  height: 40px;
+}
+
+.sideEyebrow {
+  width: 120px;
+  height: 12px;
+}
+
+.sideTitle {
+  width: 80%;
+  height: 40px;
+}
+
+.sideTitleShort {
+  width: 55%;
+  height: 40px;
+}
+
+.sideText {
+  width: 100%;
+  height: 14px;
+  margin-top: var(--space-md);
+}
+
+.sideTextShort {
+  width: 65%;
+  height: 14px;
+}
+
+/* ================= PANEL ================= */
+.panel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(2rem, 4vw, 4rem);
+}
+
+.card {
+  width: 100%;
+  max-width: 440px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.eyebrow {
+  width: 100px;
+  height: 12px;
+}
+
+.title {
+  width: 60%;
+  height: 40px;
+}
+
+.subtitle {
+  width: 80%;
+  height: 14px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.label {
+  width: 90px;
+  height: 12px;
+}
+
+.input {
+  width: 100%;
+  height: 48px;
+  border-radius: var(--radius-md);
+}
+
+.checkbox {
+  width: 160px;
+  height: 18px;
+}
+
+.submit {
+  width: 100%;
+  height: 48px;
+  border-radius: var(--radius-full);
+}
+
+.divider {
+  width: 100%;
+  height: 1px;
+  margin: var(--space-md) 0;
+}
+
+.social {
+  width: 100%;
+  height: 48px;
+  border-radius: var(--radius-full);
+}
+
+/* ================= SHIMMER ================= */
+.line {
+  position: relative;
+  overflow: hidden;
+  background-color: color-mix(in srgb, var(--text-primary) 8%, transparent);
+  border-radius: var(--radius-sm);
+}
+
+.line::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    color-mix(in srgb, var(--text-primary) 10%, transparent) 50%,
+    transparent 100%
+  );
+  animation: shimmer 1.6s infinite;
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 900px) {
+  .wrap {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .side {
+    min-height: 220px;
+    padding: var(--space-xl);
+  }
+
+  .panel {
+    padding: var(--space-2xl) var(--space-lg);
+  }
+}

@@ -1,10 +1,50 @@
+/* ================= THEME-AWARE FOOTER VARIABLES ================= */
+/* Default: DARK theme (footer ka original look) */
 .footer {
+  /* ---------- Footer tokens (default = dark) ---------- */
+  --footer-bg: var(--color-black);
+  --footer-text: var(--color-ivory);
+  --footer-text-soft: color-mix(in srgb, var(--color-ivory) 88%, var(--color-black));
+  --footer-text-dim: color-mix(in srgb, var(--color-ivory) 72%, var(--color-black));
+  --footer-muted: color-mix(in srgb, var(--color-ivory) 60%, var(--color-black));
+  --footer-faint: color-mix(in srgb, var(--color-ivory) 50%, var(--color-black));
+  --footer-label: var(--color-gold-base);
+  --footer-status: var(--color-gold-base);
+  --footer-placeholder: color-mix(in srgb, var(--color-ivory) 45%, var(--color-black));
+  --footer-line: color-mix(in srgb, var(--color-gold-base) 22%, transparent);
+  --footer-input-line: color-mix(in srgb, var(--color-ivory) 22%, transparent);
+  --footer-btn-border: color-mix(in srgb, var(--color-gold-base) 55%, transparent);
+  --footer-top-border: color-mix(in srgb, var(--color-gold-base) 55%, transparent);
+  --footer-top: var(--color-gold-base);
+  --footer-focus: var(--color-gold-light);
+
   width: 100%;
   padding-top: var(--space-3xl);
-  color: var(--color-ivory);
-  border-top: 1px solid color-mix(in srgb, var(--color-ivory) 14%, transparent);
+  background-color: var(--footer-bg);
+  color: var(--footer-text);
+  border-top: 1px solid var(--footer-line);
 }
 
+/* ---------- LIGHT theme override ---------- */
+:global([data-theme="light"]) .footer {
+  --footer-bg: var(--bg-primary);
+  --footer-text: var(--text-primary);
+  --footer-text-soft: var(--text-secondary);
+  --footer-text-dim: var(--text-secondary);
+  --footer-muted: color-mix(in srgb, var(--color-black) 60%, var(--color-ivory));
+  --footer-faint: color-mix(in srgb, var(--color-black) 50%, var(--color-ivory));
+  --footer-label: var(--color-gold-dark);
+  --footer-status: var(--color-green-base);
+  --footer-placeholder: color-mix(in srgb, var(--color-black) 45%, var(--color-ivory));
+  --footer-line: color-mix(in srgb, var(--color-black) 14%, transparent);
+  --footer-input-line: color-mix(in srgb, var(--color-black) 22%, transparent);
+  --footer-btn-border: color-mix(in srgb, var(--color-gold-dark) 55%, transparent);
+  --footer-top-border: color-mix(in srgb, var(--color-gold-dark) 55%, transparent);
+  --footer-top: var(--color-gold-dark);
+  --footer-focus: var(--color-gold-base);
+}
+
+/* ================= BAaki CSS (bilkul same, kuch nahi badla) ================= */
 .container {
   width: 100%;
   max-width: var(--container-max);
@@ -41,22 +81,22 @@
   width: 88px;
   height: 88px;
   border-radius: var(--radius-full);
-  border: 2px solid var(--color-gold-base);
+  border: 2px solid var(--accent-primary);
   background-color: var(--color-black);
   overflow: hidden;
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-gold-base) 20%, transparent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent-primary) 20%, transparent);
   transition: transform var(--transition-base), box-shadow var(--transition-base);
 }
 
 .logo:hover {
   transform: scale(1.06);
   box-shadow:
-    0 0 18px color-mix(in srgb, var(--color-gold-base) 18%, transparent),
-    0 0 0 3px color-mix(in srgb, var(--color-gold-base) 35%, transparent);
+    0 0 18px color-mix(in srgb, var(--accent-primary) 18%, transparent),
+    0 0 0 3px color-mix(in srgb, var(--accent-primary) 35%, transparent);
 }
 
 .logo:focus-visible {
-  outline: 2px solid var(--color-gold-base);
+  outline: 2px solid var(--footer-focus);
   outline-offset: 3px;
 }
 
@@ -73,7 +113,7 @@
   font-size: clamp(2.25rem, 4.5vw, 4.5rem);
   font-weight: var(--font-weight-regular);
   line-height: 1.05;
-  color: var(--color-ivory);
+  color: var(--footer-text);
 }
 
 .text {
@@ -81,7 +121,7 @@
   margin: 0 0 var(--space-2xl);
   font-size: var(--font-size-xl);
   line-height: 1.6;
-  color: color-mix(in srgb, var(--color-ivory) 78%, var(--color-black));
+  color: var(--footer-text-soft);
 }
 
 .about {
@@ -89,7 +129,7 @@
   margin: 0;
   font-size: var(--font-size-sm);
   line-height: 1.7;
-  color: color-mix(in srgb, var(--color-ivory) 70%, var(--color-black));
+  color: var(--footer-text-dim);
 }
 
 .tagline {
@@ -97,7 +137,7 @@
   font-size: var(--font-size-xs);
   letter-spacing: 4px;
   text-transform: uppercase;
-  color: var(--color-gold-base);
+  color: var(--footer-label);
 }
 
 .join {
@@ -112,7 +152,7 @@
   font-size: var(--font-size-xs);
   letter-spacing: 4px;
   text-transform: uppercase;
-  color: color-mix(in srgb, var(--color-ivory) 60%, var(--color-black));
+  color: var(--footer-muted);
 }
 
 .text {
@@ -120,7 +160,7 @@
   margin: 0 0 var(--space-2xl);
   font-size: var(--font-size-lg);
   line-height: 1.6;
-  color: color-mix(in srgb, var(--color-ivory) 70%, var(--color-black));
+  color: var(--footer-text-dim);
 }
 
 .form {
@@ -129,12 +169,12 @@
   gap: var(--space-md);
   width: 100%;
   padding-bottom: var(--space-sm);
-  border-bottom: 1px solid color-mix(in srgb, var(--color-ivory) 22%, transparent);
+  border-bottom: 1px solid var(--footer-input-line);
   transition: border-color var(--transition-base);
 }
 
 .form:focus-within {
-  border-color: var(--color-gold-base);
+  border-color: var(--footer-focus);
 }
 
 .input {
@@ -146,11 +186,11 @@
   background: transparent;
   font-family: var(--font-heading);
   font-size: var(--font-size-lg);
-  color: var(--color-ivory);
+  color: var(--footer-text);
 }
 
 .input::placeholder {
-  color: color-mix(in srgb, var(--color-ivory) 38%, var(--color-black));
+  color: var(--footer-placeholder);
 }
 
 .submit {
@@ -161,9 +201,9 @@
   width: 44px;
   height: 44px;
   border-radius: var(--radius-full);
-  border: 1px solid color-mix(in srgb, var(--color-ivory) 28%, transparent);
+  border: 1px solid var(--footer-btn-border);
   background: transparent;
-  color: var(--color-ivory);
+  color: var(--footer-text);
   cursor: pointer;
   transition:
     background-color var(--transition-base),
@@ -172,15 +212,15 @@
 }
 
 .submit:hover {
-  background-color: var(--color-gold-base);
-  border-color: var(--color-gold-base);
-  color: var(--color-black);
+  background-color: var(--accent-primary);
+  border-color: var(--accent-primary);
+  color: var(--on-accent);
 }
 
 .submit:focus-visible,
 .toTop:focus-visible,
 .socialLink:focus-visible {
-  outline: 2px solid var(--color-gold-base);
+  outline: 2px solid var(--footer-focus);
   outline-offset: 3px;
 }
 
@@ -188,7 +228,7 @@
   min-height: 1.5rem;
   margin: var(--space-sm) 0 0;
   font-size: var(--font-size-sm);
-  color: var(--color-gold-light);
+  color: var(--footer-status);
 }
 
 .socials {
@@ -203,12 +243,12 @@
   font-size: var(--font-size-xs);
   letter-spacing: 3px;
   text-transform: uppercase;
-  color: color-mix(in srgb, var(--color-ivory) 62%, var(--color-black));
+  color: var(--footer-muted);
   transition: color var(--transition-fast);
 }
 
 .socialLink:hover {
-  color: var(--color-gold-base);
+  color: var(--footer-label);
 }
 
 .bottom {
@@ -217,7 +257,7 @@
   align-items: center;
   gap: var(--space-md);
   padding-block: var(--space-lg);
-  border-top: 1px solid color-mix(in srgb, var(--color-ivory) 14%, transparent);
+  border-top: 1px solid var(--footer-line);
 }
 
 .legal {
@@ -225,7 +265,7 @@
   font-size: var(--font-size-xs);
   letter-spacing: 3px;
   text-transform: uppercase;
-  color: color-mix(in srgb, var(--color-ivory) 55%, var(--color-black));
+  color: var(--footer-faint);
 }
 
 .legalRight {
@@ -239,9 +279,9 @@
   width: 40px;
   height: 40px;
   border-radius: var(--radius-full);
-  border: 1px solid color-mix(in srgb, var(--color-gold-base) 45%, transparent);
+  border: 1px solid var(--footer-top-border);
   background: transparent;
-  color: var(--color-gold-base);
+  color: var(--footer-top);
   cursor: pointer;
   transition:
     background-color var(--transition-base),
@@ -250,8 +290,8 @@
 }
 
 .toTop:hover {
-  background-color: var(--color-gold-base);
-  color: var(--color-black);
+  background-color: var(--accent-primary);
+  color: var(--on-accent);
   transform: translateY(-3px);
 }
 
@@ -268,7 +308,7 @@
 }
 
 @media (max-width: 900px) {
-    .logo {
+  .logo {
     width: 72px;
     height: 72px;
   }
@@ -301,7 +341,7 @@
 }
 
 @media (max-width: 600px) {
-    .brandRow {
+  .brandRow {
     gap: var(--space-md);
   }
 
@@ -328,4 +368,3 @@
     transition: none;
   }
 }
-

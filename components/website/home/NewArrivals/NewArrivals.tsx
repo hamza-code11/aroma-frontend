@@ -9,12 +9,12 @@ import styles from "./NewArrivals.module.css";
 gsap.registerPlugin(ScrollTrigger);
 
 const ROOMS = [
-  { id: "living-room", name: "Price: $2600", note: "Morning, forty square metres", image: "/products/02.webp" },
-  { id: "bedroom", name: "Price: $2600", note: "Night mode, the last hour", image: "/products/02.webp" },
-  { id: "spa", name: "Price: $2600", note: "Steam and cedar, low light", image: "/products/02.webp" },
-  { id: "study", name: "Price: $2600", note: "Afternoon, focused calm", image: "/products/02.webp" },
-  { id: "lounge", name: "Price: $2600", note: "Evening, soft amber glow", image: "/products/02.webp" },
-  { id: "entryway", name: "Price: $2600", note: "First impression, all day", image: "/products/02.webp" },
+  { id: "living-room", image: "/products/07.jfif" },
+  { id: "bedroom", image: "/products/08.jfif" },
+  { id: "spa", image: "/products/09.jfif" },
+  { id: "study", image: "/products/10.jfif" },
+  { id: "lounge", image: "/products/11.jfif" },
+  { id: "entryway", image: "/products/12.jfif" },
 ];
 
 export default function NewArrivals() {
@@ -115,17 +115,13 @@ export default function NewArrivals() {
               <div className={styles.imageWrap}>
                 <Image
                   src={room.image}
-                  alt={room.name}
+                  alt={room.id}
                   fill
                   sizes="(max-width: 600px) 85vw, (max-width: 900px) 50vw, 33vw"
                   className={styles.image}
                   priority={i < 3}
                 />
-              </div>
-              <div className={styles.info}>
-                <h3 className={styles.name}>{room.note}</h3>
-                <p className={styles.note}>{room.name}</p>
-              </div>
+              </div> 
             </article>
           ))}
         </div>

@@ -1,10 +1,42 @@
+/* ================= THEME-AWARE VARIABLES (DEFAULT = DARK) ================= */
 .section {
+  /* ---------- New Arrivals tokens (dark: black bg par ivory text) ---------- */
+  --arrivals-text: var(--text-primary);
+  --arrivals-text-muted: var(--text-secondary);
+  --arrivals-accent: var(--color-gold-base);
+  --arrivals-accent-soft: color-mix(in srgb, var(--color-gold-base) 80%, var(--color-ivory));
+  --arrivals-line: color-mix(in srgb, var(--color-gold-base) 22%, transparent);
+  --arrivals-border: color-mix(in srgb, var(--color-gold-base) 55%, transparent);
+  --arrivals-btn-bg: transparent;
+  --arrivals-btn-color: var(--color-gold-base);
+  --arrivals-btn-hover-bg: var(--color-gold-base);
+  --arrivals-btn-hover-color: var(--color-black);
+  --arrivals-btn-focus: var(--color-gold-light);
+  --arrivals-image-bg: var(--color-black);
+
   --gap: 2rem;
   width: 100%;
   padding: var(--space-3xl) 0;
-  color: var(--color-ivory);
+  color: var(--arrivals-text);
 }
 
+/* ================= LIGHT THEME OVERRIDE (optional toggle) ================= */
+:global([data-theme="light"]) .section {
+  --arrivals-text: var(--text-primary);
+  --arrivals-text-muted: var(--text-secondary);
+  --arrivals-accent: var(--color-gold-dark);
+  --arrivals-accent-soft: color-mix(in srgb, var(--color-gold-dark) 80%, var(--color-black));
+  --arrivals-line: color-mix(in srgb, var(--color-black) 14%, transparent);
+  --arrivals-border: color-mix(in srgb, var(--color-gold-dark) 55%, transparent);
+  --arrivals-btn-bg: transparent;
+  --arrivals-btn-color: var(--color-gold-dark);
+  --arrivals-btn-hover-bg: var(--color-gold-dark);
+  --arrivals-btn-hover-color: var(--color-ivory);
+  --arrivals-btn-focus: var(--color-gold-base);
+  --arrivals-image-bg: var(--color-black);
+}
+
+/* ================= Baaki CSS (bilkul same) ================= */
 .container {
   width: 100%;
   max-width: var(--container-max);
@@ -19,7 +51,7 @@
   gap: var(--space-lg);
   padding-bottom: var(--space-lg);
   margin-bottom: var(--space-2xl);
-  border-bottom: 1px solid color-mix(in srgb, var(--color-ivory) 14%, transparent);
+  border-bottom: 1px solid var(--arrivals-line);
 }
 
 .title {
@@ -28,7 +60,7 @@
   font-size: clamp(2rem, 4vw, 3.25rem);
   font-weight: var(--font-weight-regular);
   line-height: 1.1;
-  color: var(--color-ivory);
+  color: var(--arrivals-text);
 }
 
 .controls {
@@ -44,9 +76,9 @@
   width: 46px;
   height: 46px;
   border-radius: var(--radius-full);
-  border: 1px solid color-mix(in srgb, var(--color-gold-base) 55%, transparent);
-  background: transparent;
-  color: var(--color-gold-base);
+  border: 1px solid var(--arrivals-border);
+  background: var(--arrivals-btn-bg);
+  color: var(--arrivals-btn-color);
   cursor: pointer;
   transition:
     background-color var(--transition-base),
@@ -56,13 +88,13 @@
 }
 
 .arrow:hover:not(:disabled) {
-  background-color: var(--color-gold-base);
-  border-color: var(--color-gold-base);
-  color: var(--color-black);
+  background-color: var(--arrivals-btn-hover-bg);
+  border-color: var(--arrivals-btn-hover-bg);
+  color: var(--arrivals-btn-hover-color);
 }
 
 .arrow:focus-visible {
-  outline: 2px solid var(--color-gold-light);
+  outline: 2px solid var(--arrivals-btn-focus);
   outline-offset: 3px;
 }
 
@@ -96,7 +128,7 @@
   width: 100%;
   aspect-ratio: 4 / 3;
   overflow: hidden;
-  background-color: var(--color-black);
+  background-color: var(--arrivals-image-bg);
 }
 
 .image {
@@ -108,33 +140,6 @@
   transform: scale(1.05);
 }
 
-.info {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: var(--space-md);
-  margin-top: var(--space-md);
-  padding-top: var(--space-md);
-  border-top: 1px solid color-mix(in srgb, var(--color-ivory) 14%, transparent);
-}
-
-.name {
-  margin: 0;
-  font-family: var(--font-heading);
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-regular);
-  color: var(--color-ivory);
-  white-space: nowrap;
-}
-
-.note {
-  margin: 0;
-  font-size: var(--font-size-xs);
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  text-align: right;
-  color: color-mix(in srgb, var(--color-gold-base) 80%, var(--color-ivory));
-}
 
 @media (max-width: 900px) {
   .section {
@@ -154,16 +159,5 @@
   .arrow {
     width: 40px;
     height: 40px;
-  }
-
-  .info {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--space-xs);
-  }
-
-  .note {
-    text-align: left;
-    letter-spacing: 2px;
   }
 }
