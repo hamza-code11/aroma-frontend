@@ -11,6 +11,7 @@ export default function ShopBanner() {
           fill
           sizes="100vw"
           priority
+          unoptimized   
           className={styles.image}
         />
         <div className={styles.overlay} />

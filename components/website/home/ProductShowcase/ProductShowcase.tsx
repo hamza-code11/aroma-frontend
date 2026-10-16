@@ -546,6 +546,7 @@ export default function ProductShowcase() {
                                         fill
                                         sizes="(max-width: 900px) 90vw, 50vw"
                                         priority={i === 0}
+                                        unoptimized   
                                         className={styles.image}
                                     />
                                 </div>

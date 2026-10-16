@@ -392,6 +392,7 @@ export default function VideoBanner() {
               alt="Luxury aroma fragrance collection"
               fill
               sizes="100vw"
+              unoptimized   
               className={styles.image}
             />
           </div>

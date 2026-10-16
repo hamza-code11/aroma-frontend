@@ -106,6 +106,7 @@ export default function Cart() {
                         alt={p.name}
                         fill
                         sizes="120px"
+                        unoptimized
                         className={styles.itemImage}
                       />
                     </Link>

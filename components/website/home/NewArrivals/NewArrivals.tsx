@@ -118,6 +118,7 @@ export default function NewArrivals() {
                   alt={room.id}
                   fill
                   sizes="(max-width: 600px) 85vw, (max-width: 900px) 50vw, 33vw"
+                  unoptimized   
                   className={styles.image}
                   priority={i < 3}
                 />

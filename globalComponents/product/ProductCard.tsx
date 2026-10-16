@@ -58,6 +58,7 @@ export default function ProductCard({ product, priority = false }: Props) {
             fill
             sizes="(max-width: 600px) 85vw, (max-width: 900px) 45vw, 25vw"
             priority={priority}
+            unoptimized   
             className={styles.image}
           />
 

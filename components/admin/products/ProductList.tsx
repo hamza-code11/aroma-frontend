@@ -119,6 +119,7 @@ export default function ProductList({ products: initialProducts, categories }: P
                             alt={p.name}
                             fill
                             sizes="44px"
+                            unoptimized   
                             className={styles.thumbImg}
                           />
                         </span>
