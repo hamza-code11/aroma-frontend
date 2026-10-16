@@ -1,0 +1,69 @@
+/* ================= SHELL ================= */
+.shell {
+  display: flex;
+  min-height: 100vh;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+/* ================= MAIN ================= */
+.main {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+
+  /* leave room for the fixed sidebar on desktop */
+  margin-left: 260px;
+
+  transition: margin-left var(--transition-base);
+}
+
+.content {
+  flex: 1 1 auto;
+  padding: var(--space-xl) var(--space-2xl);
+  overflow-x: hidden;
+  min-width: 0;
+}
+
+/* ================= BACKDROP (mobile) ================= */
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  background-color: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(4px);
+  border: none;
+  cursor: pointer;
+  animation: fadeIn 180ms ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 1024px) {
+  .main {
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 900px) {
+  .content {
+    padding: var(--space-lg);
+  }
+}
+
+@media (max-width: 600px) {
+  .content {
+    padding: var(--space-md);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .main {
+    transition: none;
+  }
+}

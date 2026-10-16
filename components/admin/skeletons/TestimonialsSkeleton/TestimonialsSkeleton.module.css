@@ -1,0 +1,198 @@
+/* ================= PAGE ================= */
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+  max-width: 1400px;
+}
+
+/* ================= HEADER ================= */
+.header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-lg);
+  padding-bottom: var(--space-md);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.title {
+  width: 220px;
+  height: 30px;
+  margin-bottom: var(--space-xs);
+}
+
+.subtitle {
+  width: 200px;
+  height: 12px;
+}
+
+/* ================= TOOLBAR ================= */
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+}
+
+.search {
+  width: 320px;
+  max-width: 100%;
+  height: 42px;
+  border-radius: var(--radius-md);
+}
+
+.count {
+  width: 90px;
+  height: 12px;
+}
+
+/* ================= TABLE ================= */
+.tableWrap {
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  background-color: var(--bg-surface);
+  overflow: hidden;
+}
+
+.tableHead,
+.tableRow {
+  display: grid;
+  grid-template-columns: 1.6fr 1.4fr 1fr 2fr 0.9fr 0.9fr 0.7fr;
+  gap: var(--space-md);
+  padding: var(--space-md) var(--space-lg);
+  align-items: center;
+}
+
+.tableHead {
+  background-color: color-mix(in srgb, var(--text-primary) 4%, transparent);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.tableRow {
+  border-bottom: 1px solid var(--border-color);
+}
+
+.tableRow:last-child {
+  border-bottom: none;
+}
+
+.userCell {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  min-width: 0;
+}
+
+.userInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-full);
+  flex-shrink: 0;
+}
+
+.th {
+  height: 12px;
+}
+
+.cellName {
+  height: 14px;
+  width: 70%;
+}
+
+.cellId {
+  height: 10px;
+  width: 40%;
+}
+
+.cellEmail {
+  height: 14px;
+  width: 85%;
+}
+
+.cellStars {
+  height: 14px;
+  width: 70%;
+}
+
+.cellReview {
+  height: 14px;
+  width: 90%;
+}
+
+.togglePill {
+  height: 26px;
+  width: 90px;
+  border-radius: var(--radius-full);
+}
+
+.cellDate {
+  height: 14px;
+  width: 70%;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+.actionBtn {
+  width: 34px;
+  height: 34px;
+  border-radius: var(--radius-full);
+}
+
+/* ================= SHIMMER ================= */
+.line {
+  position: relative;
+  overflow: hidden;
+  background-color: color-mix(in srgb, var(--text-primary) 8%, transparent);
+  border-radius: var(--radius-sm);
+}
+
+.line::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    color-mix(in srgb, var(--text-primary) 10%, transparent) 50%,
+    transparent 100%
+  );
+  animation: shimmer 1.6s infinite;
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 1200px) {
+  .tableWrap {
+    overflow-x: auto;
+  }
+
+  .tableHead,
+  .tableRow {
+    grid-template-columns: repeat(7, minmax(120px, 1fr));
+    min-width: 1100px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .line::after {
+    animation: none;
+  }
+}

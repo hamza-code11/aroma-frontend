@@ -50,3 +50,13 @@ export type ContactContent = {
     items: ContactFaqItem[];
   };
 };
+
+
+export interface ContactEnquiry {
+  id: number;
+  name: string;
+  email: string;
+  subject: string;
+  message: string;
+  created_at: string;
+}

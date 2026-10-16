@@ -22,7 +22,7 @@ export const products: Product[] = [
     shipping_class: "standard",
     images: [
       "/products/01.jfif",
-      "/products/01.jfif",
+      "/products/02.jfif",
     ],
     main_image: "/products/01.jfif",
     is_active: true,

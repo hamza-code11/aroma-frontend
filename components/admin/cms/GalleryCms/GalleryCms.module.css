@@ -1,0 +1,374 @@
+/* ================= WRAP ================= */
+.wrap {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+/* ================= HEADER ================= */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  flex-wrap: wrap;
+  padding-bottom: var(--space-md);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.headerTitle {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-regular);
+  color: var(--text-primary);
+}
+
+.headerSubtitle {
+  margin: 4px 0 0;
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+}
+
+.headerActions {
+  display: flex;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+}
+
+.saveBtn,
+.resetBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: var(--radius-full);
+  font-family: inherit;
+  font-size: var(--font-size-xs);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition:
+    background-color var(--transition-base),
+    border-color var(--transition-base),
+    color var(--transition-base);
+}
+
+.saveBtn {
+  border: 1px solid var(--accent-primary);
+  background-color: var(--accent-primary);
+  color: var(--on-accent);
+}
+
+.saveBtn:hover:not(:disabled) {
+  background-color: var(--accent-primary-hover);
+  border-color: var(--accent-primary-hover);
+}
+
+.saveBtn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.resetBtn {
+  border: 1px solid var(--border-color);
+  background: transparent;
+  color: var(--text-secondary);
+}
+
+.resetBtn:hover {
+  border-color: var(--accent-primary);
+  color: var(--accent-primary);
+}
+
+.saveBtn:focus-visible,
+.resetBtn:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
+}
+
+/* ================= SECTION ================= */
+.section {
+  padding: var(--space-lg);
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+}
+
+/* ================= GRID ================= */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-md);
+}
+
+/* ================= CARD ================= */
+.card {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border: 2px dashed var(--border-color);
+  border-radius: var(--radius-lg);
+  background-color: color-mix(in srgb, var(--text-primary) 2%, transparent);
+  overflow: hidden;
+  transition:
+    border-color var(--transition-base),
+    background-color var(--transition-base),
+    transform var(--transition-base);
+}
+
+.card:hover {
+  border-color: color-mix(in srgb, var(--accent-primary) 45%, transparent);
+}
+
+.cardFilled {
+  border-style: solid;
+  border-color: var(--border-color);
+}
+
+.cardFilled:hover {
+  border-color: color-mix(in srgb, var(--accent-primary) 55%, transparent);
+}
+
+.cardActive {
+  border-color: var(--accent-primary);
+  background-color: color-mix(in srgb, var(--accent-primary) 10%, transparent);
+  transform: scale(1.01);
+}
+
+/* ================= EMPTY (upload) ================= */
+.emptyBtn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  height: 100%;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding: var(--space-md);
+}
+
+.dropIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  border-radius: var(--radius-full);
+  border: 1px solid color-mix(in srgb, var(--accent-primary) 45%, transparent);
+  background-color: color-mix(in srgb, var(--accent-primary) 12%, transparent);
+  color: var(--accent-primary);
+}
+
+.dropText {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+}
+
+/* ================= PREVIEW ================= */
+.previewImg {
+  object-fit: cover;
+}
+
+/* ================= HOVER OVERLAY (Replace) ================= */
+.overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(2px);
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity var(--transition-base),
+    visibility var(--transition-base);
+}
+
+.cardFilled:hover .overlay,
+.cardFilled:focus-within .overlay {
+  opacity: 1;
+  visibility: visible;
+}
+
+.replaceBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--accent-primary);
+  background-color: var(--accent-primary);
+  color: var(--on-accent);
+  font-family: inherit;
+  font-size: var(--font-size-xs);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+}
+
+.replaceBtn:hover {
+  background-color: var(--accent-primary-hover);
+  border-color: var(--accent-primary-hover);
+}
+
+.replaceBtn:focus-visible {
+  outline: 2px solid var(--accent-primary-hover);
+  outline-offset: 2px;
+}
+
+/* ================= DELETE (top-right) ================= */
+.deleteBtn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 3;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: var(--radius-full);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background-color: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(6px);
+  color: #fff;
+  cursor: pointer;
+  transition:
+    background-color var(--transition-fast),
+    border-color var(--transition-fast),
+    transform var(--transition-fast);
+}
+
+.deleteBtn:hover {
+  background-color: #ff4d4d;
+  border-color: #ff4d4d;
+  transform: scale(1.08);
+}
+
+.deleteBtn:focus-visible {
+  outline: 2px solid #ff4d4d;
+  outline-offset: 2px;
+}
+
+/* ================= ADD CARD ================= */
+.addCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border: 2px dashed color-mix(in srgb, var(--accent-primary) 45%, transparent);
+  border-radius: var(--radius-lg);
+  background-color: color-mix(in srgb, var(--accent-primary) 4%, transparent);
+  color: var(--accent-primary);
+  cursor: pointer;
+  transition:
+    border-color var(--transition-base),
+    background-color var(--transition-base),
+    transform var(--transition-base);
+}
+
+.addCard:hover {
+  border-color: var(--accent-primary);
+  background-color: color-mix(in srgb, var(--accent-primary) 10%, transparent);
+  transform: translateY(-2px);
+}
+
+.addCard:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 3px;
+}
+
+.addIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  border-radius: var(--radius-full);
+  border: 1px solid color-mix(in srgb, var(--accent-primary) 55%, transparent);
+  background-color: color-mix(in srgb, var(--accent-primary) 15%, transparent);
+  color: var(--accent-primary);
+}
+
+.addText {
+  font-size: var(--font-size-xs);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-weight: var(--font-weight-medium);
+}
+
+.fileInput {
+  display: none;
+}
+
+.spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 900px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 700px) {
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .headerActions {
+    width: 100%;
+  }
+
+  .saveBtn,
+  .resetBtn {
+    flex: 1;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 500px) {
+  .grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .saveBtn,
+  .resetBtn,
+  .card,
+  .deleteBtn,
+  .addCard,
+  .replaceBtn,
+  .overlay {
+    transition: none;
+  }
+  .spin {
+    animation: none;
+  }
+  .addCard:hover,
+  .cardActive,
+  .deleteBtn:hover {
+    transform: none;
+  }
+}

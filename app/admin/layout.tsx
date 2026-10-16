@@ -1,11 +1,23 @@
+import type { Metadata } from "next";
+import { ToastProvider } from "@/components/ui/Toast";
+import AdminShell from "@/components/admin/layout/AdminShell/AdminShell";
 
-import type { ReactNode } from "react";
+export const metadata: Metadata = {
+  title: {
+    default: "Admin — i.Shine Aroma",
+    template: "%s | Admin — i.Shine Aroma",
+  },
+  description: "Admin dashboard for i.Shine Aroma",
+};
 
 export default function AdminLayout({
   children,
 }: Readonly<{
-  children: ReactNode;
+  children: React.ReactNode;
 }>) {
-  return children;
+  return (
+    <ToastProvider>
+      <AdminShell>{children}</AdminShell>
+    </ToastProvider>
+  );
 }
-
