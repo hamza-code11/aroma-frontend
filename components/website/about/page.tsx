@@ -64,6 +64,7 @@ export default function About() {
               fill
               sizes="100vw"
               priority
+              unoptimized
               className={styles.heroBannerImage}
             />
             <div className={styles.heroBannerOverlay} />
@@ -109,6 +110,7 @@ export default function About() {
               alt={story.imageAlt}
               fill
               sizes="(max-width: 900px) 90vw, 45vw"
+              unoptimized
               className={styles.storyImg}
             />
           </div>

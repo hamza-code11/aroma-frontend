@@ -114,59 +114,60 @@ export default function Contact() {
     <main ref={sectionRef} className={styles.section}>
       <div className={styles.container}>
         {/* ================= HERO BANNER (About style) ================= */}
-<section className={styles.heroBanner}>
-  <div className={styles.heroBannerMedia}>
-    <Image
-      src={banner.image}
-      alt={banner.imageAlt}
-      fill
-      sizes="100vw"
-      priority
-      className={styles.heroBannerImage}
-    />
-    <div className={styles.heroBannerOverlay} />
-  </div>
-
-  <div data-reveal className={styles.heroInner}>
-    <p className={styles.eyebrow}>{hero.eyebrow}</p>
-
-    <h1 className={styles.title}>
-      {hero.title}{" "}
-      <span className={styles.titleHighlight}>
-        {hero.titleHighlight}
-      </span>
-    </h1>
-
-    <p className={styles.lead}>{hero.lead}</p>
-
-    {/* Info list — About ke stats jaisa style */}
-    <div className={styles.infoGrid}>
-      {info.map((item) => {
-        const content = (
-          <>
-            <span className={styles.infoLabel}>
-              <span className={styles.infoIcon}>
-                <InfoIcon icon={item.icon} />
-              </span>
-              {item.label}
-            </span>
-            <span className={styles.infoValue}>{item.value}</span>
-          </>
-        );
-
-        return item.href ? (
-          <a key={item.id} href={item.href} className={styles.infoItem}>
-            {content}
-          </a>
-        ) : (
-          <div key={item.id} className={styles.infoItem}>
-            {content}
+        <section className={styles.heroBanner}>
+          <div className={styles.heroBannerMedia}>
+            <Image
+              src={banner.image}
+              alt={banner.imageAlt}
+              fill
+              sizes="100vw"
+              priority
+              unoptimized
+              className={styles.heroBannerImage}
+            />
+            <div className={styles.heroBannerOverlay} />
           </div>
-        );
-      })}
-    </div>
-  </div>
-</section>
+
+          <div data-reveal className={styles.heroInner}>
+            <p className={styles.eyebrow}>{hero.eyebrow}</p>
+
+            <h1 className={styles.title}>
+              {hero.title}{" "}
+              <span className={styles.titleHighlight}>
+                {hero.titleHighlight}
+              </span>
+            </h1>
+
+            <p className={styles.lead}>{hero.lead}</p>
+
+            {/* Info list — About ke stats jaisa style */}
+            <div className={styles.infoGrid}>
+              {info.map((item) => {
+                const content = (
+                  <>
+                    <span className={styles.infoLabel}>
+                      <span className={styles.infoIcon}>
+                        <InfoIcon icon={item.icon} />
+                      </span>
+                      {item.label}
+                    </span>
+                    <span className={styles.infoValue}>{item.value}</span>
+                  </>
+                );
+
+                return item.href ? (
+                  <a key={item.id} href={item.href} className={styles.infoItem}>
+                    {content}
+                  </a>
+                ) : (
+                  <div key={item.id} className={styles.infoItem}>
+                    {content}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </section>
 
         {/* ================= FORM + SIDE TEXT ================= */}
         <section data-reveal className={styles.formSection}>
@@ -192,9 +193,8 @@ export default function Contact() {
                 return (
                   <div
                     key={f.id}
-                    className={`${styles.field} ${
-                      isFullWidth ? styles.fieldFull : ""
-                    }`}
+                    className={`${styles.field} ${isFullWidth ? styles.fieldFull : ""
+                      }`}
                   >
                     <label htmlFor={`contact-${f.id}`} className={styles.label}>
                       {f.label}
@@ -256,9 +256,8 @@ export default function Contact() {
               return (
                 <div
                   key={item.id}
-                  className={`${styles.faqItem} ${
-                    isOpen ? styles.faqOpen : ""
-                  }`}
+                  className={`${styles.faqItem} ${isOpen ? styles.faqOpen : ""
+                    }`}
                 >
                   <button
                     type="button"
