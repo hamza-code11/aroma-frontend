@@ -42,6 +42,7 @@ export default function ImageGallery({
                 alt={`${name} ${i + 1}`}
                 fill
                 sizes="88px"
+                unoptimized
                 className={styles.thumbImg}
               />
             </button>
@@ -56,7 +57,7 @@ export default function ImageGallery({
           alt={name}
           fill
           sizes="(max-width: 900px) 90vw, 50vw"
-          priority
+          unoptimized
           className={styles.mainImage}
         />
 

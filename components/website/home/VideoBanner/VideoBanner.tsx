@@ -299,9 +299,9 @@ export default function VideoBanner() {
           scrollTrigger: {
             trigger: section,
             start: "top top",
-            end: () => `+=${window.innerHeight * 6}`,
+            end: () => `+=${window.innerHeight * 3.5}`,
             pin: true,
-            scrub: 0.6,
+            scrub: 0.4,
             anticipatePin: 1,
             invalidateOnRefresh: true,
           },
@@ -310,24 +310,24 @@ export default function VideoBanner() {
         tl.fromTo(
           media,
           { clipPath: startClip },
-          { clipPath: FULL_CLIP, duration: 2, ease: "power2.inOut" },
+          { clipPath: FULL_CLIP, duration: 1.6, ease: "power2.inOut" },
           0.4
         );
         tl.fromTo(
           picture,
           { scale: 1.25 },
-          { scale: 1, duration: 2, ease: "power2.inOut", immediateRender: false },
+          { scale: 1, duration: 1.6, ease: "power2.inOut", immediateRender: false },
           0.4
         );
         tl.fromTo(
           overlay,
           { autoAlpha: 0 },
-          { autoAlpha: 1, duration: 0.8, immediateRender: false },
+          { autoAlpha: 1, duration: 0.6, immediateRender: false },
           1.6
         );
 
-        const stepStart = 2.8;
-        const stepLength = 2.4;
+        const stepStart = 2.2;
+        const stepLength = 1.6;
 
         steps.forEach((step, i) => {
           const at = stepStart + i * stepLength;
@@ -338,7 +338,7 @@ export default function VideoBanner() {
             {
               autoAlpha: 1,
               y: 0,
-              duration: 0.6,
+              duration: 0.5,
               ease: "power2.out",
               immediateRender: false,
             },
@@ -352,7 +352,7 @@ export default function VideoBanner() {
               {
                 autoAlpha: 0,
                 y: -48,
-                duration: 0.5,
+                duration: 0.4,
                 ease: "power2.in",
                 immediateRender: false,
               },
@@ -361,7 +361,7 @@ export default function VideoBanner() {
           }
         });
 
-        const total = stepStart + last * stepLength + 0.6 + 1.2;
+        const total = stepStart + last * stepLength + 0.5 + 0.8;
 
         tl.fromTo(
           bar,

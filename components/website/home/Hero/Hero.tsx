@@ -209,8 +209,8 @@ import styles from "./Hero.module.css";
 gsap.registerPlugin(ScrollTrigger);
 
 // Scroll lambai (viewport heights mein)
-const VIDEO_SCROLL = 3;   // itni scroll mein poori video chalti hai
-const EXIT_SCROLL = 0.7;  // video end hone ke BAAD text upar jane ki scroll
+const VIDEO_SCROLL = 1.2;   // itni scroll mein poori video chalti hai
+const EXIT_SCROLL = 0.4;  // video end hone ke BAAD text upar jane ki scroll
 
 export default function Hero() {
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -307,7 +307,7 @@ export default function Hero() {
 
       // Smooth follow: current -> target
       tickerFn = (_time, dt) => {
-        const k = 1 - Math.exp(-(dt / 1000) * 12);
+        const k = 1 - Math.exp(-(dt / 1000) * 18);
         current += (target - current) * k;
 
         if (Math.abs(target - current) < 0.001) current = target;
@@ -358,7 +358,8 @@ export default function Hero() {
             poster="/videos/hero-poster.png"
             aria-hidden="true"
           >
-            <source src="/videos/hero.mp4" type="video/mp4" />
+            <source src="/videos/hero2.mp4" type="video/mp4" /> 
+            {/* 8 second video */}
           </video>
         </div>
 

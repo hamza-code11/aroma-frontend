@@ -41,7 +41,7 @@
 //             { label: "Best For", value: "Evening" },
 //         ],
 //         price: "$ 4,500",
-//         href: "/shop",
+//         href: "/shop/serene-wood-grain-diffuser",
 //     },
 //     {
 //         id: "amber-noir",
@@ -59,7 +59,7 @@
 //             { label: "Best For", value: "Winter" },
 //         ],
 //         price: "$ 4,200",
-//         href: "/shop",
+//         href: "/shop/serene-wood-grain-diffuser",
 //     },
 //     {
 //         id: "jasmine-bloom",
@@ -77,7 +77,7 @@
 //             { label: "Best For", value: "Daytime" },
 //         ],
 //         price: "$ 3,900",
-//         href: "/shop",
+//         href: "/shop/serene-wood-grain-diffuser",
 //     },
 //     {
 //         id: "citrus-veil",
@@ -95,7 +95,7 @@
 //             { label: "Best For", value: "Summer" },
 //         ],
 //         price: "$ 3,500",
-//         href: "/shop",
+//         href: "/shop/serene-wood-grain-diffuser",
 //     },
 // ];
 
@@ -358,7 +358,7 @@ const PRODUCTS: Product[] = [
             { label: "Best For", value: "Evening" },
         ],
         price: "$ 4,500",
-        href: "/shop",
+        href: "/shop/serene-wood-grain-diffuser",
     },
     {
         id: "amber-noir",
@@ -376,7 +376,7 @@ const PRODUCTS: Product[] = [
             { label: "Best For", value: "Winter" },
         ],
         price: "$ 4,200",
-        href: "/shop",
+        href: "/shop/serene-wood-grain-diffuser",
     },
     {
         id: "jasmine-bloom",
@@ -394,7 +394,7 @@ const PRODUCTS: Product[] = [
             { label: "Best For", value: "Daytime" },
         ],
         price: "$ 3,900",
-        href: "/shop",
+        href: "/shop/serene-wood-grain-diffuser",
     },
     {
         id: "citrus-veil",
@@ -412,7 +412,7 @@ const PRODUCTS: Product[] = [
             { label: "Best For", value: "Summer" },
         ],
         price: "$ 3,500",
-        href: "/shop",
+        href: "/shop/serene-wood-grain-diffuser",
     },
 ];
 
