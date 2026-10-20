@@ -5,36 +5,48 @@ import Image from "next/image";
 import styles from "./ImageGallery.module.css";
 
 type Props = {
-  images: string[];
+  mainImage: string;        // products.main_image
+  images: string[];         // products.images (sirf thumbnails ke liye)
   name: string;
   saleBadge?: string | null;
   outOfStock?: boolean;
 };
 
 export default function ImageGallery({
+  mainImage,
   images,
   name,
   saleBadge,
   outOfStock,
 }: Props) {
-  const [activeImage, setActiveImage] = useState(0);
-  const safeImages = images.length > 0 ? images : ["/placeholder.png"];
+  // null = default main_image dikhao, warna clicked thumbnail
+  const [selected, setSelected] = useState<string | null>(null);
+
+  const thumbs = images ?? [];
+  const hasThumbs = thumbs.length > 0;
+  const shownImage = selected ?? mainImage ?? "/placeholder.png";
 
   return (
-    <div className={styles.gallery}>
-      {/* LEFT — vertical thumbnails */}
-      {safeImages.length > 1 && (
-        <div className={styles.thumbCol} role="tablist" aria-label="Product images">
-          {safeImages.map((img, i) => (
+    <div
+      className={`${styles.gallery} ${hasThumbs ? "" : styles.galleryNoThumbs}`}
+    >
+      {/* LEFT: thumbnails (images column) */}
+      {hasThumbs && (
+        <div
+          className={styles.thumbCol}
+          role="tablist"
+          aria-label="Product images"
+        >
+          {thumbs.map((img, i) => (
             <button
-              key={i}
+              key={`${img}-${i}`}
               type="button"
               role="tab"
-              aria-selected={i === activeImage}
+              aria-selected={shownImage === img}
               className={`${styles.thumb} ${
-                i === activeImage ? styles.thumbActive : ""
+                shownImage === img ? styles.thumbActive : ""
               }`}
-              onClick={() => setActiveImage(i)}
+              onClick={() => setSelected(img)}
               aria-label={`View image ${i + 1}`}
             >
               <Image
@@ -50,12 +62,14 @@ export default function ImageGallery({
         </div>
       )}
 
-      {/* RIGHT — main image */}
+      {/* RIGHT: main image (main_image column) */}
       <div className={styles.mainImageWrap}>
         <Image
-          src={safeImages[activeImage]}
+          key={shownImage}
+          src={shownImage}
           alt={name}
           fill
+          priority
           sizes="(max-width: 900px) 90vw, 50vw"
           unoptimized
           className={styles.mainImage}

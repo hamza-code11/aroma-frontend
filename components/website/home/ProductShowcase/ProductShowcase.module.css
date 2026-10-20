@@ -1,7 +1,7 @@
-/* ================= SECTION (theme-aware, colors sirf colors.css se) ================= */
+/* ================= SECTION ================= */
 .section {
-  --nav-offset: 92px;       /* fixed navbar ke liye */
-  --progress-offset: 76px;  /* neeche progress bar ke liye */
+  --nav-offset: 92px;
+  --progress-offset: 76px;
 
   position: relative;
   width: 100%;
@@ -9,7 +9,6 @@
   height: 100svh;
   min-height: 600px;
   overflow: hidden;
-  /* background-color: var(--bg-primary); */
   color: var(--showcase-title);
 }
 
@@ -19,7 +18,6 @@
   height: 100%;
 }
 
-/* Har product ek slide, sab ek doosre ke upar stacked */
 .slide {
   position: absolute;
   top: 0;
@@ -37,7 +35,6 @@
   pointer-events: none;
 }
 
-/* JS chalne se pehle sirf pehla product dikhe (flash na ho) */
 .slide:not(:first-child) .imageWrap,
 .slide:not(:first-child) .content {
   opacity: 0;
@@ -50,7 +47,6 @@
   min-height: 0;
 }
 
-/* Gold glow product ke peechay */
 .imagePanel::before {
   content: "";
   position: absolute;
@@ -61,11 +57,7 @@
   max-width: 100%;
   transform: translate(-50%, -50%);
   border-radius: var(--radius-full);
-  background: radial-gradient(
-    circle,
-    var(--showcase-glow) 0%,
-    transparent 65%
-  );
+  background: radial-gradient(circle, var(--showcase-glow) 0%, transparent 65%);
 }
 
 .imageWrap {
@@ -132,7 +124,6 @@
   margin-bottom: 0;
 }
 
-/* Notes (Top / Heart / Base) */
 .notes {
   width: 100%;
   display: grid;
@@ -140,7 +131,6 @@
   gap: var(--space-md);
 }
 
-/* Specs (2 x 2) */
 .specs {
   width: 100%;
   display: grid;
@@ -169,11 +159,12 @@
   color: var(--showcase-title);
 }
 
+/* Price upar, button neeche (new line) */
 .buyRow {
   display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: var(--space-lg);
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-sm);
   margin-top: var(--space-xs);
 }
 
@@ -255,13 +246,13 @@
 @media (max-width: 900px) {
   .section {
     --nav-offset: 76px;
-    --progress-offset: 60px;
+    --progress-offset: 56px;
   }
 
   .slide {
     grid-template-columns: minmax(0, 1fr);
-    grid-template-rows: minmax(0, 36%) minmax(0, 1fr);
-    gap: var(--space-md);
+    grid-template-rows: minmax(0, 52%) minmax(0, 1fr);
+    gap: var(--space-sm);
   }
 
   .imageWrap {
@@ -274,34 +265,81 @@
 
   .content {
     max-width: 100%;
-    gap: var(--space-sm);
+    gap: var(--space-xs);
   }
 
   .tagline {
     display: none;
   }
 
+  .name {
+    font-size: clamp(1.6rem, 6vw, 2.4rem);
+  }
+
   .description {
     font-size: var(--font-size-sm);
-    line-height: 1.55;
+    line-height: 1.5;
     display: -webkit-box;
-    -webkit-line-clamp: 3;
+    -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
+  }
+
+  .notes {
+    gap: var(--space-sm);
+  }
+
+  /* Specs wapas: ek hi row mein 4 compact items */
+  .specs {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--space-sm);
+  }
+
+  .notes > div,
+  .specs > div {
+    padding-top: 4px;
+  }
+
+  .notes dt,
+  .specs dt {
+    font-size: 10px;
+    letter-spacing: 1px;
+  }
+
+  .notes dd,
+  .specs dd {
+    font-size: var(--font-size-xs);
+  }
+
+  .buyRow {
+    gap: var(--space-xs);
+    margin-top: 0;
+  }
+
+  .progress {
+    max-width: none;
+    bottom: var(--space-sm);
   }
 }
 
 @media (max-width: 600px) {
+  .slide {
+    grid-template-rows: minmax(0, 42%) minmax(0, 1fr);
+  }
+
   .notes {
-    display: none; /* chhoti screen par jagah ke liye */
+    display: none;
+  }
+
+  /* Mobile: specs 2 x 2, compact */
+  .specs {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 4px var(--space-md);
   }
 
   .eyebrow {
     letter-spacing: 3px;
-  }
-
-  .buyRow {
-    gap: var(--space-md);
+    font-size: var(--font-size-xs);
   }
 }
 

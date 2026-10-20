@@ -48,12 +48,11 @@ export default function ProductDetails({ product, related }: Props) {
         <div className={styles.main}>
           {/* LEFT */}
           <ImageGallery
-            images={
-              product.images.length > 0 ? product.images : [product.main_image]
-            }
+            mainImage={product.main_image}
+            images={product.images}
             name={product.name}
-            saleBadge={hasSale ? `-${discountPercent}%` : null}
-            outOfStock={outOfStock}
+            saleBadge={product.sale_price ? "Sale" : null}
+            outOfStock={product.stock_quantity === 0}
           />
 
           {/* RIGHT — ab koi prop nahi, ProductInfo khud hooks use karta hai */}

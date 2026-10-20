@@ -544,7 +544,7 @@ export default function ProductShowcase() {
                                         src={p.image}
                                         alt={p.name}
                                         fill
-                                        sizes="(max-width: 900px) 90vw, 50vw"
+                                        sizes="(max-width: 900px) 100vw, 50vw"
                                         priority={i === 0}
                                         unoptimized   
                                         className={styles.image}
