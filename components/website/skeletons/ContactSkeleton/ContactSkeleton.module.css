@@ -45,71 +45,103 @@
   }
 }
 
-/* ================= HERO ================= */
-.hero {
+/* ================= HERO BANNER ================= */
+.heroBanner {
+  position: relative;
+  width: 100%;
+  min-height: 500px;
+  display: flex;
+  align-items: flex-end;
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  background-color: var(--bg-surface);
+}
+
+.heroBannerMedia {
+  position: absolute;
+  inset: 0;
+}
+
+.bannerImage {
+  width: 100%;
+  height: 100%;
+  border-radius: 0;
+}
+
+.heroBannerOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+}
+
+.heroInner {
+  position: relative;
+  z-index: 1;
+  padding: var(--space-2xl);
   display: flex;
   flex-direction: column;
   gap: var(--space-md);
+  width: 100%;
   max-width: 900px;
 }
 
 .eyebrow {
-  width: 140px;
-  height: 12px;
+  width: 120px;
+  height: 14px;
+  background-color: rgba(255,255,255,0.2);
 }
 
 .title {
   width: 70%;
-  height: 52px;
+  height: 56px;
+  background-color: rgba(255,255,255,0.3);
 }
 
 .titleShort {
-  width: 40%;
-  height: 52px;
+  width: 45%;
+  height: 56px;
+  background-color: rgba(255,255,255,0.3);
 }
 
 .lead {
   width: 90%;
   height: 16px;
-  margin-top: var(--space-md);
+  margin-top: var(--space-sm);
+  background-color: rgba(255,255,255,0.15);
 }
 
 .leadShort {
   width: 60%;
   height: 16px;
+  background-color: rgba(255,255,255,0.15);
 }
 
-/* ================= INFO CARDS ================= */
+/* Info Cards inside banner */
 .infoGrid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: var(--space-lg);
+  margin-top: var(--space-xl);
 }
 
-.infoCard {
+.infoItem {
   display: flex;
   flex-direction: column;
-  gap: var(--space-sm);
-  padding: var(--space-lg);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-lg);
-}
-
-.infoIcon {
-  width: 44px;
-  height: 44px;
-  border-radius: var(--radius-full);
-  margin-bottom: var(--space-xs);
+  gap: 8px;
+  padding-top: var(--space-sm);
+  border-top: 1px solid rgba(255,255,255,0.2);
 }
 
 .infoLabel {
   width: 60px;
   height: 12px;
+  background-color: rgba(255,255,255,0.2);
 }
 
 .infoValue {
   width: 80%;
   height: 18px;
+  background-color: rgba(255,255,255,0.3);
 }
 
 /* ================= FORM SECTION ================= */
@@ -141,6 +173,18 @@
 .paraShort {
   width: 75%;
   height: 14px;
+}
+
+.highlights {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  margin-top: var(--space-lg);
+}
+
+.highlight {
+  width: 80%;
+  height: 16px;
 }
 
 /* ================= FORM ================= */
@@ -229,6 +273,10 @@
 
 /* ================= RESPONSIVE ================= */
 @media (max-width: 1000px) {
+  .heroBanner {
+    min-height: 450px;
+  }
+  
   .infoGrid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -247,6 +295,18 @@
 @media (max-width: 600px) {
   .section {
     --nav-offset: 84px;
+  }
+  
+  .heroBanner {
+    min-height: 400px;
+  }
+
+  .heroInner {
+    padding: var(--space-xl);
+  }
+
+  .title, .titleShort {
+    height: 40px;
   }
 
   .infoGrid,

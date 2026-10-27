@@ -13,7 +13,8 @@ import {
   FileText,
   X,
   Star,
-  MessageSquare
+  MessageSquare,
+  ShieldCheck 
 } from "lucide-react";
 import styles from "./AdminSidebar.module.css";
 
@@ -48,6 +49,7 @@ const SECTIONS: NavSection[] = [
       { label: "Categories", href: "/admin/categories", icon: FolderTree },
       { label: "Orders", href: "/admin/orders", icon: ShoppingCart },
       { label: "Customers", href: "/admin/customers", icon: Users },
+      { label: "Tax IDs", href: "/admin/tax-ids", icon: ShieldCheck },
     ],
   },
   {

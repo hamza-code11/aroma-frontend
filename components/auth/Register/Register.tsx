@@ -4,6 +4,8 @@ import { useState } from "react";
 import Link from "next/link";
 import { Eye, EyeOff, ArrowRight, Check } from "lucide-react";
 import styles from "./Register.module.css";
+import { useRegister } from "@/hooks/auth/useRegister"; // Hook import kiya
+import { authService } from "@/services/auth.service"; // Service import ki
 
 type FormState = {
   name: string;
@@ -27,12 +29,17 @@ export default function Register() {
   const [status, setStatus] = useState<"idle" | "error" | "done">("idle");
   const [message, setMessage] = useState("");
 
+  // Hook initialize kiya
+  const registerMutation = useRegister();
+
   const handleChange = (field: keyof FormState, value: string) => {
     setForm((prev) => ({ ...prev, [field]: value }));
     if (status !== "idle") {
       setStatus("idle");
       setMessage("");
     }
+    // Agar API error aya tha, toh naya type karte hi clear kar dein
+    if (registerMutation.isError) registerMutation.reset();
   };
 
   // Password strength check
@@ -52,6 +59,7 @@ export default function Register() {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    // 1. Front-end Validations (Fast UI Response)
     const nameOk = form.name.trim().length >= 2;
     const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim());
     const passOk = form.password.length >= 8;
@@ -67,12 +75,41 @@ export default function Register() {
       return;
     }
 
-    // TODO: yahan apna register API call laga do
-    console.log("Register submitted:", { ...form, agree });
+    // 2. API Call via Hook
+    setStatus("idle");
+    setMessage("");
 
-    setStatus("done");
-    setMessage("Account created — signing you in…");
+    registerMutation.mutate(
+      {
+        name: form.name,
+        email: form.email,
+        password: form.password,
+        password_confirmation: form.confirm,
+      },
+      {
+        onSuccess: () => {
+          setStatus("done");
+          setMessage("Account created — signing you in…");
+          // Redirect hook ke andar handle ho raha hai
+        },
+        onError: (error: any) => {
+          setStatus("error");
+          // Backend validation errors handle karein (e.g., email already exists)
+          const errMsg = error.response?.data?.message || "Something went wrong. Try again.";
+          // Agar Laravel validation errors hain (422)
+          if (error.response?.data?.errors) {
+            const firstError = Object.values(error.response.data.errors)[0] as string[];
+            setMessage(firstError[0]);
+          } else {
+            setMessage(errMsg);
+          }
+        },
+      }
+    );
   };
+
+  // Loading state check
+  const isLoading = registerMutation.isPending;
 
   return (
     <div className={styles.card}>
@@ -99,6 +136,7 @@ export default function Register() {
             value={form.name}
             onChange={(e) => handleChange("name", e.target.value)}
             aria-invalid={status === "error" && form.name.trim().length < 2}
+            disabled={isLoading}
             required
           />
         </div>
@@ -117,6 +155,7 @@ export default function Register() {
             value={form.email}
             onChange={(e) => handleChange("email", e.target.value)}
             aria-invalid={status === "error" && !form.email.trim()}
+            disabled={isLoading}
             required
           />
         </div>
@@ -136,6 +175,7 @@ export default function Register() {
               value={form.password}
               onChange={(e) => handleChange("password", e.target.value)}
               aria-invalid={status === "error" && form.password.length < 8}
+              disabled={isLoading}
               required
             />
             <button
@@ -189,6 +229,7 @@ export default function Register() {
                 form.confirm.length > 0 &&
                 form.password !== form.confirm
               }
+              disabled={isLoading}
               required
             />
             <button
@@ -212,6 +253,7 @@ export default function Register() {
             type="checkbox"
             checked={agree}
             onChange={(e) => setAgree(e.target.checked)}
+            disabled={isLoading}
           />
           <span className={styles.checkboxBox} aria-hidden="true">
             <Check size={11} strokeWidth={3} />
@@ -228,7 +270,7 @@ export default function Register() {
           </span>
         </label>
 
-        {/* Status */}
+        {/* Status Message */}
         <p
           className={`${styles.status} ${
             status === "error" ? styles.statusError : ""
@@ -239,10 +281,10 @@ export default function Register() {
           {message}
         </p>
 
-        {/* Submit */}
-        <button type="submit" className={styles.submit}>
-          Create account
-          <ArrowRight size={14} strokeWidth={1.5} />
+        {/* Submit Button */}
+        <button type="submit" className={styles.submit} disabled={isLoading}>
+          {isLoading ? "Creating account..." : "Create account"}
+          {!isLoading && <ArrowRight size={14} strokeWidth={1.5} />}
         </button>
 
         {/* Divider */}
@@ -250,11 +292,12 @@ export default function Register() {
           <span>or</span>
         </div>
 
-        {/* Google */}
+        {/* Google Button - Directly triggers backend redirect */}
         <button
           type="button"
           className={styles.socialBtn}
-          onClick={() => console.log("Google sign-up clicked")}
+          onClick={authService.googleLogin}
+          disabled={isLoading}
         >
           <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true">
             <path

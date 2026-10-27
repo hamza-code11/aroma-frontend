@@ -1,44 +1,48 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Search, Trash2, Copy, Check } from "lucide-react";
+import { Search, Trash2, Copy, Check, Loader2 } from "lucide-react";
 import { useToast } from "@/components/ui/Toast";
 import type { NewsletterSubscriber } from "@/types/newsletter";
 import styles from "./Newsletter.module.css";
 
-type Props = {
-  subscribers: NewsletterSubscriber[];
-};
+// Skeleton Import
+import NewsletterSkeleton from "@/components/admin/skeletons/NewsletterSkeleton/NewsletterSkeleton";
 
-export default function NewsletterList({ subscribers: initial }: Props) {
-  const [subscribers, setSubscribers] = useState(initial);
+// Hooks Import
+import { useAdminNewsletters, useDeleteNewsletter } from "@/hooks/useNewsletter";
+
+export default function NewsletterList() {
   const [query, setQuery] = useState("");
   const [deleting, setDeleting] = useState<NewsletterSubscriber | null>(null);
   const [copiedId, setCopiedId] = useState<number | null>(null);
   const { showToast } = useToast();
 
+  // Fetch Data
+  const { data: apiData, isLoading } = useAdminNewsletters(1);
+  const subscribers = apiData?.data || [];
+
+  // Delete Mutation
+  const deleteMutation = useDeleteNewsletter();
+
+  // Search Filter
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
     if (!q) return subscribers;
     return subscribers.filter((s) => s.email.toLowerCase().includes(q));
   }, [subscribers, query]);
 
-  const activeCount = useMemo(
-    () => subscribers.filter((s) => s.is_active).length,
-    [subscribers]
-  );
-
   const handleDelete = () => {
     if (!deleting) return;
-    setSubscribers((prev) => prev.filter((s) => s.id !== deleting.id));
-    showToast(`"${deleting.email}" removed from newsletter.`);
-    setDeleting(null);
-  };
-
-  const toggleStatus = (id: number) => {
-    setSubscribers((prev) =>
-      prev.map((s) => (s.id === id ? { ...s, is_active: !s.is_active } : s))
-    );
+    deleteMutation.mutate(deleting.id, {
+      onSuccess: () => {
+        showToast(`"${deleting.email}" removed from newsletter.`, "success");
+        setDeleting(null);
+      },
+      onError: (err: any) => {
+        showToast(err.response?.data?.message || "Failed to delete subscriber", "error");
+      }
+    });
   };
 
   const copyEmail = async (id: number, email: string) => {
@@ -59,6 +63,11 @@ export default function NewsletterList({ subscribers: initial }: Props) {
       day: "numeric",
     });
 
+  // Loading State -> Show Skeleton
+  if (isLoading) {
+    return <NewsletterSkeleton />;
+  }
+
   return (
     <div className={styles.page}>
       {/* HEADER */}
@@ -66,8 +75,7 @@ export default function NewsletterList({ subscribers: initial }: Props) {
         <div>
           <h2 className={styles.title}>Newsletter</h2>
           <p className={styles.subtitle}>
-            {subscribers.length} subscriber{subscribers.length === 1 ? "" : "s"} ·{" "}
-            {activeCount} active
+            {subscribers.length} subscriber{subscribers.length === 1 ? "" : "s"}
           </p>
         </div>
       </header>
@@ -107,7 +115,6 @@ export default function NewsletterList({ subscribers: initial }: Props) {
               <tr>
                 <th>Email</th>
                 <th>Subscribed</th>
-                <th>Status</th>
                 <th className={styles.thRight}>Actions</th>
               </tr>
             </thead>
@@ -131,26 +138,7 @@ export default function NewsletterList({ subscribers: initial }: Props) {
                       </button>
                     </div>
                   </td>
-                  <td className={styles.date}>{formatDate(s.subscribed_at)}</td>
-                  <td>
-                    <button
-                      type="button"
-                      role="switch"
-                      aria-checked={s.is_active}
-                      className={`${styles.toggle} ${
-                        s.is_active ? styles.toggleOn : styles.toggleOff
-                      }`}
-                      onClick={() => toggleStatus(s.id)}
-                      aria-label={`Toggle ${s.email} ${
-                        s.is_active ? "inactive" : "active"
-                      }`}
-                    >
-                      <span className={styles.toggleKnob} />
-                      <span className={styles.toggleLabel}>
-                        {s.is_active ? "Active" : "Inactive"}
-                      </span>
-                    </button>
-                  </td>
+                  <td className={styles.date}>{formatDate(s.created_at)}</td>
                   <td className={styles.tdRight}>
                     <button
                       type="button"
@@ -187,6 +175,7 @@ export default function NewsletterList({ subscribers: initial }: Props) {
                 type="button"
                 className={styles.cancelBtn}
                 onClick={() => setDeleting(null)}
+                disabled={deleteMutation.isPending}
               >
                 Cancel
               </button>
@@ -194,9 +183,14 @@ export default function NewsletterList({ subscribers: initial }: Props) {
                 type="button"
                 className={styles.dangerBtn}
                 onClick={handleDelete}
+                disabled={deleteMutation.isPending}
                 autoFocus
               >
-                Remove
+                {deleteMutation.isPending ? (
+                  <><Loader2 size={14} className="animate-spin" /> Removing...</>
+                ) : (
+                  "Remove"
+                )}
               </button>
             </div>
           </div>

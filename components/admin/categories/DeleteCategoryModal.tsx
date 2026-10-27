@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { AlertTriangle } from "lucide-react";
+import { AlertTriangle, Loader2 } from "lucide-react"; // Loader2 import kiya
 import type { Category } from "@/types/category";
 import styles from "./DeleteCategoryModal.module.css";
 
@@ -9,18 +9,25 @@ type Props = {
   category: Category | null;
   onClose: () => void;
   onConfirm: (category: Category) => void;
+  isLoading?: boolean; // Loading prop add ki
 };
 
 export default function DeleteCategoryModal({
   category,
   onClose,
   onConfirm,
+  isLoading = false,
 }: Props) {
   const open = !!category;
 
   useEffect(() => {
     if (!open) return;
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
+    
+    const onKey = (e: KeyboardEvent) => {
+      // Agar delete API chal rahi hai toh ESC se close na ho
+      if (e.key === "Escape" && !isLoading) onClose();
+    };
+    
     document.addEventListener("keydown", onKey);
 
     const prev = document.body.style.overflow;
@@ -30,14 +37,16 @@ export default function DeleteCategoryModal({
       document.removeEventListener("keydown", onKey);
       document.body.style.overflow = prev;
     };
-  }, [open, onClose]);
+  }, [open, onClose, isLoading]);
 
   if (!open || !category) return null;
 
   return (
     <div
       className={styles.backdrop}
-      onMouseDown={(e) => e.target === e.currentTarget && onClose()}
+      onMouseDown={(e) => {
+        if (e.target === e.currentTarget && !isLoading) onClose();
+      }}
       role="presentation"
     >
       <div
@@ -65,6 +74,7 @@ export default function DeleteCategoryModal({
             type="button"
             className={styles.cancelBtn}
             onClick={onClose}
+            disabled={isLoading}
           >
             Cancel
           </button>
@@ -72,9 +82,17 @@ export default function DeleteCategoryModal({
             type="button"
             className={styles.confirmBtn}
             onClick={() => onConfirm(category)}
+            disabled={isLoading}
             autoFocus
           >
-            Delete
+            {isLoading ? (
+              <>
+                Deleting...
+                <Loader2 size={16} className="animate-spin" />
+              </>
+            ) : (
+              "Delete"
+            )}
           </button>
         </div>
       </div>

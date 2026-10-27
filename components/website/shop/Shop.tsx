@@ -4,10 +4,13 @@ import { useMemo, useState } from "react";
 import { SlidersHorizontal } from "lucide-react";
 import PageBanner from "@/components/website/banner/ShopBanner";
 import ProductCard from "@/globalComponents/product/ProductCard";
-import { products } from "@/data/product";
-import { categories } from "@/data/category";
 import type { Product } from "@/types/product";
 import styles from "./Shop.module.css";
+
+// Skeletons & Hooks
+import ShopSkeleton from "@/components/website/skeletons/ShopSkeleton/ShopSkeleton";
+import { useProducts } from "@/hooks/products/useProducts";
+import { useCategories } from "@/hooks/categories/useCategories";
 
 type SortKey = "featured" | "price-asc" | "price-desc" | "name-asc" | "name-desc";
 
@@ -22,15 +25,20 @@ const SORT_OPTIONS: { value: SortKey; label: string }[] = [
 export default function Shop() {
   const [activeCategory, setActiveCategory] = useState<number | "all">("all");
   const [sort, setSort] = useState<SortKey>("featured");
-  const [wishlist, setWishlist] = useState<Set<number>>(new Set());
 
+  // Data Fetching
+  const { data: products = [], isLoading: productsLoading } = useProducts();
+  const { data: categories = [], isLoading: categoriesLoading } = useCategories();
+
+  // Filter active categories
   const activeCategories = useMemo(
     () => categories.filter((c) => c.is_active),
-    []
+    [categories]
   );
 
+  // Filter and sort products (Only active products)
   const filtered = useMemo(() => {
-    let list: Product[] = products.filter((p) => p.is_active);
+    let list = products.filter((p) => p.is_active);
 
     if (activeCategory !== "all") {
       list = list.filter((p) => p.category_id === activeCategory);
@@ -39,16 +47,12 @@ export default function Shop() {
     switch (sort) {
       case "price-asc":
         list = [...list].sort(
-          (a, b) =>
-            (a.sale_price ?? a.regular_price) -
-            (b.sale_price ?? b.regular_price)
+          (a, b) => (Number(a.sale_price) || Number(a.regular_price)) - (Number(b.sale_price) || Number(b.regular_price))
         );
         break;
       case "price-desc":
         list = [...list].sort(
-          (a, b) =>
-            (b.sale_price ?? b.regular_price) -
-            (a.sale_price ?? a.regular_price)
+          (a, b) => (Number(b.sale_price) || Number(b.regular_price)) - (Number(a.sale_price) || Number(a.regular_price))
         );
         break;
       case "name-asc":
@@ -62,38 +66,26 @@ export default function Shop() {
     }
 
     return list;
-  }, [activeCategory, sort]);
+  }, [products, activeCategory, sort]);
 
-  const handleAddToCart = (product: Product) => {
-    // TODO: yahan apna cart logic laga do
-    console.log("Add to cart:", product);
-  };
-
-  const handleToggleWishlist = (product: Product) => {
-    setWishlist((prev) => {
-      const next = new Set(prev);
-      if (next.has(product.id)) next.delete(product.id);
-      else next.add(product.id);
-      return next;
-    });
-  };
+  // Yahan humne spinner ki jagah aapka Skeleton return kar diya hai
+  if (productsLoading || categoriesLoading) {
+    return <ShopSkeleton />;
+  }
 
   return (
     <div className={styles.page}>
       <div className={styles.container}>
         {/* ================= HERO BANNER ================= */}
-        <PageBanner/>
+        <PageBanner />
 
         {/* ================= TOOLBAR ================= */}
         <div className={styles.toolbar}>
           <nav className={styles.tabs} aria-label="Filter by category">
             <button
               type="button"
-              className={`${styles.tab} ${
-                activeCategory === "all" ? styles.tabActive : ""
-              }`}
+              className={`${styles.tab} ${activeCategory === "all" ? styles.tabActive : ""}`}
               onClick={() => setActiveCategory("all")}
-              aria-pressed={activeCategory === "all"}
             >
               All Products
             </button>
@@ -101,11 +93,8 @@ export default function Shop() {
               <button
                 key={c.id}
                 type="button"
-                className={`${styles.tab} ${
-                  activeCategory === c.id ? styles.tabActive : ""
-                }`}
+                className={`${styles.tab} ${activeCategory === c.id ? styles.tabActive : ""}`}
                 onClick={() => setActiveCategory(c.id)}
-                aria-pressed={activeCategory === c.id}
               >
                 {c.name}
               </button>
@@ -113,15 +102,8 @@ export default function Shop() {
           </nav>
 
           <div className={styles.sortWrap}>
-            <SlidersHorizontal
-              size={14}
-              strokeWidth={1.6}
-              className={styles.sortIcon}
-              aria-hidden="true"
-            />
-            <label htmlFor="shop-sort" className={styles.srOnly}>
-              Sort products
-            </label>
+            <SlidersHorizontal size={14} strokeWidth={1.6} className={styles.sortIcon} />
+            <label htmlFor="shop-sort" className={styles.srOnly}>Sort products</label>
             <select
               id="shop-sort"
               className={styles.sortSelect}
@@ -129,9 +111,7 @@ export default function Shop() {
               onChange={(e) => setSort(e.target.value as SortKey)}
             >
               {SORT_OPTIONS.map((o) => (
-                <option key={o.value} value={o.value}>
-                  {o.label}
-                </option>
+                <option key={o.value} value={o.value}>{o.label}</option>
               ))}
             </select>
           </div>
@@ -148,19 +128,14 @@ export default function Shop() {
         ) : (
           <div className={styles.grid}>
             {filtered.map((p, i) => (
-              <ProductCard
-                key={p.id}
-                product={p}
-                priority={i < 4}
-              />
+              <ProductCard key={p.id} product={p} priority={i < 4} />
             ))}
           </div>
         )}
 
         {/* ================= COUNT ================= */}
         <p className={styles.count}>
-          Showing {filtered.length} of{" "}
-          {products.filter((p) => p.is_active).length} products
+          Showing {filtered.length} of {products.filter((p) => p.is_active).length} products
         </p>
       </div>
     </div>

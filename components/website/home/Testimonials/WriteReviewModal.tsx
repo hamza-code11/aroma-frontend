@@ -1,28 +1,28 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Star, X } from "lucide-react";
+import { Star, X, Loader2 } from "lucide-react"; // Loader2 import kiya
 import styles from "./WriteReviewModal.module.css";
 
 type Props = {
   open: boolean;
   onClose: () => void;
   onSubmit?: (data: { rating: number; review: string }) => void;
+  isLoading?: boolean; // Loading prop add kiya
 };
 
-export default function WriteReviewModal({ open, onClose, onSubmit }: Props) {
+export default function WriteReviewModal({ open, onClose, onSubmit, isLoading = false }: Props) {
   const dialogRef = useRef<HTMLDivElement>(null);
   const [rating, setRating] = useState(0);
   const [hover, setHover] = useState(0);
   const [review, setReview] = useState("");
   const [status, setStatus] = useState<"idle" | "error" | "done">("idle");
 
-  // Esc se close + body scroll lock
   useEffect(() => {
     if (!open) return;
 
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
+      if (e.key === "Escape" && !isLoading) onClose();
     };
     document.addEventListener("keydown", onKey);
 
@@ -33,9 +33,8 @@ export default function WriteReviewModal({ open, onClose, onSubmit }: Props) {
       document.removeEventListener("keydown", onKey);
       document.body.style.overflow = prevOverflow;
     };
-  }, [open, onClose]);
+  }, [open, onClose, isLoading]);
 
-  // Reset on open
   useEffect(() => {
     if (open) {
       setRating(0);
@@ -48,11 +47,12 @@ export default function WriteReviewModal({ open, onClose, onSubmit }: Props) {
   if (!open) return null;
 
   const handleBackdrop = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (e.target === e.currentTarget) onClose();
+    if (e.target === e.currentTarget && !isLoading) onClose();
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    
     if (rating < 1) {
       setStatus("error");
       return;
@@ -61,9 +61,9 @@ export default function WriteReviewModal({ open, onClose, onSubmit }: Props) {
       setStatus("error");
       return;
     }
+    
     onSubmit?.({ rating, review: review.trim() });
-    setStatus("done");
-    setTimeout(() => onClose(), 900);
+    // Status done parent component handle karega API success ke baad
   };
 
   const displayRating = hover || rating;
@@ -85,6 +85,7 @@ export default function WriteReviewModal({ open, onClose, onSubmit }: Props) {
           type="button"
           className={styles.close}
           onClick={onClose}
+          disabled={isLoading}
           aria-label="Close"
         >
           <X size={18} strokeWidth={1.5} />
@@ -119,6 +120,7 @@ export default function WriteReviewModal({ open, onClose, onSubmit }: Props) {
                       setRating(value);
                       setStatus("idle");
                     }}
+                    disabled={isLoading}
                     aria-label={`${value} star${value > 1 ? "s" : ""}`}
                     aria-checked={rating === value}
                     role="radio"
@@ -150,6 +152,7 @@ export default function WriteReviewModal({ open, onClose, onSubmit }: Props) {
               placeholder="Tell us how the fragrance felt in your space..."
               rows={5}
               maxLength={500}
+              disabled={isLoading}
             />
             <span className={styles.counter}>{review.length} / 500</span>
           </div>
@@ -157,7 +160,6 @@ export default function WriteReviewModal({ open, onClose, onSubmit }: Props) {
           {/* Status */}
           <p className={styles.status} role="status" aria-live="polite">
             {status === "error" && "Please pick a rating and write a short review."}
-            {status === "done" && "Thank you! Your review has been submitted."}
           </p>
 
           <div className={styles.actions}>
@@ -165,11 +167,16 @@ export default function WriteReviewModal({ open, onClose, onSubmit }: Props) {
               type="button"
               className={styles.cancel}
               onClick={onClose}
+              disabled={isLoading}
             >
               Cancel
             </button>
-            <button type="submit" className={styles.submit}>
-              Submit Review
+            <button type="submit" className={styles.submit} disabled={isLoading}>
+              {isLoading ? (
+                <><Loader2 className="animate-spin" size={16} /> Submitting...</>
+              ) : (
+                "Submit Review"
+              )}
             </button>
           </div>
         </form>

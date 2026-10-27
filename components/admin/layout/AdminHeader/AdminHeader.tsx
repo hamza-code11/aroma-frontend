@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { Menu, ExternalLink, User } from "lucide-react";
+import { Menu, ExternalLink, User, LogOut, Loader2 } from "lucide-react";
 import ThemeToggle from "@/components/theme/ThemeToggle";
+import { useLogout } from "@/hooks/auth/useProfile"; // Logout hook import kiya
 import styles from "./AdminHeader.module.css";
 
 type Props = {
@@ -14,6 +15,15 @@ export default function AdminHeader({
   onMenuClick,
   title = "Admin",
 }: Props) {
+  const logoutMutation = useLogout();
+
+  const handleLogout = () => {
+    // Confirmation before logout
+    if (window.confirm("Are you sure you want to logout?")) {
+      logoutMutation.mutate();
+    }
+  };
+
   return (
     <header className={styles.header}>
       {/* LEFT — mobile menu + title */}
@@ -56,6 +66,22 @@ export default function AdminHeader({
             <span className={styles.userRole}>Owner</span>
           </span>
         </div>
+
+        {/* LOGOUT BUTTON */}
+        <button
+          type="button"
+          className={styles.logoutBtn}
+          onClick={handleLogout}
+          disabled={logoutMutation.isPending}
+          aria-label="Logout"
+          title="Logout"
+        >
+          {logoutMutation.isPending ? (
+            <Loader2 size={18} className="animate-spin" />
+          ) : (
+            <LogOut size={18} strokeWidth={1.8} />
+          )}
+        </button>
       </div>
     </header>
   );

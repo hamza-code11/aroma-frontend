@@ -1,0 +1,305 @@
+/* ================= PAGE ================= */
+.page {
+  min-height: 100vh;
+  background: var(--bg-primary);
+  padding-top: 120px;
+  padding-bottom: 60px;
+}
+
+.container {
+  width: 100%;
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding-inline: var(--container-pad);
+}
+
+.loading { display: flex; justify-content: center; align-items: center; min-height: 50vh; color: var(--accent-primary); }
+.error { text-align: center; padding: 40px; color: var(--text-secondary); }
+
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  text-decoration: none;
+  margin-bottom: var(--space-lg);
+  transition: color 0.2s;
+}
+.backLink:hover { color: var(--accent-primary); }
+
+/* ================= MAIN SINGLE BOX ================= */
+.mainCard {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xl);
+  padding: var(--space-xl);
+  box-shadow: 0 4px 20px -5px var(--shadow-color);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+}
+
+/* HEADER */
+.cardHeader {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--space-md);
+  padding-bottom: var(--space-lg);
+  border-bottom: 1px solid var(--border-color);
+}
+
+@media (min-width: 768px) {
+  .cardHeader {
+    flex-direction: row;
+    align-items: center;
+  }
+}
+
+.title {
+  font-family: var(--font-heading);
+  font-size: 1.6rem;
+  color: var(--text-primary);
+  margin: 0 0 6px 0;
+}
+
+.metaInfo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.paymentBadge {
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+.paid { background: color-mix(in srgb, #22c55e 15%, transparent); color: #22c55e; }
+.unpaid { background: color-mix(in srgb, #ef4444 15%, transparent); color: #ef4444; }
+
+/* Tracking Box in Header */
+.trackingBox {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  background-color: var(--bg-primary);
+  padding: 8px 16px;
+  border-radius: var(--radius-md);
+  border: 1px dashed var(--border-color);
+}
+
+.trackingLabel {
+  font-size: 10px;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+.trackingNumber {
+  font-family: monospace;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--accent-primary);
+}
+
+/* ================= CONTENT GRID ================= */
+.contentGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-xl);
+}
+
+@media (min-width: 900px) {
+  .contentGrid {
+    grid-template-columns: 1.2fr 1fr;
+    gap: var(--space-2xl);
+  }
+}
+
+.leftCol, .rightCol {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+}
+
+/* ================= SECTIONS ================= */
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.sectionTitle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* ================= VERTICAL TIMELINE ================= */
+.verticalTimeline {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding-left: var(--space-sm);
+  position: relative;
+}
+
+.timelineStep {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-md);
+  position: relative;
+  padding-bottom: var(--space-xl);
+}
+
+.timelineStep:last-child {
+  padding-bottom: 0;
+}
+
+/* Icon Circle */
+.timelineIconWrap {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: var(--bg-primary);
+  border: 2px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  flex-shrink: 0;
+  z-index: 2;
+  transition: all 0.3s;
+}
+
+/* Connecting Line */
+.timelineLine {
+  position: absolute;
+  top: 32px;
+  left: 15px;
+  width: 2px;
+  height: calc(100% - 32px);
+  background-color: var(--border-color);
+  z-index: 1;
+  transition: background-color 0.3s;
+}
+
+/* Content */
+.timelineContent h4 {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin: 4px 0 2px 0;
+  transition: color 0.3s;
+}
+
+.timelineContent p {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin: 0;
+  opacity: 0.7;
+}
+
+/* Active States */
+.active .timelineIconWrap {
+  border-color: var(--accent-primary);
+  background-color: var(--accent-primary);
+  color: var(--on-accent);
+}
+
+.active .timelineContent h4 {
+  color: var(--text-primary);
+}
+
+.lineActive {
+  background-color: var(--accent-primary);
+}
+
+/* Current Step Pulse */
+.current .timelineIconWrap {
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent-primary) 20%, transparent);
+}
+
+/* ================= ITEMS ================= */
+.itemsList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.itemRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 12px;
+  border-bottom: 1px dashed var(--border-color);
+}
+
+.itemName { font-weight: 500; color: var(--text-primary); margin: 0; }
+.itemMeta { font-size: 12px; color: var(--text-secondary); margin: 4px 0 0; }
+
+.totals {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-top: var(--space-sm);
+  background-color: var(--bg-primary);
+  padding: var(--space-md);
+  border-radius: var(--radius-md);
+  margin-top: var(--space-sm);
+}
+
+.totals div {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.totalRow {
+  font-size: 15px !important;
+  font-weight: 700;
+  color: var(--text-primary) !important;
+  border-top: 1px solid var(--border-color);
+  padding-top: 8px;
+  margin-top: 4px;
+}
+
+/* ================= ADDRESS & PAYMENT ================= */
+.addressBlock, .paymentBlock {
+  background-color: var(--bg-primary);
+  padding: var(--space-md);
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+.addressBlock p { margin: 0; }
+.strong { font-weight: 600; color: var(--text-primary); margin-bottom: 4px !important; }
+
+.paymentRow {
+  display: flex;
+  justify-content: space-between;
+  padding: 4px 0;
+}
+
+.mono {
+  font-family: monospace;
+  font-size: 12px;
+  color: var(--text-primary);
+  word-break: break-all;
+  text-align: right;
+  max-width: 60%;
+}

@@ -1,0 +1,435 @@
+.sectionTitle {
+  font-family: var(--font-heading);
+  font-size: 1.4rem;
+  color: var(--text-primary);
+  margin: 0 0 var(--space-xl) 0;
+  padding-bottom: var(--space-md);
+  border-bottom: 1px solid var(--border-color);
+}
+
+/* ================= SEARCH FORM ================= */
+.searchForm {
+  display: flex;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-xl);
+}
+
+.input {
+  flex: 1;
+  min-width: 0;
+  padding: 12px 16px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-size: 14px;
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--accent-primary);
+}
+
+.searchBtn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 24px;
+  background-color: var(--accent-primary);
+  color: var(--on-accent);
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.searchBtn:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.searchBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ================= ERROR ================= */
+.errorBox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  background-color: color-mix(in srgb, #ef4444 10%, transparent);
+  color: #ef4444;
+  border-radius: var(--radius-md);
+  font-size: 14px;
+}
+
+/* ================= RESULT CARD ================= */
+.resultCard {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+}
+
+/* ---------- Headline ---------- */
+.headline {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-lg);
+  border-radius: var(--radius-md);
+  background-color: color-mix(in srgb, var(--accent-primary) 10%, transparent);
+}
+
+.headlineIcon {
+  flex-shrink: 0;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--accent-primary);
+  color: var(--on-accent);
+}
+
+.headlineTitle {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 4px 0;
+}
+
+.headlineSub {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.headlineDone {
+  background-color: color-mix(in srgb, #22c55e 12%, transparent);
+}
+
+.headlineDone .headlineIcon {
+  background-color: #22c55e;
+  color: #fff;
+}
+
+.headlineWarn {
+  background-color: color-mix(in srgb, #f59e0b 14%, transparent);
+}
+
+.headlineWarn .headlineIcon {
+  background-color: #f59e0b;
+  color: #fff;
+}
+
+/* ---------- Info row ---------- */
+.infoRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-lg) var(--space-xl);
+  padding-bottom: var(--space-lg);
+  border-bottom: 1px dashed var(--border-color);
+}
+
+.infoItem {
+  min-width: 140px;
+}
+
+.trackingLabel {
+  font-size: 11px;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  font-weight: 600;
+  margin: 0 0 2px 0;
+  letter-spacing: 0.4px;
+}
+
+.trackingNumber {
+  font-family: monospace;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.infoValue {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+/* ================= PROGRESS STEPPER ================= */
+.stepper {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: var(--space-md) 0;
+}
+
+.step {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  text-align: center;
+}
+
+/* connector line */
+.step:not(:first-child)::before {
+  content: "";
+  position: absolute;
+  top: 17px;
+  right: 50%;
+  width: 100%;
+  height: 3px;
+  background-color: var(--border-color);
+  z-index: 0;
+}
+
+.stepDone:not(:first-child)::before,
+.stepCurrent:not(:first-child)::before {
+  background-color: var(--accent-primary);
+}
+
+.stepCircle {
+  position: relative;
+  z-index: 1;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--bg-surface);
+  border: 2px solid var(--border-color);
+  color: var(--text-secondary);
+}
+
+.stepDone .stepCircle {
+  background-color: var(--accent-primary);
+  border-color: var(--accent-primary);
+  color: var(--on-accent);
+}
+
+.stepCurrent .stepCircle {
+  border-color: var(--accent-primary);
+  color: var(--accent-primary);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent-primary) 20%, transparent);
+}
+
+.stepLabel {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  line-height: 1.3;
+  max-width: 80px;
+}
+
+.stepDone .stepLabel,
+.stepCurrent .stepLabel {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+/* ================= HISTORY ================= */
+.history {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.historyTitle {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0;
+}
+
+.dateGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.dateHeading {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+  padding: 6px 12px;
+  background-color: var(--bg-primary);
+  border-radius: var(--radius-sm, 6px);
+  width: fit-content;
+}
+
+.timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding-left: 4px;
+}
+
+.timelineItem {
+  display: flex;
+  gap: var(--space-md);
+  position: relative;
+  padding-bottom: var(--space-lg);
+}
+
+.timelineItem:last-child {
+  padding-bottom: 0;
+}
+
+.timelineDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: var(--border-color);
+  flex-shrink: 0;
+  margin-top: 5px;
+  position: relative;
+  z-index: 2;
+}
+
+.timelineDotLatest {
+  background-color: var(--accent-primary);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent-primary) 25%, transparent);
+}
+
+/* Vertical line */
+.timelineItem:not(:last-child) .timelineDot::after {
+  content: "";
+  position: absolute;
+  top: 10px;
+  left: 4px;
+  width: 2px;
+  height: calc(100% + var(--space-lg) + 4px);
+  background-color: var(--border-color);
+  z-index: 1;
+}
+
+.timelineContent {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.eventDesc {
+  font-size: 14px;
+  color: var(--text-primary);
+  font-weight: 600;
+  margin: 0;
+}
+
+.eventLocation {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.eventTime {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.toggleBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  align-self: flex-start;
+  padding: 10px 16px;
+  background: transparent;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  color: var(--accent-primary);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.toggleBtn:hover {
+  background-color: color-mix(in srgb, var(--accent-primary) 8%, transparent);
+}
+
+/* ================= EMPTY STATE ================= */
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-2xl) 0;
+  text-align: center;
+}
+
+.emptyIcon {
+  color: var(--text-secondary);
+  margin-bottom: var(--space-md);
+  opacity: 0.5;
+}
+
+.emptyState h3 {
+  font-size: 1.2rem;
+  color: var(--text-primary);
+  margin: 0 0 8px 0;
+}
+
+.emptyState p {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin: 0;
+  max-width: 300px;
+}
+
+/* ================= MOBILE ================= */
+@media (max-width: 600px) {
+  .resultCard {
+    padding: var(--space-lg);
+  }
+
+  .searchForm {
+    flex-direction: column;
+  }
+
+  .searchBtn {
+    justify-content: center;
+  }
+
+  .headline {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .stepLabel {
+    font-size: 10px;
+    max-width: 56px;
+  }
+
+  .stepCircle {
+    width: 30px;
+    height: 30px;
+  }
+
+  .step:not(:first-child)::before {
+    top: 14px;
+  }
+}

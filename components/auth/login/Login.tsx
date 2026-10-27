@@ -4,6 +4,8 @@ import { useState } from "react";
 import Link from "next/link";
 import { Eye, EyeOff, ArrowRight } from "lucide-react";
 import styles from "./Login.module.css";
+import { useLogin } from "@/hooks/auth/useLogin"; // Hook import
+import { authService } from "@/services/auth.service"; // Google Auth ke liye
 
 type FormState = {
   email: string;
@@ -19,17 +21,22 @@ export default function Login() {
   const [status, setStatus] = useState<"idle" | "error" | "done">("idle");
   const [message, setMessage] = useState("");
 
+  // Login Hook initialize
+  const loginMutation = useLogin();
+
   const handleChange = (field: keyof FormState, value: string) => {
     setForm((prev) => ({ ...prev, [field]: value }));
     if (status !== "idle") {
       setStatus("idle");
       setMessage("");
     }
+    if (loginMutation.isError) loginMutation.reset(); // Clear old errors on type
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    // Frontend Validation
     const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim());
     const passOk = form.password.length >= 6;
 
@@ -39,12 +46,40 @@ export default function Login() {
       return;
     }
 
-    // TODO: yahan apna auth API call laga do
-    console.log("Login submitted:", { ...form, remember });
+    setStatus("idle");
+    setMessage("");
 
-    setStatus("done");
-    setMessage("Welcome back — signing you in…");
+    // API Call
+    loginMutation.mutate(
+      { email: form.email, password: form.password },
+      {
+        onSuccess: () => {
+          setStatus("done");
+          setMessage("Welcome back — signing you in…");
+        },
+        onError: (error: any) => {
+          setStatus("error");
+          
+          // Check karein agar user Google account use kar raha hai
+          if (error.response?.status === 403 && error.response?.data?.status === 'google_account') {
+            setMessage(error.response.data.message);
+            // Yahan aap chahain toh state change kar sakte hain jisse "Continue with Google" ka button highlight ho jaye
+            return;
+          }
+
+          // Normal Validation Error Handle
+          if (error.response?.data?.errors) {
+            const firstError = Object.values(error.response.data.errors)[0] as string[];
+            setMessage(firstError[0]);
+          } else {
+            setMessage(error.response?.data?.message || "Invalid credentials. Please try again.");
+          }
+        },
+      }
+    );
   };
+
+  const isLoading = loginMutation.isPending;
 
   return (
     <div className={styles.card}>
@@ -71,6 +106,7 @@ export default function Login() {
             value={form.email}
             onChange={(e) => handleChange("email", e.target.value)}
             aria-invalid={status === "error" && !form.email.trim()}
+            disabled={isLoading}
             required
           />
         </div>
@@ -95,6 +131,7 @@ export default function Login() {
               value={form.password}
               onChange={(e) => handleChange("password", e.target.value)}
               aria-invalid={status === "error" && form.password.length < 6}
+              disabled={isLoading}
               required
             />
             <button
@@ -118,6 +155,7 @@ export default function Login() {
             type="checkbox"
             checked={remember}
             onChange={(e) => setRemember(e.target.checked)}
+            disabled={isLoading}
           />
           <span className={styles.checkboxBox} aria-hidden="true" />
           <span className={styles.checkboxText}>Keep me signed in</span>
@@ -135,9 +173,9 @@ export default function Login() {
         </p>
 
         {/* Submit */}
-        <button type="submit" className={styles.submit}>
-          Sign in
-          <ArrowRight size={14} strokeWidth={1.5} />
+        <button type="submit" className={styles.submit} disabled={isLoading}>
+          {isLoading ? "Signing in..." : "Sign in"}
+          {!isLoading && <ArrowRight size={14} strokeWidth={1.5} />}
         </button>
 
         {/* Divider */}
@@ -149,7 +187,8 @@ export default function Login() {
         <button
           type="button"
           className={styles.socialBtn}
-          onClick={() => console.log("Google sign-in clicked")}
+          onClick={authService.googleLogin} // Connect to real Google flow
+          disabled={isLoading}
         >
           <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true">
             <path

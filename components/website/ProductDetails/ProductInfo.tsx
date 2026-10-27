@@ -19,13 +19,32 @@ export default function ProductInfo({ product }: Props) {
 
   const wishlisted = mounted ? has(product.id) : false;
 
-  const hasSale =
-    product.sale_price !== null && product.sale_price < product.regular_price;
-  const price = hasSale ? product.sale_price! : product.regular_price;
-  const savings = hasSale ? product.regular_price - price : 0;
+  // Prices Number mein convert karein (safety ke liye)
+  const regularPrice = Number(product.regular_price);
+  const salePrice = product.sale_price !== null ? Number(product.sale_price) : null;
+  
+  const hasSale = salePrice !== null && salePrice < regularPrice;
+  const price = hasSale ? salePrice! : regularPrice;
+  const savings = hasSale ? regularPrice - price : 0;
 
   const outOfStock = product.stock_quantity <= 0;
   const lowStock = !outOfStock && product.stock_quantity <= 5;
+
+  // Image URL Helper
+  const getImageUrl = (path: string) => {
+    if (!path) return "/placeholder.jpg";
+    return path.startsWith("http") ? path : `${process.env.NEXT_PUBLIC_STORAGE_URL}/${path}`;
+  };
+
+  // PRODUCT OBJECT TAYAR KAREIN (Cart / Wishlist mein bhejne ke liye)
+  // Isme hum full URL images aur number prices bhej rahe hain
+  const productForStorage: Product = {
+    ...product,
+    regular_price: regularPrice,
+    sale_price: salePrice,
+    main_image: getImageUrl(product.main_image),
+    images: (product.images || []).map(getImageUrl),
+  };
 
   const increment = () =>
     setQuantity((q) => Math.min(q + 1, product.stock_quantity || 1));
@@ -33,24 +52,22 @@ export default function ProductInfo({ product }: Props) {
 
   const handleAddToCart = () => {
     if (outOfStock) return;
-    addItem(product, quantity);
+    // Product object pass karein
+    addItem(productForStorage, quantity);
   };
 
   const handleWishlist = () => {
-    toggle(product);
+    // Product object pass karein
+    toggle(productForStorage);
   };
 
   return (
     <div className={styles.info}>
       {/* BREADCRUMB */}
       <nav className={styles.breadcrumb} aria-label="Breadcrumb">
-        <Link href="/" className={styles.crumbLink}>
-          Home
-        </Link>
+        <Link href="/" className={styles.crumbLink}>Home</Link>
         <span className={styles.crumbSep}>/</span>
-        <Link href="/shop" className={styles.crumbLink}>
-          Shop
-        </Link>
+        <Link href="/shop" className={styles.crumbLink}>Shop</Link>
         <span className={styles.crumbSep}>/</span>
         <span className={styles.crumbCurrent}>{product.name}</span>
       </nav>
@@ -64,12 +81,8 @@ export default function ProductInfo({ product }: Props) {
         {hasSale ? (
           <>
             <span className={styles.priceSale}>${price.toFixed(2)}</span>
-            <span className={styles.priceOld}>
-              ${product.regular_price.toFixed(2)}
-            </span>
-            <span className={styles.saveBadge}>
-              Save ${savings.toFixed(2)}
-            </span>
+            <span className={styles.priceOld}>${regularPrice.toFixed(2)}</span>
+            <span className={styles.saveBadge}>Save ${savings.toFixed(2)}</span>
           </>
         ) : (
           <span className={styles.price}>${price.toFixed(2)}</span>
@@ -79,17 +92,11 @@ export default function ProductInfo({ product }: Props) {
       {/* Stock */}
       <div className={styles.stockRow}>
         {outOfStock ? (
-          <span className={`${styles.stock} ${styles.stockOut}`}>
-            Out of Stock
-          </span>
+          <span className={`${styles.stock} ${styles.stockOut}`}>Out of Stock</span>
         ) : lowStock ? (
-          <span className={`${styles.stock} ${styles.stockLow}`}>
-            Only {product.stock_quantity} left in stock
-          </span>
+          <span className={`${styles.stock} ${styles.stockLow}`}>Only {product.stock_quantity} left in stock</span>
         ) : (
-          <span className={`${styles.stock} ${styles.stockIn}`}>
-            In Stock ({product.stock_quantity} available)
-          </span>
+          <span className={`${styles.stock} ${styles.stockIn}`}>In Stock ({product.stock_quantity} available)</span>
         )}
       </div>
 
@@ -105,9 +112,7 @@ export default function ProductInfo({ product }: Props) {
           >
             <Minus size={14} strokeWidth={1.8} />
           </button>
-          <span className={styles.qtyValue} aria-live="polite">
-            {quantity}
-          </span>
+          <span className={styles.qtyValue} aria-live="polite">{quantity}</span>
           <button
             type="button"
             className={styles.qtyBtn}
@@ -131,55 +136,31 @@ export default function ProductInfo({ product }: Props) {
 
         <button
           type="button"
-          className={`${styles.wishBtn} ${
-            wishlisted ? styles.wishActive : ""
-          }`}
+          className={`${styles.wishBtn} ${wishlisted ? styles.wishActive : ""}`}
           onClick={handleWishlist}
           aria-label={wishlisted ? "Remove from wishlist" : "Add to wishlist"}
           aria-pressed={wishlisted}
         >
-          <Heart
-            size={16}
-            strokeWidth={1.6}
-            fill={wishlisted ? "currentColor" : "none"}
-          />
+          <Heart size={16} strokeWidth={1.6} fill={wishlisted ? "currentColor" : "none"} />
         </button>
       </div>
 
       {/* Specs */}
       <dl className={styles.specGrid}>
-        <div>
-          <dt>SKU</dt>
-          <dd>{product.sku}</dd>
-        </div>
-        <div>
-          <dt>Weight</dt>
-          <dd>
-            {product.weight} {product.weight_unit}
-          </dd>
-        </div>
+        <div><dt>SKU</dt><dd>{product.sku}</dd></div>
+        <div><dt>Weight</dt><dd>{product.weight} {product.weight_unit}</dd></div>
         {product.length && product.width && product.height && (
           <div>
             <dt>Dimensions</dt>
-            <dd>
-              {product.length} × {product.width} × {product.height}{" "}
-              {product.dimension_unit}
-            </dd>
+            <dd>{product.length} × {product.width} × {product.height} {product.dimension_unit}</dd>
           </div>
         )}
         {product.shipping_class && (
-          <div>
-            <dt>Shipping Class</dt>
-            <dd>{product.shipping_class}</dd>
-          </div>
+          <div><dt>Shipping Class</dt><dd>{product.shipping_class}</dd></div>
         )}
         <div>
           <dt>Availability</dt>
-          <dd>
-            {outOfStock
-              ? "Out of stock"
-              : `${product.stock_quantity} in stock`}
-          </dd>
+          <dd>{outOfStock ? "Out of stock" : `${product.stock_quantity} in stock`}</dd>
         </div>
       </dl>
     </div>

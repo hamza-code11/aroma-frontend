@@ -3,51 +3,46 @@
 import { useRef, useState } from "react";
 import Image from "next/image";
 import {
-  Save,
   Plus,
   Trash2,
   Upload,
   Image as ImageIcon,
-  RotateCcw,
   RefreshCw,
+  Loader2,
 } from "lucide-react";
-import { galleryContent } from "@/data/gallery";
 import { useToast } from "@/components/ui/Toast";
-import type { GalleryContent, GalleryImage } from "@/types/gallery";
 import styles from "./GalleryCms.module.css";
 
-const newImage = (): GalleryImage => ({
-  id: `g-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
-  image: "",
-  imageAlt: "",
-});
+// Hooks Import
+import { 
+  useGallery, 
+  useUploadGalleryImage, 
+  useReplaceGalleryImage, 
+  useDeleteGalleryImage 
+} from "@/hooks/useGallery";
 
 /* ================= SINGLE IMAGE CARD ================= */
 function GalleryCard({
-  index,
   item,
-  onChange,
+  onReplace,
   onRemove,
+  isUploading,
+  isReplacing,
+  isDeleting,
 }: {
-  index: number;
-  item: GalleryImage;
-  onChange: (url: string) => void;
+  item: { id: number; image: string };
+  onReplace: (file: File) => void;
   onRemove: () => void;
+  isUploading?: boolean;
+  isReplacing?: boolean;
+  isDeleting?: boolean;
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
-  const [busy, setBusy] = useState(false);
   const [dragOver, setDragOver] = useState(false);
 
   const handleFile = (file: File) => {
     if (!file.type.startsWith("image/")) return;
-    setBusy(true);
-    const reader = new FileReader();
-    reader.onload = () => {
-      onChange(reader.result as string);
-      setBusy(false);
-    };
-    reader.onerror = () => setBusy(false);
-    reader.readAsDataURL(file);
+    onReplace(file);
   };
 
   const onDrop = (e: React.DragEvent) => {
@@ -64,12 +59,15 @@ function GalleryCard({
   };
 
   const openPicker = () => inputRef.current?.click();
+  const imageUrl = item.image.startsWith('http') 
+    ? item.image 
+    : `${process.env.NEXT_PUBLIC_STORAGE_URL}/${item.image}`;
+
+  const isBusy = isUploading || isReplacing || isDeleting;
 
   return (
     <div
-      className={`${styles.card} ${dragOver ? styles.cardActive : ""} ${
-        item.image ? styles.cardFilled : ""
-      }`}
+      className={`${styles.card} ${dragOver ? styles.cardActive : ""} ${styles.cardFilled}`}
       onDrop={onDrop}
       onDragOver={(e) => {
         e.preventDefault();
@@ -77,60 +75,47 @@ function GalleryCard({
       }}
       onDragLeave={() => setDragOver(false)}
     >
-      {item.image ? (
-        <>
-          <Image
-            src={item.image}
-            alt={item.imageAlt || `Gallery ${index + 1}`}
-            fill
-            sizes="(max-width: 900px) 50vw, 25vw"
-            className={styles.previewImg}
-            unoptimized
-          />
+      <Image
+        src={imageUrl}
+        alt={`Gallery ${item.id}`}
+        fill
+        sizes="(max-width: 900px) 50vw, 25vw"
+        className={styles.previewImg}
+        unoptimized
+      />
 
-          {/* Hover overlay with Replace */}
-          <div className={styles.overlay}>
-            <button
-              type="button"
-              className={styles.replaceBtn}
-              onClick={openPicker}
-              aria-label="Replace image"
-            >
-              <RefreshCw size={14} strokeWidth={1.8} />
-              Replace
-            </button>
-          </div>
+      {/* Loading Overlay */}
+      {isBusy && (
+        <div className={styles.overlay} style={{ opacity: 1, backgroundColor: 'rgba(0,0,0,0.6)' }}>
+          <Loader2 className="animate-spin text-white" size={24} />
+        </div>
+      )}
 
-          {/* Delete — top right */}
+      {!isBusy && (
+        <div className={styles.overlay}>
           <button
             type="button"
-            className={styles.deleteBtn}
-            onClick={(e) => {
-              e.stopPropagation();
-              onRemove();
-            }}
-            aria-label="Delete image"
+            className={styles.replaceBtn}
+            onClick={openPicker}
+            aria-label="Replace image"
           >
-            <Trash2 size={13} strokeWidth={2} />
+            <RefreshCw size={14} strokeWidth={1.8} />
+            Replace
           </button>
-        </>
-      ) : (
+        </div>
+      )}
+
+      {!isBusy && (
         <button
           type="button"
-          className={styles.emptyBtn}
-          onClick={openPicker}
-          aria-label={`Upload gallery image ${index + 1}`}
+          className={styles.deleteBtn}
+          onClick={(e) => {
+            e.stopPropagation();
+            onRemove();
+          }}
+          aria-label="Delete image"
         >
-          <span className={styles.dropIcon} aria-hidden="true">
-            {busy ? (
-              <Upload size={20} strokeWidth={1.7} className={styles.spin} />
-            ) : (
-              <ImageIcon size={20} strokeWidth={1.7} />
-            )}
-          </span>
-          <span className={styles.dropText}>
-            {busy ? "Uploading…" : "Click or drop image"}
-          </span>
+          <Trash2 size={13} strokeWidth={2} />
         </button>
       )}
 
@@ -149,100 +134,114 @@ function GalleryCard({
 /* ================= MAIN ================= */
 export default function GalleryCms() {
   const { showToast } = useToast();
+  const uploadInputRef = useRef<HTMLInputElement>(null);
 
-  const [content, setContent] = useState<GalleryContent>(() =>
-    JSON.parse(JSON.stringify(galleryContent))
-  );
-  const [saving, setSaving] = useState(false);
+  // Fetch Data
+  const { data: galleryData, isLoading } = useGallery(1);
+  const galleryImages = galleryData?.data || [];
 
-  const updateImage = (index: number, url: string) => {
-    setContent((prev) => ({
-      ...prev,
-      images: prev.images.map((img, i) =>
-        i === index ? { ...img, image: url } : img
-      ),
-    }));
+  // Mutations
+  const uploadMutation = useUploadGalleryImage();
+  const replaceMutation = useReplaceGalleryImage();
+  const deleteMutation = useDeleteGalleryImage();
+
+  // Handlers
+  const handleUpload = (file: File) => {
+    if (!file.type.startsWith("image/")) return;
+    uploadMutation.mutate(file, {
+      onSuccess: () => showToast("Image uploaded successfully.", "success"),
+      onError: (err: any) => showToast(err.response?.data?.message || "Upload failed", "error"),
+    });
   };
 
-  const removeImage = (index: number) => {
-    setContent((prev) => ({
-      ...prev,
-      images: prev.images.filter((_, i) => i !== index),
-    }));
-    showToast("Image removed.", "info");
+  const handleReplace = (id: number, file: File) => {
+    replaceMutation.mutate(
+      { id, image: file },
+      {
+        onSuccess: () => showToast("Image replaced successfully.", "success"),
+        onError: (err: any) => showToast(err.response?.data?.message || "Replace failed", "error"),
+      }
+    );
   };
 
-  const addImage = () => {
-    setContent((prev) => ({ ...prev, images: [...prev.images, newImage()] }));
+  const handleRemove = (id: number) => {
+    if (!confirm("Are you sure you want to delete this image?")) return;
+    deleteMutation.mutate(id, {
+      onSuccess: () => showToast("Image deleted.", "success"),
+      onError: (err: any) => showToast(err.response?.data?.message || "Delete failed", "error"),
+    });
   };
 
-  const handleSave = (e: React.FormEvent) => {
-    e.preventDefault();
-    setSaving(true);
-    console.log("Save gallery content:", content);
-    showToast("Gallery updated.");
-    setTimeout(() => setSaving(false), 600);
-  };
-
-  const handleReset = () => {
-    setContent(JSON.parse(JSON.stringify(galleryContent)));
-    showToast("Reset to original.", "info");
+  const onUploadInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) handleUpload(file);
+    e.target.value = "";
   };
 
   return (
-    <form className={styles.wrap} onSubmit={handleSave}>
+    <div className={styles.wrap}>
       {/* HEADER */}
       <div className={styles.header}>
         <div>
           <h3 className={styles.headerTitle}>Gallery</h3>
           <p className={styles.headerSubtitle}>
-            {content.images.length} image{content.images.length === 1 ? "" : "s"} ·
+            {galleryImages.length} image{galleryImages.length === 1 ? "" : "s"} ·
             upload, replace, or delete.
           </p>
-        </div>
-        <div className={styles.headerActions}>
-          <button
-            type="button"
-            className={styles.resetBtn}
-            onClick={handleReset}
-          >
-            <RotateCcw size={14} strokeWidth={1.7} />
-            Reset
-          </button>
-          <button type="submit" className={styles.saveBtn} disabled={saving}>
-            <Save size={14} strokeWidth={1.8} />
-            {saving ? "Saving…" : "Save Changes"}
-          </button>
         </div>
       </div>
 
       {/* ============ IMAGES GRID ============ */}
       <section className={styles.section}>
-        <div className={styles.grid}>
-          {content.images.map((item, i) => (
-            <GalleryCard
-              key={item.id}
-              index={i}
-              item={item}
-              onChange={(url) => updateImage(i, url)}
-              onRemove={() => removeImage(i)}
-            />
-          ))}
+        {isLoading ? (
+          <div style={{ padding: '40px', textAlign: 'center', color: 'var(--text-secondary)' }}>
+            <Loader2 className="animate-spin mx-auto mb-4" size={28} />
+            Loading gallery...
+          </div>
+        ) : (
+          <div className={styles.grid}>
+            {galleryImages.map((item) => (
+              <GalleryCard
+                key={item.id}
+                item={item}
+                onReplace={(file) => handleReplace(item.id, file)}
+                onRemove={() => handleRemove(item.id)}
+                isReplacing={replaceMutation.isPending && replaceMutation.variables?.id === item.id}
+                isDeleting={deleteMutation.isPending && deleteMutation.variables === item.id}
+              />
+            ))}
 
-          {/* Add card */}
-          <button
-            type="button"
-            className={styles.addCard}
-            onClick={addImage}
-            aria-label="Add image"
-          >
-            <span className={styles.addIcon} aria-hidden="true">
-              <Plus size={22} strokeWidth={1.7} />
-            </span>
-            <span className={styles.addText}>Add Image</span>
-          </button>
-        </div>
+            {/* Add Card (Upload New) */}
+            <button
+              type="button"
+              className={styles.addCard}
+              onClick={() => uploadInputRef.current?.click()}
+              disabled={uploadMutation.isPending}
+              aria-label="Add image"
+            >
+              <span className={styles.addIcon} aria-hidden="true">
+                {uploadMutation.isPending ? (
+                  <Loader2 size={22} className="animate-spin" />
+                ) : (
+                  <Plus size={22} strokeWidth={1.7} />
+                )}
+              </span>
+              <span className={styles.addText}>
+                {uploadMutation.isPending ? "Uploading..." : "Add Image"}
+              </span>
+            </button>
+            
+            <input
+              ref={uploadInputRef}
+              type="file"
+              accept="image/*"
+              className={styles.fileInput}
+              onChange={onUploadInputChange}
+              tabIndex={-1}
+            />
+          </div>
+        )}
       </section>
-    </form>
+    </div>
   );
 }

@@ -8,76 +8,75 @@ import {
   X,
   Star,
   BadgeCheck,
-  Check,
-  Copy,
+  Loader2,
 } from "lucide-react";
 import { useToast } from "@/components/ui/Toast";
 import type { Testimonial } from "@/types/testimonial";
 import styles from "./Testimonials.module.css";
 
-type Props = {
-  testimonials: Testimonial[];
-};
+// Hooks Import
+import { useAdminTestimonials, useToggleTestimonialVerification } from "@/hooks/useTestimonials";
+import TestimonialsSkeleton from "@/components/admin/skeletons/TestimonialsSkeleton/TestimonialsSkeleton";
 
-export default function TestimonialsList({ testimonials: initial }: Props) {
-  const [items, setItems] = useState(initial);
+export default function TestimonialsList() {
   const [query, setQuery] = useState("");
   const [viewing, setViewing] = useState<Testimonial | null>(null);
   const [deleting, setDeleting] = useState<Testimonial | null>(null);
-  const [copiedId, setCopiedId] = useState<number | null>(null);
   const { showToast } = useToast();
 
+  // Fetch Dynamic Data
+  const { data: apiData, isLoading } = useAdminTestimonials(1);
+  const testimonials = apiData?.data || [];
+
+  // Toggle Mutation
+  const toggleMutation = useToggleTestimonialVerification();
+
+  // Search Filter
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
-    if (!q) return items;
-    return items.filter(
+    if (!q) return testimonials;
+    return testimonials.filter(
       (t) =>
         t.user.name.toLowerCase().includes(q) ||
-        t.user.email.toLowerCase().includes(q) ||
-        t.rating.review.toLowerCase().includes(q)
+        (t.user.email && t.user.email.toLowerCase().includes(q)) ||
+        t.reviews.toLowerCase().includes(q)
     );
-  }, [items, query]);
+  }, [testimonials, query]);
 
+  // Verified Count
   const verifiedCount = useMemo(
-    () => items.filter((t) => t.rating.verified).length,
-    [items]
+    () => testimonials.filter((t) => t.is_verified).length,
+    [testimonials]
   );
 
-  const toggleVerified = (ratingId: number) => {
-    setItems((prev) =>
-      prev.map((t) =>
-        t.rating.id === ratingId
-          ? { ...t, rating: { ...t.rating, verified: !t.rating.verified } }
-          : t
-      )
+  const toggleVerified = (t: Testimonial) => {
+    toggleMutation.mutate(
+      { id: t.id, is_verified: !t.is_verified },
+      {
+        onSuccess: () => {
+          showToast(
+            `"${t.user.name}" review is now ${!t.is_verified ? "verified" : "unverified"}.`,
+            !t.is_verified ? "success" : "info"
+          );
+          // Modal khula hai toh update kar dein
+          if (viewing?.id === t.id) {
+            setViewing({ ...viewing, is_verified: !t.is_verified });
+          }
+        },
+        onError: (error: any) => {
+          showToast(error.response?.data?.message || "Failed to update status", "error");
+        }
+      }
     );
-    const item = items.find((t) => t.rating.id === ratingId);
-    if (item) {
-      showToast(
-        `"${item.user.name}" review is now ${
-          item.rating.verified ? "unverified" : "verified"
-        }.`,
-        item.rating.verified ? "info" : "success"
-      );
-    }
   };
 
   const handleDelete = () => {
     if (!deleting) return;
-    setItems((prev) => prev.filter((t) => t.rating.id !== deleting.rating.id));
-    showToast(`Review by "${deleting.user.name}" deleted.`);
+    // TODO: Backend API banne ke baad isko connect karein
+    // deleteMutation.mutate(deleting.id, { ... })
+    
+    showToast(`Review by "${deleting.user.name}" deleted.`, "success");
     setDeleting(null);
-  };
-
-  const copyEmail = async (id: number, email: string) => {
-    try {
-      await navigator.clipboard.writeText(email);
-      setCopiedId(id);
-      showToast("Email copied.", "info");
-      setTimeout(() => setCopiedId(null), 1500);
-    } catch {
-      showToast("Failed to copy.", "error");
-    }
   };
 
   const formatDate = (iso: string) =>
@@ -107,6 +106,10 @@ export default function TestimonialsList({ testimonials: initial }: Props) {
       .slice(0, 2)
       .toUpperCase();
 
+  if (isLoading) {
+    return <TestimonialsSkeleton />;
+  }
+ 
   return (
     <div className={styles.page}>
       {/* HEADER */}
@@ -114,7 +117,7 @@ export default function TestimonialsList({ testimonials: initial }: Props) {
         <div>
           <h2 className={styles.title}>Testimonials</h2>
           <p className={styles.subtitle}>
-            {items.length} review{items.length === 1 ? "" : "s"} ·{" "}
+            {testimonials.length} review{testimonials.length === 1 ? "" : "s"} ·{" "}
             {verifiedCount} verified
           </p>
         </div>
@@ -163,7 +166,7 @@ export default function TestimonialsList({ testimonials: initial }: Props) {
             </thead>
             <tbody>
               {filtered.map((t) => (
-                <tr key={t.rating.id}>
+                <tr key={t.id}>
                   <td>
                     <div className={styles.userCell}>
                       <span className={styles.avatar}>
@@ -180,33 +183,34 @@ export default function TestimonialsList({ testimonials: initial }: Props) {
                   <td>
                     <div className={styles.ratingCell}>
                       <span className={styles.ratingValue}>
-                        {t.rating.ratings}.0
+                        {t.ratings}.0
                       </span>
                     </div>
                   </td>
                   <td className={styles.reviewCell}>
-                    <span className={styles.reviewPreview} title={t.rating.review}>
-                      {truncate(t.rating.review)}
+                    <span className={styles.reviewPreview} title={t.reviews}>
+                      {truncate(t.reviews)}
                     </span>
                   </td>
                   <td>
                     <button
                       type="button"
                       role="switch"
-                      aria-checked={t.rating.verified}
+                      aria-checked={t.is_verified}
                       className={`${styles.toggle} ${
-                        t.rating.verified ? styles.toggleOn : styles.toggleOff
+                        t.is_verified ? styles.toggleOn : styles.toggleOff
                       }`}
-                      onClick={() => toggleVerified(t.rating.id)}
+                      onClick={() => toggleVerified(t)}
+                      disabled={toggleMutation.isPending && toggleMutation.variables?.id === t.id}
                       aria-label={`Toggle verified for ${t.user.name}`}
                     >
                       <span className={styles.toggleKnob} />
                       <span className={styles.toggleLabel}>
-                        {t.rating.verified ? "Verified" : "Unverified"}
+                        {t.is_verified ? "Verified" : "Unverified"}
                       </span>
                     </button>
                   </td>
-                  <td className={styles.date}>{formatDate(t.rating.created_at)}</td>
+                  <td className={styles.date}>{formatDate(t.created_at)}</td>
                   <td className={styles.tdRight}>
                     <div className={styles.actions}>
                       <button
@@ -269,7 +273,7 @@ export default function TestimonialsList({ testimonials: initial }: Props) {
               </div>
               <div>
                 <dt>Rating ID</dt>
-                <dd>#{viewing.rating.id}</dd>
+                <dd>#{viewing.id}</dd>
               </div>
               <div>
                 <dt>Rating</dt>
@@ -281,10 +285,10 @@ export default function TestimonialsList({ testimonials: initial }: Props) {
                         size={14}
                         strokeWidth={0}
                         fill={
-                          i < viewing.rating.ratings ? "currentColor" : "none"
+                          i < viewing.ratings ? "currentColor" : "none"
                         }
                         className={
-                          i < viewing.rating.ratings
+                          i < viewing.ratings
                             ? styles.starFilled
                             : styles.starEmpty
                         }
@@ -296,7 +300,7 @@ export default function TestimonialsList({ testimonials: initial }: Props) {
               <div>
                 <dt>Status</dt>
                 <dd>
-                  {viewing.rating.verified ? (
+                  {viewing.is_verified ? (
                     <span className={styles.verifiedBadge}>
                       <BadgeCheck size={12} strokeWidth={2.2} />
                       Verified
@@ -310,35 +314,29 @@ export default function TestimonialsList({ testimonials: initial }: Props) {
               </div>
               <div>
                 <dt>Created</dt>
-                <dd>{formatDateTime(viewing.rating.created_at)}</dd>
+                <dd>{formatDateTime(viewing.created_at)}</dd>
               </div>
             </dl>
 
             <div className={styles.dialogBody}>
               <p className={styles.dialogBodyLabel}>Review</p>
-              <p className={styles.dialogReview}>{viewing.rating.review}</p>
+              <p className={styles.dialogReview}>{viewing.reviews}</p>
             </div>
 
             <div className={styles.dialogActions}>
               <button
                 type="button"
                 className={`${styles.toggleLarge} ${
-                  viewing.rating.verified
+                  viewing.is_verified
                     ? styles.toggleLargeOn
                     : styles.toggleLargeOff
                 }`}
-                onClick={() => {
-                  toggleVerified(viewing.rating.id);
-                  setViewing({
-                    ...viewing,
-                    rating: {
-                      ...viewing.rating,
-                      verified: !viewing.rating.verified,
-                    },
-                  });
-                }}
+                onClick={() => toggleVerified(viewing)}
+                disabled={toggleMutation.isPending}
               >
-                {viewing.rating.verified ? (
+                {toggleMutation.isPending ? (
+                  <><Loader2 size={14} className="animate-spin" /> Updating...</>
+                ) : viewing.is_verified ? (
                   <>
                     <BadgeCheck size={14} strokeWidth={2} />
                     Verified — Click to unverify

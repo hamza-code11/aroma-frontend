@@ -77,9 +77,12 @@ export default function WishlistSidebar() {
             <ul className={styles.list}>
               {wishlist.map((item) => {
                 const p = item.product;
-                const hasSale =
-                  p.sale_price !== null && p.sale_price < p.regular_price;
-                const price = hasSale ? p.sale_price! : p.regular_price;
+                
+                // Safe price conversions
+                const regularPrice = Number(p.regular_price);
+                const salePrice = p.sale_price !== null ? Number(p.sale_price) : null;
+                const hasSale = salePrice !== null && salePrice < regularPrice;
+                const price = hasSale ? salePrice! : regularPrice;
 
                 return (
                   <li key={p.id} className={styles.item}>
@@ -89,10 +92,11 @@ export default function WishlistSidebar() {
                       onClick={close}
                     >
                       <Image
-                        src={p.main_image}
+                        src={p.main_image || "/placeholder.jpg"} // Fallback
                         alt={p.name}
                         fill
                         sizes="80px"
+                        unoptimized // Full URL ya local, dono ke liye
                         className={styles.itemImage}
                       />
                     </Link>
@@ -113,7 +117,7 @@ export default function WishlistSidebar() {
                               ${price.toFixed(2)}
                             </span>
                             <span className={styles.itemPriceOld}>
-                              ${p.regular_price.toFixed(2)}
+                              ${regularPrice.toFixed(2)}
                             </span>
                           </>
                         ) : (

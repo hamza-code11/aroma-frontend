@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-// import HeroCms from "./HeroCms/HeroCms";
+import HeroCms from "./HeroCms/HeroCms";
 import BannerCms from "./BannerCms/BannerCms";
 import GalleryCms from "./GalleryCms/GalleryCms";
 import ShopCms from "./ShopCms/ShopCms";
@@ -10,7 +10,7 @@ import ContactCms from "./ContactCms/ContactCms";
 import styles from "./Cms.module.css";
 
 type TabKey =
-  // | "hero"
+  | "hero"
   | "banner"
   | "gallery"
   | "shop"
@@ -23,7 +23,7 @@ type Tab = {
 };
 
 const TABS: Tab[] = [
-  // { id: "hero", label: "Hero" },
+  { id: "hero", label: "Hero" },
   { id: "banner", label: "Banner" },
   { id: "gallery", label: "Gallery" },
   { id: "shop", label: "Shop" },
@@ -32,12 +32,12 @@ const TABS: Tab[] = [
 ];
 
 export default function CmsTabs() {
-  const [active, setActive] = useState<TabKey>("banner");
+  const [active, setActive] = useState<TabKey>("hero");
 
   const renderContent = () => {
     switch (active) {
-      // case "hero":
-      //   return <HeroCms />;
+      case "hero":
+        return <HeroCms />;
       case "banner":
         return <BannerCms />;
       case "gallery":

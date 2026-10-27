@@ -1,12 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import Image from "next/image";
 import styles from "./ImageGallery.module.css";
 
 type Props = {
-  mainImage: string;        // products.main_image
-  images: string[];         // products.images (sirf thumbnails ke liye)
+  mainImage: string;        
+  images: string[];         
   name: string;
   saleBadge?: string | null;
   outOfStock?: boolean;
@@ -19,54 +19,59 @@ export default function ImageGallery({
   saleBadge,
   outOfStock,
 }: Props) {
-  // null = default main_image dikhao, warna clicked thumbnail
-  const [selected, setSelected] = useState<string | null>(null);
+  // Saari images ko combine karein (Main image + Gallery images) aur duplicates hatayein
+  const allImages = useMemo(() => {
+    const combined = [mainImage, ...(images || [])];
+    return Array.from(new Set(combined)).filter(Boolean); // Remove empty and duplicates
+  }, [mainImage, images]);
 
-  const thumbs = images ?? [];
-  const hasThumbs = thumbs.length > 0;
-  const shownImage = selected ?? mainImage ?? "/placeholder.png";
+  const [selected, setSelected] = useState<string>(allImages[0] || "");
+  const hasThumbs = allImages.length > 1;
+
+  // Function to get full image URL
+  const getImageUrl = (path: string) => {
+    if (!path) return "/placeholder.png";
+    return path.startsWith("http") ? path : `${process.env.NEXT_PUBLIC_STORAGE_URL}/${path}`;
+  };
+
+  const shownImage = selected || allImages[0];
 
   return (
-    <div
-      className={`${styles.gallery} ${hasThumbs ? "" : styles.galleryNoThumbs}`}
-    >
-      {/* LEFT: thumbnails (images column) */}
+    <div className={`${styles.gallery} ${hasThumbs ? "" : styles.galleryNoThumbs}`}>
+      {/* THUMBNAILS */}
       {hasThumbs && (
-        <div
-          className={styles.thumbCol}
-          role="tablist"
-          aria-label="Product images"
-        >
-          {thumbs.map((img, i) => (
-            <button
-              key={`${img}-${i}`}
-              type="button"
-              role="tab"
-              aria-selected={shownImage === img}
-              className={`${styles.thumb} ${
-                shownImage === img ? styles.thumbActive : ""
-              }`}
-              onClick={() => setSelected(img)}
-              aria-label={`View image ${i + 1}`}
-            >
-              <Image
-                src={img}
-                alt={`${name} ${i + 1}`}
-                fill
-                sizes="88px"
-                unoptimized
-                className={styles.thumbImg}
-              />
-            </button>
-          ))}
+        <div className={styles.thumbCol} role="tablist" aria-label="Product images">
+          {allImages.map((img, i) => {
+            const fullUrl = getImageUrl(img);
+            return (
+              <button
+                key={`${img}-${i}`}
+                type="button"
+                role="tab"
+                aria-selected={selected === img}
+                className={`${styles.thumb} ${selected === img ? styles.thumbActive : ""}`}
+                onClick={() => setSelected(img)}
+                aria-label={`View image ${i + 1}`}
+              >
+                <Image
+                  src={fullUrl}
+                  alt={`${name} ${i + 1}`}
+                  fill
+                  sizes="88px"
+                  unoptimized
+                  className={styles.thumbImg}
+                />
+              </button>
+            );
+          })}
         </div>
       )}
 
-      {/* RIGHT: main image (main_image column) */}
+      {/* MAIN IMAGE */}
       <div className={styles.mainImageWrap}>
         <Image
           key={shownImage}
-          src={shownImage}
+          src={getImageUrl(shownImage)}
           alt={name}
           fill
           priority

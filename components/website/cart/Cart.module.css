@@ -617,3 +617,123 @@
     transition: none;
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+/* ================= TAX ID SECTION ================= */
+.taxSection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  padding: var(--space-md);
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  margin-top: var(--space-md);
+}
+
+.taxStatus {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--accent-text);
+  font-weight: 500;
+}
+
+.taxForm {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+}
+
+.taxInput {
+  flex: 1;
+  padding: 10px 14px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-size: 13px;
+  outline: none;
+}
+
+.taxInput:focus {
+  border-color: var(--accent-primary);
+}
+
+.taxSubmitBtn {
+  padding: 10px 16px;
+  border-radius: var(--radius-md);
+  border: none;
+  background-color: var(--accent-primary);
+  color: var(--on-accent);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.taxSubmitBtn:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.taxSubmitBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.checkoutBtnLocked {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-primary);
+  color: var(--text-secondary);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: not-allowed;
+  width: 100%;
+}
+
+
+
+
+.checkStatusBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+  padding: 6px 12px;
+  background-color: transparent;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  align-self: flex-start;
+}
+
+.checkStatusBtn:hover:not(:disabled) {
+  border-color: var(--accent-primary);
+  color: var(--accent-primary);
+  background-color: color-mix(in srgb, var(--accent-primary) 5%, transparent);
+}
+
+.checkStatusBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

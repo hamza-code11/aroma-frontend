@@ -1,18 +1,38 @@
-export type TestimonialUser = {
+export interface TestimonialUser {
   id: number;
   name: string;
-  email: string;
-};
+  email?: string; // Admin list mein email bhi aata hai
+}
 
-export type TestimonialRating = {
+export interface Testimonial {
   id: number;
-  ratings: number;        // 1-5
-  review: string;
-  verified: boolean;
+  user_id: number;
+  ratings: number;
+  reviews: string;
+  is_verified: boolean;
   created_at: string;
-};
+  updated_at: string;
+  user: TestimonialUser; // Backend with('user') kar raha hai
+}
 
-export type Testimonial = {
-  user: TestimonialUser;
-  rating: TestimonialRating;
-};
+export interface TestimonialPayload {
+  ratings: number;
+  reviews: string;
+}
+
+// Pagination Type (Laravel ki default pagination ke liye)
+export interface PaginatedResponse<T> {
+  current_page: number;
+  data: T[];
+  first_page_url: string;
+  from: number;
+  last_page: number;
+  last_page_url: string;
+  links: any[];
+  next_page_url: string | null;
+  path: string;
+  per_page: number;
+  prev_page_url: string | null;
+  to: number;
+  total: number;
+}

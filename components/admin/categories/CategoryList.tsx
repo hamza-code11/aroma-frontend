@@ -1,7 +1,7 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { Plus, Pencil, Trash2, Search } from "lucide-react";
+import { useState } from "react";
+import { Plus, Pencil, Trash2 } from "lucide-react";
 import CreateCategoryModal from "./CreateCategoryModal";
 import EditCategoryModal from "./EditCategoryModal";
 import DeleteCategoryModal from "./DeleteCategoryModal";
@@ -9,62 +9,109 @@ import { useToast } from "@/components/ui/Toast";
 import type { Category } from "@/types/category";
 import styles from "./CategoryList.module.css";
 
+// Hooks Import
+import { 
+  useCategories, 
+  useCreateCategory, 
+  useUpdateCategory, 
+  useDeleteCategory, 
+  useToggleCategory 
+} from "@/hooks/categories/useCategories";
+
 type Props = {
-  initialCategories: Category[];
+  initialCategories?: Category[]; // Ab ye prop zaroori nahi, par rehne dein for fallback
 };
 
-const nextId = (list: Category[]) => Math.max(0, ...list.map((c) => c.id)) + 1;
+export default function CategoryList({ initialCategories = [] }: Props) {
+  const { showToast } = useToast();
 
-export default function CategoryList({ initialCategories }: Props) {
-  const [categories, setCategories] = useState(initialCategories);
-  const [query, setQuery] = useState("");
+  // State for Modals
   const [createOpen, setCreateOpen] = useState(false);
   const [editing, setEditing] = useState<Category | null>(null);
   const [deleting, setDeleting] = useState<Category | null>(null);
 
-  const { showToast } = useToast();
-
-  const filtered = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    if (!q) return categories;
-    return categories.filter(
-      (c) =>
-        c.name.toLowerCase().includes(q) || c.slug.toLowerCase().includes(q)
-    );
-  }, [categories, query]);
+  // React Query Hooks
+  const { data: categories = initialCategories, isLoading, isError } = useCategories();
+  const createMutation = useCreateCategory();
+  const updateMutation = useUpdateCategory();
+  const deleteMutation = useDeleteCategory();
+  const toggleMutation = useToggleCategory();
 
   /* ---------- Handlers ---------- */
   const handleCreate = (payload: Omit<Category, "id">) => {
-    const created: Category = { id: nextId(categories), ...payload };
-    setCategories((prev) => [...prev, created]);
-    setCreateOpen(false);
-    showToast(`Category "${created.name}" created.`);
+    createMutation.mutate(payload, {
+      onSuccess: (data) => {
+        setCreateOpen(false);
+        showToast(`Category "${data.name}" created.`, "success");
+      },
+      onError: (error: any) => {
+        showToast(error.response?.data?.message || "Failed to create category", "error");
+      }
+    });
   };
 
   const handleUpdate = (updated: Category) => {
-    setCategories((prev) =>
-      prev.map((c) => (c.id === updated.id ? updated : c))
+    updateMutation.mutate(
+      { id: updated.id, payload: updated },
+      {
+        onSuccess: (data) => {
+          setEditing(null);
+          showToast(`Category "${data.name}" updated.`, "success");
+        },
+        onError: (error: any) => {
+          showToast(error.response?.data?.message || "Failed to update", "error");
+        }
+      }
     );
-    setEditing(null);
-    showToast(`Category "${updated.name}" updated.`);
   };
 
   const handleDelete = (category: Category) => {
-    setCategories((prev) => prev.filter((c) => c.id !== category.id));
-    setDeleting(null);
-    showToast(`Category "${category.name}" deleted.`);
+    deleteMutation.mutate(category.id, {
+      onSuccess: () => {
+        setDeleting(null);
+        showToast(`Category "${category.name}" deleted.`, "success");
+      },
+      onError: (error: any) => {
+        showToast(error.response?.data?.message || "Failed to delete", "error");
+        setDeleting(null);
+      }
+    });
   };
 
-  const handleToggleStatus = (category: Category) => {
-    const next = !category.is_active;
-    setCategories((prev) =>
-      prev.map((c) => (c.id === category.id ? { ...c, is_active: next } : c))
-    );
-    showToast(
-      `"${category.name}" is now ${next ? "active" : "inactive"}.`,
-      next ? "success" : "info"
-    );
+    const handleToggleStatus = (category: Category) => {
+    toggleMutation.mutate(category.id, {
+      onSuccess: () => {
+        showToast(
+          `"${category.name}" status updated successfully.`,
+          category.is_active ? "info" : "success" // UI ka logic
+        );
+      },
+      onError: () => {
+        showToast("Failed to update status", "error");
+      }
+    });
   };
+
+  /* ---------- Loading & Error States ---------- */
+  if (isLoading) {
+    return (
+      <div className={styles.wrap}>
+        <div style={{ padding: '50px', textAlign: 'center', color: 'var(--text-secondary)' }}>
+          Loading categories...
+        </div>
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className={styles.wrap}>
+        <div style={{ padding: '50px', textAlign: 'center', color: '#ef4444' }}>
+          Error loading categories. Please try again.
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.wrap}>
@@ -88,33 +135,12 @@ export default function CategoryList({ initialCategories }: Props) {
         </button>
       </header>
 
-      {/* ============ TOOLBAR ============ */}
-      <div className={styles.toolbar}>
-        <div className={styles.searchWrap}>
-          <Search size={15} strokeWidth={1.7} className={styles.searchIcon} />
-          <input
-            type="text"
-            className={styles.searchInput}
-            placeholder="Search by name or slug…"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            aria-label="Search categories"
-          />
-        </div>
-
-        <span className={styles.count}>
-          {filtered.length} result{filtered.length === 1 ? "" : "s"}
-        </span>
-      </div>
-
       {/* ============ TABLE ============ */}
-      {filtered.length === 0 ? (
+      {categories.length === 0 ? (
         <div className={styles.empty}>
           <p className={styles.emptyTitle}>No categories found</p>
           <p className={styles.emptyText}>
-            {query
-              ? "Try a different search term."
-              : "Create your first category to get started."}
+            Create your first category to get started.
           </p>
         </div>
       ) : (
@@ -129,7 +155,7 @@ export default function CategoryList({ initialCategories }: Props) {
               </tr>
             </thead>
             <tbody>
-              {filtered.map((c) => (
+              {categories.map((c) => (
                 <tr key={c.id}>
                   <td>
                     <span className={styles.name}>{c.name}</span>
@@ -146,6 +172,7 @@ export default function CategoryList({ initialCategories }: Props) {
                         c.is_active ? styles.toggleOn : styles.toggleOff
                       }`}
                       onClick={() => handleToggleStatus(c)}
+                      disabled={toggleMutation.isPending}
                       aria-label={`Toggle ${c.name} ${
                         c.is_active ? "inactive" : "active"
                       }`}
@@ -189,18 +216,21 @@ export default function CategoryList({ initialCategories }: Props) {
         open={createOpen}
         onClose={() => setCreateOpen(false)}
         onSubmit={handleCreate}
+        isLoading={createMutation.isPending}
       />
 
       <EditCategoryModal
         category={editing}
         onClose={() => setEditing(null)}
         onSubmit={handleUpdate}
+        isLoading={updateMutation.isPending}
       />
 
       <DeleteCategoryModal
         category={deleting}
         onClose={() => setDeleting(null)}
         onConfirm={handleDelete}
+        isLoading={deleteMutation.isPending}
       />
     </div>
   );

@@ -3,62 +3,15 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Star, ArrowLeft, ArrowRight, PenLine } from "lucide-react";
+import { Star, ArrowLeft, ArrowRight, PenLine, Loader2 } from "lucide-react";
 import WriteReviewModal from "./WriteReviewModal";
 import styles from "./Testimonials.module.css";
 
-gsap.registerPlugin(ScrollTrigger);
+// Hooks Import
+import { useTestimonials, useSubmitTestimonial } from "@/hooks/useTestimonials";
+import { useToast } from "@/components/ui/Toast";
 
-const REVIEWS = [
-  {
-    id: 1,
-    quote:
-      "The scent fills my living room within minutes and stays soft all evening. Guests ask about it every single time.",
-    name: "Ayesha Khan",
-    place: "Karachi",
-    product: "Oud Royale",
-  },
-  {
-    id: 2,
-    quote:
-      "I use the diffuser in my bedroom at night and the amber blend is calming without being heavy. Worth every rupee.",
-    name: "Hamza Siddiqui",
-    place: "Lahore",
-    product: "Amber Noir",
-  },
-  {
-    id: 3,
-    quote:
-      "Packaging felt premium and the jasmine fragrance is exactly as described. It has become my daily ritual.",
-    name: "Sana Malik",
-    place: "Islamabad",
-    product: "Jasmine Bloom",
-  },
-  {
-    id: 4,
-    quote:
-      "Citrus Veil is now my morning ritual. Fresh, clean and it wakes up the whole house without being overpowering.",
-    name: "Bilal Ahmed",
-    place: "Faisalabad",
-    product: "Citrus Veil",
-  },
-  {
-    id: 5,
-    quote:
-      "I gifted Amber Noir to my mother and she has not stopped talking about it. Elegant bottle, richer scent.",
-    name: "Mariam Tariq",
-    place: "Multan",
-    product: "Amber Noir",
-  },
-  {
-    id: 6,
-    quote:
-      "Every room in my home smells like a boutique hotel now. The longevity is genuinely impressive.",
-    name: "Usman Raza",
-    place: "Rawalpindi",
-    product: "Oud Royale",
-  },
-];
+gsap.registerPlugin(ScrollTrigger);
 
 export default function Testimonials() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -66,6 +19,15 @@ export default function Testimonials() {
   const [canPrev, setCanPrev] = useState(false);
   const [canNext, setCanNext] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
+
+  const { showToast } = useToast();
+
+  // Data Fetching
+  const { data: testimonialsData, isLoading } = useTestimonials(1); // Page 1
+  const testimonials = testimonialsData?.data || [];
+
+  // Submit Mutation
+  const submitMutation = useSubmitTestimonial();
 
   /* ---------- Arrows enable/disable ---------- */
   const updateButtons = useCallback(() => {
@@ -100,12 +62,12 @@ export default function Testimonials() {
       track.removeEventListener("scroll", updateButtons);
       window.removeEventListener("resize", updateButtons);
     };
-  }, [updateButtons]);
+  }, [updateButtons, testimonials]);
 
-  /* ---------- GSAP intro (opacity-only, no layout shift) ---------- */
+  /* ---------- GSAP intro ---------- */
   useEffect(() => {
     const section = sectionRef.current;
-    if (!section) return;
+    if (!section || isLoading || testimonials.length === 0) return;
 
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
@@ -126,7 +88,27 @@ export default function Testimonials() {
     }, section);
 
     return () => ctx.revert();
-  }, []);
+  }, [isLoading, testimonials.length]);
+
+  // Handle Form Submit
+  const handleReviewSubmit = (data: { rating: number; review: string }) => {
+    submitMutation.mutate(
+      { ratings: data.rating, reviews: data.review },
+      {
+        onSuccess: () => {
+          showToast("Your review has been submitted for approval.", "success");
+          setModalOpen(false);
+        },
+        onError: (error: any) => {
+          if (error.response?.status === 401) {
+            showToast("Please login to submit a review.", "error");
+          } else {
+            showToast(error.response?.data?.message || "Failed to submit review.", "error");
+          }
+        }
+      }
+    );
+  };
 
   return (
     <section
@@ -152,7 +134,7 @@ export default function Testimonials() {
                   <Star key={i} size={16} fill="currentColor" strokeWidth={0} />
                 ))}
               </div>
-              <p className={styles.count}>From 500+ happy customers</p>
+              <p className={styles.count}>From {testimonials.length > 0 ? "500+" : "0"} happy customers</p>
             </div>
           </div>
         </div>
@@ -191,36 +173,50 @@ export default function Testimonials() {
         </div>
 
         {/* Carousel track */}
-        <div ref={trackRef} className={styles.track}>
-          {REVIEWS.map((r) => (
-            <figure key={r.id} data-review className={styles.card}>
-              <div className={styles.stars} aria-hidden="true">
-                {Array.from({ length: 5 }).map((_, i) => (
-                  <Star key={i} size={14} fill="currentColor" strokeWidth={0} />
-                ))}
-              </div>
+        {isLoading ? (
+          <div style={{ display: 'flex', justifyContent: 'center', padding: '40px' }}>
+            <Loader2 className="animate-spin text-[var(--accent-primary)]" size={32} />
+          </div>
+        ) : testimonials.length === 0 ? (
+          <div style={{ textAlign: 'center', padding: '40px', color: 'var(--text-secondary)' }}>
+            No reviews yet. Be the first to share your experience!
+          </div>
+        ) : (
+          <div ref={trackRef} className={styles.track}>
+            {testimonials.map((r) => (
+              <figure key={r.id} data-review className={styles.card}>
+                <div className={styles.stars} aria-hidden="true">
+                  {Array.from({ length: 5 }).map((_, i) => (
+                    <Star 
+                      key={i} 
+                      size={14} 
+                      fill={i < r.ratings ? "currentColor" : "none"} 
+                      strokeWidth={i < r.ratings ? 0 : 1.5}
+                      style={{ opacity: i < r.ratings ? 1 : 0.3 }}
+                    />
+                  ))}
+                </div>
 
-              <blockquote className={styles.quote}>{r.quote}</blockquote>
+                <blockquote className={styles.quote}>{r.reviews}</blockquote>
 
-              <figcaption className={styles.author}>
-                <span className={styles.name}>{r.name}</span>
-                <span className={styles.meta}>
-                  {r.place} &middot; {r.product}
-                </span>
-              </figcaption>
-            </figure>
-          ))}
-        </div>
+                <figcaption className={styles.author}>
+                  <span className={styles.name}>{r.user?.name || "Anonymous"}</span>
+                  <span className={styles.meta}>
+                    Verified Customer
+                  </span>
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Modal */}
       <WriteReviewModal
         open={modalOpen}
         onClose={() => setModalOpen(false)}
-        onSubmit={(data) => {
-          // Yahan aap apna API call laga sakte ho
-          console.log("Review submitted:", data);
-        }}
+        onSubmit={handleReviewSubmit}
+        isLoading={submitMutation.isPending}
       />
     </section>
   );

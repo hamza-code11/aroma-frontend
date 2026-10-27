@@ -1,0 +1,149 @@
+.page {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xl);
+    width: 100%;
+}
+
+/* Shimmer Base */
+.line {
+    background-color: color-mix(in srgb, var(--text-primary) 8%, transparent);
+    border-radius: var(--radius-sm);
+    position: relative;
+    overflow: hidden;
+}
+
+.line::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    transform: translateX(-100%);
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        color-mix(in srgb, var(--text-primary) 10%, transparent) 50%,
+        transparent 100%
+    );
+    animation: shimmer 1.6s infinite;
+}
+
+@keyframes shimmer {
+    100% { transform: translateX(100%); }
+}
+
+/* Header */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.title {
+    width: 120px;
+    height: 28px;
+    margin-bottom: 8px;
+}
+
+.subtitle {
+    width: 200px;
+    height: 14px;
+}
+
+/* Tabs */
+.tabs {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.tab {
+    width: 80px;
+    height: 36px;
+    border-radius: var(--radius-full);
+}
+
+/* Toolbar */
+.toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+}
+
+.search {
+    width: 100%;
+    max-width: 400px;
+    height: 42px;
+    border-radius: var(--radius-full);
+}
+
+.count {
+    width: 80px;
+    height: 14px;
+}
+
+/* Table */
+.tableWrap {
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table th,
+.table td {
+    padding: 16px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.table th {
+    background-color: var(--bg-primary);
+}
+
+.table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.th {
+    width: 60%;
+    height: 12px;
+}
+
+.cellSm {
+    width: 40px;
+    height: 14px;
+}
+
+.cellMd {
+    width: 120px;
+    height: 14px;
+}
+
+.cellStack {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.badge {
+    width: 70px;
+    height: 24px;
+    border-radius: var(--radius-full);
+}
+
+.icon {
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-sm);
+    margin-left: auto;
+}
+
+.tdRight {
+    text-align: right;
+}

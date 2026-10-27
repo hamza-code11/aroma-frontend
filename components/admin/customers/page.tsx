@@ -8,22 +8,30 @@ import {
   Check,
   Shield,
   User as UserIcon,
+  Loader2,
 } from "lucide-react";
 import { useToast } from "@/components/ui/Toast";
 import type { Customer } from "@/types/customer";
 import styles from "./Customers.module.css";
 
-type Props = {
-  customers: Customer[];
-};
+// Skeleton & Hooks
+import CustomersSkeleton from "@/components/admin/skeletons/CustomersSkeleton/CustomersSkeleton";
+import { useCustomers, useDeleteCustomer } from "@/hooks/useCustomers";
 
-export default function CustomersList({ customers: initial }: Props) {
-  const [customers, setCustomers] = useState(initial);
+export default function CustomersList() {
   const [query, setQuery] = useState("");
   const [deleting, setDeleting] = useState<Customer | null>(null);
   const [copiedId, setCopiedId] = useState<number | null>(null);
   const { showToast } = useToast();
 
+  // Data Fetching
+  const { data: apiData, isLoading } = useCustomers(1);
+  const customers = apiData?.data || [];
+
+  // Delete Mutation
+  const deleteMutation = useDeleteCustomer();
+
+  // Search Filter
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
     if (!q) return customers;
@@ -42,9 +50,15 @@ export default function CustomersList({ customers: initial }: Props) {
 
   const handleDelete = () => {
     if (!deleting) return;
-    setCustomers((prev) => prev.filter((c) => c.id !== deleting.id));
-    showToast(`Customer "${deleting.name}" deleted.`);
-    setDeleting(null);
+    deleteMutation.mutate(deleting.id, {
+      onSuccess: () => {
+        showToast(`Customer "${deleting.name}" deleted.`, "success");
+        setDeleting(null);
+      },
+      onError: (err: any) => {
+        showToast(err.response?.data?.message || "Failed to delete customer", "error");
+      }
+    });
   };
 
   const copyEmail = async (id: number, email: string) => {
@@ -72,6 +86,11 @@ export default function CustomersList({ customers: initial }: Props) {
       .join("")
       .slice(0, 2)
       .toUpperCase();
+
+  // Loading State
+  if (isLoading) {
+    return <CustomersSkeleton />;
+  }
 
   return (
     <div className={styles.page}>
@@ -212,6 +231,7 @@ export default function CustomersList({ customers: initial }: Props) {
                 type="button"
                 className={styles.cancelBtn}
                 onClick={() => setDeleting(null)}
+                disabled={deleteMutation.isPending}
               >
                 Cancel
               </button>
@@ -219,9 +239,14 @@ export default function CustomersList({ customers: initial }: Props) {
                 type="button"
                 className={styles.dangerBtn}
                 onClick={handleDelete}
+                disabled={deleteMutation.isPending}
                 autoFocus
               >
-                Delete
+                {deleteMutation.isPending ? (
+                  <><Loader2 size={14} className="animate-spin" /> Deleting...</>
+                ) : (
+                  "Delete"
+                )}
               </button>
             </div>
           </div>

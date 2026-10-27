@@ -4,24 +4,23 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import NewArrivalsSkeleton from "./NewArrivalsSkeleton";
 import styles from "./NewArrivals.module.css";
 
-gsap.registerPlugin(ScrollTrigger);
+// Hook Import
+import { useGallery } from "@/hooks/useGallery";
 
-const ROOMS = [
-  { id: "living-room", image: "/products/07.jfif" },
-  { id: "bedroom", image: "/products/08.jfif" },
-  { id: "spa", image: "/products/09.jfif" },
-  { id: "study", image: "/products/10.jfif" },
-  { id: "lounge", image: "/products/11.jfif" },
-  { id: "entryway", image: "/products/12.jfif" },
-];
+gsap.registerPlugin(ScrollTrigger);
 
 export default function NewArrivals() {
   const sectionRef = useRef<HTMLElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const [canPrev, setCanPrev] = useState(false);
   const [canNext, setCanNext] = useState(true);
+
+  // Fetch Gallery Images (Yahan New Arrivals ke liye Gallery use ho rahi hai)
+  const { data: galleryData, isLoading } = useGallery(1);
+  const rooms = galleryData?.data || [];
 
   const updateButtons = useCallback(() => {
     const track = trackRef.current;
@@ -41,7 +40,7 @@ export default function NewArrivals() {
 
   useEffect(() => {
     const track = trackRef.current;
-    if (!track) return;
+    if (!track || isLoading || rooms.length === 0) return;
 
     updateButtons();
     track.addEventListener("scroll", updateButtons, { passive: true });
@@ -51,11 +50,11 @@ export default function NewArrivals() {
       track.removeEventListener("scroll", updateButtons);
       window.removeEventListener("resize", updateButtons);
     };
-  }, [updateButtons]);
+  }, [updateButtons, isLoading, rooms.length]);
 
   useEffect(() => {
     const section = sectionRef.current;
-    if (!section) return;
+    if (!section || isLoading || rooms.length === 0) return;
 
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
@@ -75,7 +74,14 @@ export default function NewArrivals() {
     }, section);
 
     return () => ctx.revert();
-  }, []);
+  }, [isLoading, rooms.length]);
+
+  // Loading state ke liye kuch render nahi karna, ya skeleton dikhana
+  if (isLoading) {
+    return <NewArrivalsSkeleton />;
+  }
+
+  if (rooms.length === 0) return null;
 
   return (
     <section ref={sectionRef} className={styles.section} aria-label="The room after">
@@ -110,21 +116,28 @@ export default function NewArrivals() {
         </div>
 
         <div ref={trackRef} className={styles.track}>
-          {ROOMS.map((room, i) => (
-            <article key={room.id} data-room className={styles.card}>
-              <div className={styles.imageWrap}>
-                <Image
-                  src={room.image}
-                  alt={room.id}
-                  fill
-                  sizes="(max-width: 600px) 85vw, (max-width: 900px) 50vw, 33vw"
-                  unoptimized   
-                  className={styles.image}
-                  priority={i < 3}
-                />
-              </div> 
-            </article>
-          ))}
+          {rooms.map((room, i) => {
+            // Image URL Fix
+            const imageUrl = room.image?.startsWith('http')
+              ? room.image
+              : `${process.env.NEXT_PUBLIC_STORAGE_URL}/${room.image}`;
+
+            return (
+              <article key={room.id} data-room className={styles.card}>
+                <div className={styles.imageWrap}>
+                  <Image
+                    src={imageUrl}
+                    alt={`Gallery Image ${i + 1}`}
+                    fill
+                    sizes="(max-width: 600px) 85vw, (max-width: 900px) 50vw, 33vw"
+                    unoptimized   
+                    className={styles.image}
+                    priority={i < 3}
+                  />
+                </div> 
+              </article>
+            );
+          })}
         </div>
       </div>
     </section>

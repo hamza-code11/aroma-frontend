@@ -1,0 +1,373 @@
+/* ================= PAGE ================= */
+.page {
+  min-height: 100vh;
+  background-color: var(--bg-primary);
+  padding-top: 120px;
+  padding-bottom: 80px;
+}
+
+.container {
+  width: 100%;
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding-inline: var(--container-pad);
+}
+
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  text-decoration: none;
+  margin-bottom: var(--space-lg);
+  transition: color 0.2s ease;
+}
+
+.backLink:hover {
+  color: var(--accent-primary);
+}
+
+/* NEW: Page Header */
+.pageHeader {
+  margin-bottom: var(--space-2xl);
+}
+
+.pageTitle {
+  font-family: var(--font-heading);
+  font-size: clamp(2rem, 4vw, 2.8rem);
+  color: var(--text-primary);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin: 0 0 4px 0;
+  font-weight: 400;
+}
+
+.pageSubtitle {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+/* ================= LAYOUT ================= */
+.layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-2xl);
+}
+
+@media (min-width: 992px) {
+  .layout {
+    grid-template-columns: 1.2fr 0.8fr;
+    align-items: flex-start;
+  }
+}
+
+/* ================= FORM SECTION ================= */
+
+.formSection {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md); 
+  padding: var(--space-xl);
+  box-shadow: 0 4px 20px -5px var(--shadow-color);
+}
+
+@media (min-width: 768px) {
+  .formSection {
+    padding: var(--space-2xl);
+  }
+}
+
+.header {
+  margin-bottom: var(--space-xl);
+}
+
+.title {
+  font-family: var(--font-heading);
+  font-size: 1.8rem;
+  color: var(--text-primary);
+  margin: 0 0 4px 0;
+}
+
+.subtitle {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+/* ================= FORM ================= */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.label {
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+.input, .select {
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-size: 14px;
+  transition: border-color 0.2s ease;
+}
+
+.input:focus, .select:focus {
+  outline: none;
+  border-color: var(--accent-primary);
+}
+
+.input::placeholder {
+  color: var(--text-secondary);
+  opacity: 0.5;
+}
+
+/* Phone Group */
+.phoneGroup {
+  display: flex;
+  gap: 8px;
+}
+
+.codeSelect {
+  width: 100px;
+  flex-shrink: 0;
+  padding: 14px 10px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.codeSelect:focus {
+  outline: none;
+  border-color: var(--accent-primary);
+}
+
+/* 2 Column Grid */
+.grid2 {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-lg);
+}
+
+@media (min-width: 600px) {
+  .grid2 {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* Submit Button */
+.submitBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 16px;
+  margin-top: var(--space-md);
+  border-radius: var(--radius-full);
+  border: none;
+  background-color: var(--accent-primary);
+  color: var(--on-accent);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.submitBtn:hover {
+  background-color: var(--accent-primary-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px color-mix(in srgb, var(--accent-primary) 30%, transparent);
+}
+
+/* ================= SUMMARY SECTION ================= */
+.summarySection {
+  position: sticky;
+  top: 100px;
+}
+
+.summaryCard {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  /* ROUNDED BORDER (xl) */
+  border-radius: var(--radius-md); 
+  padding: var(--space-xl);
+  box-shadow: 0 4px 20px -5px var(--shadow-color);
+}
+
+.summaryTitle {
+  font-family: var(--font-heading);
+  font-size: 1.4rem;
+  color: var(--text-primary);
+  margin: 0 0 var(--space-lg) 0;
+  padding-bottom: var(--space-md);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.summaryItems {
+  padding: var(--space-md) 0;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.summaryFooter {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  padding: var(--space-md) 0;
+}
+
+.summaryRow {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.totalRow {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-top: var(--space-sm);
+  padding-top: var(--space-sm);
+  border-top: 1px solid var(--border-color);
+}
+
+.secureBadge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--accent-primary);
+  background-color: color-mix(in srgb, var(--accent-primary) 10%, transparent);
+  padding: 8px;
+  border-radius: var(--radius-md);
+  margin-top: var(--space-md);
+}
+
+
+
+
+
+
+
+
+
+
+/* ================= SHIPPING RATES ================= */
+.rateList {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.rateCard {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 18px 20px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background-color: var(--bg-primary);
+}
+
+.rateCard:hover {
+    border-color: var(--accent-primary);
+}
+
+.rateCardActive {
+    border-color: var(--accent-primary);
+    background-color: color-mix(in srgb, var(--accent-primary) 5%, transparent);
+    box-shadow: 0 4px 12px color-mix(in srgb, var(--accent-primary) 10%, transparent);
+}
+
+.radioCircle {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--on-accent);
+    transition: all 0.2s ease;
+}
+
+.radioCircleActive {
+    background-color: var(--accent-primary);
+    border-color: var(--accent-primary);
+}
+
+.rateInfo {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.rateName {
+    font-size: 15px;
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+.rateDays {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin: 2px 0 0 0;
+}
+
+.ratePrice {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+/* ================= BUTTONS ROW ================= */
+.buttonsRow {
+    display: flex;
+    gap: 16px;
+    margin-top: 24px;
+}
+
+.backBtn {
+    flex: 1;
+    padding: 14px;
+    background: transparent;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-full);
+    cursor: pointer;
+    color: var(--text-primary);
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.backBtn:hover:not(:disabled) {
+    background-color: var(--bg-surface);
+    border-color: var(--text-primary);
+}
+
+.backBtn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}

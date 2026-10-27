@@ -10,6 +10,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import ThemeToggle from "@/components/theme/ThemeToggle";
 import { useCart } from "@/hooks/useCart";
 import { useWishlistContext } from "@/app/providers/WishlistProvider";
+import { useUser } from "@/hooks/auth/useUser"; // <-- User data ke liye hook import kiya
 import styles from "./Navbar.module.css";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -27,8 +28,11 @@ export default function Navbar() {
   const pathname = usePathname();
 
   const { totalItems, mounted: cartMounted } = useCart();
-  const { wishlist, mounted: wishMounted, open: openWishlist } =
-    useWishlistContext();
+  const { wishlist, mounted: wishMounted, open: openWishlist } = useWishlistContext();
+  
+  // User ka data fetch karein
+  const { data: userData, isLoading: userLoading } = useUser();
+  const user = userData?.user;
 
   // Route change par mobile menu band
   useEffect(() => {
@@ -62,6 +66,9 @@ export default function Navbar() {
   const cartCount = cartMounted ? totalItems : 0;
   const wishlistCount = wishMounted ? wishlist.length : 0;
 
+  // Role ke hisaab se redirect link tayar karein
+  const profileLink = user?.role === "admin" ? "/admin" : "/profile";
+
   return (
     <nav
       ref={navRef}
@@ -89,8 +96,7 @@ export default function Navbar() {
             <li key={link.href}>
               <Link
                 href={link.href}
-                className={`${styles.link} ${isActive(link.href) ? styles.active : ""
-                  }`}
+                className={`${styles.link} ${isActive(link.href) ? styles.active : ""}`}
                 aria-current={isActive(link.href) ? "page" : undefined}
               >
                 {link.label}
@@ -101,21 +107,34 @@ export default function Navbar() {
 
         {/* RIGHT: Icons */}
         <div className={styles.icons}>
-          {/* Sign in */}
-          <Link
-            href="/login"
-            className={styles.iconBtn}
-            aria-label="Sign in"
-          >
-            <User size={20} strokeWidth={1.8} />
-          </Link>
+          
+          {/* USER SECTION: Agar login hai toh Name ke sath, warna simple icon */}
+          {userLoading ? (
+             // Loading state (blank space taake layout na hile)
+             <div style={{ width: '42px', height: '42px' }} />
+          ) : user ? (
+            <Link
+              href={profileLink}
+              className={styles.iconBtn}
+              aria-label={`Go to ${user.role} dashboard`}
+              style={{ width: 'auto', padding: '0 12px', gap: '8px', borderRadius: '100px' }} // Inline style for pill shape
+            >
+              <User size={18} strokeWidth={1.8} />
+              <span style={{ fontSize: '13px', fontWeight: 500, textTransform: 'capitalize' }}>
+                {user.name.split(' ')[0]} {/* Sirf pehla naam dikhane ke liye */}
+              </span>
+            </Link>
+          ) : (
+            <Link href="/login" className={styles.iconBtn} aria-label="Sign in">
+              <User size={20} strokeWidth={1.8} />
+            </Link>
+          )}
 
           {/* Wishlist */}
           <button
             type="button"
             className={styles.iconBtn}
-            aria-label={`Wishlist${wishlistCount > 0 ? ` (${wishlistCount} items)` : ""
-              }`}
+            aria-label={`Wishlist${wishlistCount > 0 ? ` (${wishlistCount} items)` : ""}`}
             onClick={openWishlist}
           >
             <Heart size={20} strokeWidth={1.8} />

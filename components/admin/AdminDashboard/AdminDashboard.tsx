@@ -1,47 +1,81 @@
+"use client";
+
 import Link from "next/link";
 import {
   Package,
-  ShoppingCart,
+  ShoppingBag,
   Users,
   DollarSign,
   ArrowRight,
+  ShieldCheck,
+  Loader2,
+  Clock,
 } from "lucide-react";
-import { products } from "@/data/product";
-import { categories } from "@/data/category";
+import { useDashboardStats } from "@/hooks/useDashboardStats";
 import styles from "./AdminDashboard.module.css";
 
-const STATS = [
-  {
-    id: "products",
-    label: "Total Products",
-    value: products.length,
-    icon: Package,
-    href: "/admin/products",
-  },
-  {
-    id: "categories",
-    label: "Categories",
-    value: categories.length,
-    icon: ShoppingCart,
-    href: "/admin/categories",
-  },
-  {
-    id: "customers",
-    label: "Customers",
-    value: 12,
-    icon: Users,
-    href: "/admin/customers",
-  },
-  {
-    id: "revenue",
-    label: "Revenue (mock)",
-    value: "$4,250",
-    icon: DollarSign,
-    href: "/admin/orders",
-  },
-];
-
 export default function AdminDashboard() {
+  const { data, isLoading } = useDashboardStats();
+
+  if (isLoading) {
+    return (
+      <div className={styles.wrap}>
+        <header className={styles.heading}>
+          <h2 className={styles.title}>Welcome back, Admin</h2>
+          <p className={styles.subtitle}>Loading your store data...</p>
+        </header>
+        <div className={styles.stats}>
+          {Array.from({ length: 4 }).map((_, i) => (
+            <div key={i} className={`${styles.stat} ${styles.skeletonCard}`} />
+          ))}
+        </div>
+        <div className={styles.mainSections}>
+            <div className={styles.section}>
+                <div className={`${styles.sectionTitle} ${styles.skeletonCard}`} style={{width: '200px', height: '24px'}}></div>
+            </div>
+            <div className={styles.section}>
+                <div className={`${styles.sectionTitle} ${styles.skeletonCard}`} style={{width: '200px', height: '24px'}}></div>
+            </div>
+        </div>
+      </div>
+    );
+  }
+
+  const stats = data?.stats || { products: 0, orders: 0, customers: 0, revenue: 0 };
+  const recentOrders = data?.recent_orders || [];
+  const pendingTaxCount = data?.pending_tax_ids_count || 0;
+
+  const STATS = [
+    {
+      id: "products",
+      label: "Total Products",
+      value: stats.products,
+      icon: Package,
+      href: "/admin/products",
+    },
+    {
+      id: "orders",
+      label: "Total Orders",
+      value: stats.orders,
+      icon: ShoppingBag,
+      href: "/admin/orders",
+    },
+    {
+      id: "customers",
+      label: "Customers",
+      value: stats.customers,
+      icon: Users,
+      href: "/admin/customers",
+    },
+    {
+      id: "revenue",
+      label: "Total Revenue",
+      value: `$${Number(stats.revenue).toFixed(2)}`,
+      icon: DollarSign,
+      href: "/admin/orders",
+    },
+  ];
+
   return (
     <div className={styles.wrap}>
       {/* Page heading */}
@@ -70,28 +104,54 @@ export default function AdminDashboard() {
         })}
       </div>
 
-      {/* Quick links */}
-      <section className={styles.section}>
-        <h3 className={styles.sectionTitle}>Quick actions</h3>
-        <div className={styles.quickGrid}>
-          <Link href="/admin/products" className={styles.quickCard}>
-            <span>Manage products</span>
-            <ArrowRight size={16} strokeWidth={1.6} />
-          </Link>
-          <Link href="/admin/categories" className={styles.quickCard}>
-            <span>Manage categories</span>
-            <ArrowRight size={16} strokeWidth={1.6} />
-          </Link>
-          <Link href="/admin/orders" className={styles.quickCard}>
-            <span>View orders</span>
-            <ArrowRight size={16} strokeWidth={1.6} />
-          </Link>
-          <Link href="/admin/settings" className={styles.quickCard}>
-            <span>Store settings</span>
-            <ArrowRight size={16} strokeWidth={1.6} />
-          </Link>
-        </div>
-      </section>
+      {/* Main Sections Grid */}
+      <div className={styles.mainSections}>
+        
+        {/* Recent Orders */}
+        <section className={styles.section}>
+          <div className={styles.sectionHeader}>
+            <h3 className={styles.sectionTitle}>Recent 5 Orders</h3>
+            <Link href="/admin/orders" className={styles.viewAll}>View All</Link>
+          </div>
+          <div className={styles.recentOrdersList}>
+            {recentOrders.length === 0 ? (
+              <p className={styles.noData}>No recent orders yet.</p>
+            ) : (
+              recentOrders.map((order: any) => (
+                <Link key={order.id} href={`/admin/orders/${order.id}`} className={styles.recentOrderItem}>
+                  <div>
+                    <span className={styles.orderId}>#{order.id}</span>
+                    <span className={styles.orderDate}>{new Date(order.created_at).toLocaleDateString()}</span>
+                  </div>
+                  <div className={styles.orderMeta}>
+                    <span className={styles.orderTotal}>${Number(order.total).toFixed(2)}</span>
+                    <span className={`${styles.badge} ${styles[`badge${order.status.charAt(0).toUpperCase() + order.status.slice(1)}`]}`}>
+                      {order.status}
+                    </span>
+                  </div>
+                </Link>
+              ))
+            )}
+          </div>
+        </section>
+
+        {/* Tax ID Verifications */}
+        <section className={styles.section}>
+          <div className={styles.sectionHeader}>
+            <h3 className={styles.sectionTitle}>Pending Tax IDs</h3>
+            <Link href="/admin/tax-ids" className={styles.viewAll}>View All</Link>
+          </div>
+          <div className={styles.taxBox}>
+            <div className={styles.taxIconWrap}>
+              <ShieldCheck size={24} />
+            </div>
+            <div>
+              <p className={styles.taxCount}>{pendingTaxCount}</p>
+              <p className={styles.taxLabel}>Tax ID requests pending admin approval</p>
+            </div>
+          </div>
+        </section>
+      </div>
     </div>
   );
 }

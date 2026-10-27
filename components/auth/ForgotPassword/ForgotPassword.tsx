@@ -11,6 +11,7 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import styles from "./ForgotPassword.module.css";
+import { useSendOtp, useVerifyOtp, useResetPassword } from "@/hooks/auth/useForgotPassword";
 
 type Step = "email" | "otp" | "password" | "done";
 
@@ -27,6 +28,9 @@ export default function ForgotPassword() {
   const [otp, setOtp] = useState<string[]>(Array(OTP_LENGTH).fill(""));
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
+  
+  // Backend se aane wala Reset Token
+  const [resetToken, setResetToken] = useState("");
 
   // UI state
   const [showPassword, setShowPassword] = useState(false);
@@ -34,6 +38,11 @@ export default function ForgotPassword() {
   const [status, setStatus] = useState<"idle" | "error" | "done">("idle");
   const [message, setMessage] = useState("");
   const [countdown, setCountdown] = useState(0);
+
+  // Hooks
+  const sendOtpMutation = useSendOtp();
+  const verifyOtpMutation = useVerifyOtp();
+  const resetPasswordMutation = useResetPassword();
 
   /* ---------------- Countdown for resend ---------------- */
   useEffect(() => {
@@ -50,6 +59,16 @@ export default function ForgotPassword() {
 
   const startCountdown = () => setCountdown(OTP_RESEND_SECONDS);
 
+  const handleApiError = (error: any, defaultMsg: string) => {
+    setStatus("error");
+    if (error.response?.data?.errors) {
+      const firstError = Object.values(error.response.data.errors)[0] as string[];
+      setMessage(firstError[0]);
+    } else {
+      setMessage(error.response?.data?.message || defaultMsg);
+    }
+  };
+
   /* ---------------- STEP 1: Send OTP ---------------- */
   const handleSendOtp = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -61,13 +80,19 @@ export default function ForgotPassword() {
       return;
     }
 
-    // TODO: yahan apna API call laga do — send OTP
-    console.log("Send OTP to:", email);
-
     resetStatus();
-    setOtp(Array(OTP_LENGTH).fill(""));
-    setStep("otp");
-    startCountdown();
+    
+    sendOtpMutation.mutate(
+      { email: email.trim() },
+      {
+        onSuccess: () => {
+          setOtp(Array(OTP_LENGTH).fill(""));
+          setStep("otp");
+          startCountdown();
+        },
+        onError: (error) => handleApiError(error, "Failed to send OTP. Try again."),
+      }
+    );
   };
 
   /* ---------------- STEP 2: Verify OTP ---------------- */
@@ -134,22 +159,34 @@ export default function ForgotPassword() {
       return;
     }
 
-    // TODO: yahan apna verify-OTP API call laga do
-    console.log("Verify OTP:", code);
-
     resetStatus();
-    setStep("password");
+    
+    verifyOtpMutation.mutate(
+      { email: email.trim(), otp: code },
+      {
+        onSuccess: (data) => {
+          setResetToken(data.reset_token); // Save token for final step
+          setStep("password");
+        },
+        onError: (error) => handleApiError(error, "Invalid OTP."),
+      }
+    );
   };
 
   const handleResendOtp = () => {
     if (countdown > 0) return;
 
-    // TODO: yahan resend OTP API call laga do
-    console.log("Resend OTP to:", email);
-
-    setOtp(Array(OTP_LENGTH).fill(""));
     resetStatus();
-    startCountdown();
+    sendOtpMutation.mutate(
+      { email: email.trim() },
+      {
+        onSuccess: () => {
+          setOtp(Array(OTP_LENGTH).fill(""));
+          startCountdown();
+        },
+        onError: (error) => handleApiError(error, "Failed to resend OTP."),
+      }
+    );
   };
 
   /* ---------------- STEP 3: Set New Password ---------------- */
@@ -183,14 +220,28 @@ export default function ForgotPassword() {
       return;
     }
 
-    // TODO: yahan apna reset-password API call laga do
-    console.log("Reset password for:", email, "with OTP:", otp.join(""));
-
     resetStatus();
-    setStep("done");
-    // ✅ Login page par redirect (2 second baad)
-    setTimeout(() => router.push("/login"), 1800);
+    
+    resetPasswordMutation.mutate(
+      {
+        email: email.trim(),
+        reset_token: resetToken,
+        password: password,
+        password_confirmation: confirm,
+      },
+      {
+        onSuccess: () => {
+          setStep("done");
+          // ✅ Login page par redirect (2 second baad)
+          setTimeout(() => router.push("/login"), 1800);
+        },
+        onError: (error) => handleApiError(error, "Failed to reset password."),
+      }
+    );
   };
+
+  // Global loading state (Koi bhi API chal rahi ho toh buttons/inputs disable ho jayein)
+  const isLoading = sendOtpMutation.isPending || verifyOtpMutation.isPending || resetPasswordMutation.isPending;
 
   /* ================= STEP 4: DONE ================= */
   if (step === "done") {
@@ -251,6 +302,7 @@ export default function ForgotPassword() {
                 }}
                 aria-invalid={status === "error" && password.length < 8}
                 autoFocus
+                disabled={isLoading}
                 required
               />
               <button
@@ -258,6 +310,7 @@ export default function ForgotPassword() {
                 className={styles.toggle}
                 onClick={() => setShowPassword((v) => !v)}
                 aria-label={showPassword ? "Hide password" : "Show password"}
+                disabled={isLoading}
               >
                 {showPassword ? "HIDE" : "SHOW"}
               </button>
@@ -303,6 +356,7 @@ export default function ForgotPassword() {
                   confirm.length > 0 &&
                   password !== confirm
                 }
+                disabled={isLoading}
                 required
               />
               <button
@@ -310,6 +364,7 @@ export default function ForgotPassword() {
                 className={styles.toggle}
                 onClick={() => setShowConfirm((v) => !v)}
                 aria-label={showConfirm ? "Hide password" : "Show password"}
+                disabled={isLoading}
               >
                 {showConfirm ? "HIDE" : "SHOW"}
               </button>
@@ -326,9 +381,9 @@ export default function ForgotPassword() {
             {message}
           </p>
 
-          <button type="submit" className={styles.submit}>
-            Reset password
-            <ArrowRight size={14} strokeWidth={1.5} />
+          <button type="submit" className={styles.submit} disabled={isLoading}>
+            {isLoading ? "Resetting..." : "Reset password"}
+            {!isLoading && <ArrowRight size={14} strokeWidth={1.5} />}
           </button>
         </form>
 
@@ -340,6 +395,7 @@ export default function ForgotPassword() {
               resetStatus();
               setStep("otp");
             }}
+            disabled={isLoading}
           >
             <ArrowLeft size={12} strokeWidth={1.5} />
             Back to OTP
@@ -382,6 +438,7 @@ export default function ForgotPassword() {
                   onKeyDown={(e) => handleOtpKeyDown(i, e)}
                   aria-label={`Digit ${i + 1}`}
                   autoFocus={i === 0}
+                  disabled={isLoading}
                 />
               ))}
             </div>
@@ -397,9 +454,9 @@ export default function ForgotPassword() {
             {message}
           </p>
 
-          <button type="submit" className={styles.submit}>
-            Verify code
-            <ArrowRight size={14} strokeWidth={1.5} />
+          <button type="submit" className={styles.submit} disabled={isLoading}>
+            {isLoading ? "Verifying..." : "Verify code"}
+            {!isLoading && <ArrowRight size={14} strokeWidth={1.5} />}
           </button>
         </form>
 
@@ -411,7 +468,7 @@ export default function ForgotPassword() {
             type="button"
             className={styles.resendBtn}
             onClick={handleResendOtp}
-            disabled={countdown > 0}
+            disabled={countdown > 0 || isLoading}
           >
             {countdown > 0 ? `Resend in ${countdown}s` : "Resend code"}
           </button>
@@ -425,6 +482,7 @@ export default function ForgotPassword() {
               resetStatus();
               setStep("email");
             }}
+            disabled={isLoading}
           >
             <ArrowLeft size={12} strokeWidth={1.5} />
             Change email
@@ -464,6 +522,7 @@ export default function ForgotPassword() {
             }}
             aria-invalid={status === "error"}
             autoFocus
+            disabled={isLoading}
             required
           />
         </div>
@@ -478,9 +537,9 @@ export default function ForgotPassword() {
           {message}
         </p>
 
-        <button type="submit" className={styles.submit}>
-          Send verification code
-          <ArrowRight size={14} strokeWidth={1.5} />
+        <button type="submit" className={styles.submit} disabled={isLoading}>
+          {isLoading ? "Sending..." : "Send verification code"}
+          {!isLoading && <ArrowRight size={14} strokeWidth={1.5} />}
         </button>
       </form>
 

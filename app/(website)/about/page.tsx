@@ -8,7 +8,6 @@ export const metadata = {
 };
 
 export default function AboutPage() {
-  // Agar About component kisi wajah se available na ho to 404
   if (!About) {
     notFound();
   }

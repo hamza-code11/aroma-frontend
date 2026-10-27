@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { ToastProvider } from "@/components/ui/Toast";
 import AdminShell from "@/components/admin/layout/AdminShell/AdminShell";
+import ProtectedRoute from "@/components/auth/ProtectedRoute";
 
 export const metadata: Metadata = {
   title: {
@@ -16,8 +17,11 @@ export default function AdminLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ToastProvider>
-      <AdminShell>{children}</AdminShell>
-    </ToastProvider>
+    <ProtectedRoute allowedRole="admin">
+      <ToastProvider>
+        <AdminShell>{children}</AdminShell>
+      </ToastProvider>
+    </ProtectedRoute>
+
   );
 }

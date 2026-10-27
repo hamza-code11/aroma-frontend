@@ -3,8 +3,12 @@
 import { FormEvent, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, ArrowUp } from "lucide-react";
+import { ArrowRight, ArrowUp, Loader2 } from "lucide-react";
 import styles from "./Footer.module.css";
+
+// Hook Import
+import { useSubscribeNewsletter } from "@/hooks/useNewsletter";
+import { useToast } from "@/components/ui/Toast";
 
 const SOCIALS = [
     { label: "Instagram", href: "https://instagram.com" },
@@ -15,17 +19,41 @@ const SOCIALS = [
 
 export default function Footer() {
     const [email, setEmail] = useState("");
-    const [status, setStatus] = useState<"idle" | "done" | "error">("idle");
+    const [errorMsg, setErrorMsg] = useState("");
+    const { showToast } = useToast();
+
+    // Hook
+    const subscribeMutation = useSubscribeNewsletter();
 
     const onSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        setErrorMsg("");
+
         const valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
         if (!valid) {
-            setStatus("error");
+            setErrorMsg("Please enter a valid email address.");
             return;
         }
-        setStatus("done");
-        setEmail("");
+
+        // API Call
+        subscribeMutation.mutate(
+            { email: email.trim() },
+            {
+                onSuccess: () => {
+                    showToast("Successfully subscribed to the newsletter!", "success");
+                    setEmail("");
+                },
+                onError: (err: any) => {
+                    // Handle validation errors (422) or general errors
+                    if (err.response?.status === 422 && err.response?.data?.errors?.email) {
+                        setErrorMsg(err.response.data.errors.email[0]);
+                    } else {
+                        const msg = err.response?.data?.message || "Something went wrong. Try again.";
+                        setErrorMsg(msg);
+                    }
+                }
+            }
+        );
     };
 
     const scrollToTop = () => {
@@ -77,26 +105,34 @@ export default function Footer() {
                                 value={email}
                                 onChange={(e) => {
                                     setEmail(e.target.value);
-                                    if (status !== "idle") setStatus("idle");
+                                    if (errorMsg) setErrorMsg(""); // Clear error on type
                                 }}
                                 placeholder="you@email.com"
                                 autoComplete="email"
                                 className={styles.input}
-                                aria-invalid={status === "error"}
+                                aria-invalid={!!errorMsg}
+                                disabled={subscribeMutation.isPending}
                             />
                             <button
                                 type="submit"
                                 className={styles.submit}
                                 aria-label="Subscribe"
+                                disabled={subscribeMutation.isPending}
                             >
-                                <ArrowRight size={18} strokeWidth={1.5} />
+                                {subscribeMutation.isPending ? (
+                                    <Loader2 size={18} strokeWidth={1.5} className="animate-spin" />
+                                ) : (
+                                    <ArrowRight size={18} strokeWidth={1.5} />
+                                )}
                             </button>
                         </form>
 
-                        <p className={styles.status} role="status" aria-live="polite">
-                            {status === "done" && "Thank you, you are on the list."}
-                            {status === "error" && "Please enter a valid email address."}
-                        </p>
+                        {/* Error Message */}
+                        {errorMsg && (
+                            <p className={`${styles.status}`} style={{ color: "#ef4444" }} role="alert">
+                                {errorMsg}
+                            </p>
+                        )}
 
                         <ul className={styles.socials}>
                             {SOCIALS.map((s) => (

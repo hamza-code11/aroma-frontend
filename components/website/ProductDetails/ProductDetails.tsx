@@ -1,40 +1,67 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import ImageGallery from "./ImageGallery";
 import ProductInfo from "./ProductInfo";
 import RelatedProducts from "./RelatedProducts";
-import type { Product } from "@/types/product";
 import styles from "./ProductDetails.module.css";
 
-type Props = {
-  product: Product;
-  related: Product[];
-};
+import { useProducts } from "@/hooks/products/useProducts";
+import ProductDetailsSkeleton from "@/components/website/skeletons/ProductDetailsSkeleton/ProductDetailsSkeleton";
 
 type TabKey = "description" | "details" | "shipping";
 
-export default function ProductDetails({ product, related }: Props) {
+type Props = {
+  slug: string;
+};
+
+export default function ProductDetails({ slug }: Props) {
   const [activeTab, setActiveTab] = useState<TabKey>("description");
 
-  const hasSale =
-    product.sale_price !== null && product.sale_price < product.regular_price;
-  const discountPercent = hasSale
-    ? Math.round(
-        ((product.regular_price - product.sale_price!) /
-          product.regular_price) *
-          100
-      )
-    : 0;
+  // Fetch all products and find the one with the matching slug
+  const { data: products = [], isLoading, isError } = useProducts();
 
-  const outOfStock = product.stock_quantity <= 0;
+  const product = useMemo(() => {
+    return products.find((p) => p.slug === slug && p.is_active);
+  }, [products, slug]);
+
+  const related = useMemo(() => {
+    if (!product) return [];
+    return products.filter(
+      (p) =>
+        p.is_active &&
+        p.category_id === product.category_id &&
+        p.id !== product.id
+    ).slice(0, 8); // Max 8 related products
+  }, [products, product]);
+
+  if (isLoading) {
+    return <ProductDetailsSkeleton />;
+  }
+
+  if (isError || !product) {
+    return (
+      <div className={styles.page}>
+        <div className={styles.container} style={{ textAlign: "center", padding: "100px 0" }}>
+          <h1 style={{ fontSize: "2rem", marginBottom: "16px" }}>Product not found</h1>
+          <p style={{ color: "var(--text-secondary)", marginBottom: "24px" }}>
+            The product you're looking for doesn't exist or has been removed.
+          </p>
+          <Link href="/shop" className={styles.crumbLink} style={{ display: "inline-flex", background: "var(--accent-primary)", color: "var(--on-accent)", padding: "12px 24px", borderRadius: "100px" }}>
+            <ArrowLeft size={16} style={{ marginRight: "8px" }} />
+            Back to Shop
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.page}>
       <div className={styles.container}>
-        {/* ================= BREADCRUMB ================= */}
+        {/* BREADCRUMB */}
         <nav className={styles.breadcrumb} aria-label="Breadcrumb">
           <Link href="/shop" className={styles.crumbLink}>
             <ArrowLeft size={14} strokeWidth={1.5} />
@@ -44,9 +71,8 @@ export default function ProductDetails({ product, related }: Props) {
           <span className={styles.crumbCurrent}>{product.name}</span>
         </nav>
 
-        {/* ================= MAIN — 2 columns ================= */}
+        {/* MAIN */}
         <div className={styles.main}>
-          {/* LEFT */}
           <ImageGallery
             mainImage={product.main_image}
             images={product.images}
@@ -54,13 +80,11 @@ export default function ProductDetails({ product, related }: Props) {
             saleBadge={product.sale_price ? "Sale" : null}
             outOfStock={product.stock_quantity === 0}
           />
-
-          {/* RIGHT — ab koi prop nahi, ProductInfo khud hooks use karta hai */}
           <ProductInfo product={product} />
         </div>
 
-        {/* ================= RELATED ================= */}
-        <RelatedProducts products={related} />
+        {/* RELATED */}
+        {related.length > 0 && <RelatedProducts products={related} />}
       </div>
     </div>
   );

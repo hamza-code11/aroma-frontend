@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import { ArrowLeft, Home, Search } from 'lucide-react';
-
 import styles from './NotFound.module.css';
 
 export const metadata = {
@@ -26,7 +25,7 @@ export default function NotFound() {
             Back to Home
           </Link>
 
-          <Link href="/collections" className={styles.secondaryBtn}>
+          <Link href="/shop" className={styles.secondaryBtn}>
             <Search size={16} strokeWidth={2} />
             Browse Collections
           </Link>

@@ -1,0 +1,235 @@
+/* ================= PAGE ================= */
+.page {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xl);
+    width: 100%;
+}
+
+/* Shimmer Base */
+.line {
+    background-color: color-mix(in srgb, var(--text-primary) 8%, transparent);
+    border-radius: var(--radius-sm);
+    position: relative;
+    overflow: hidden;
+}
+
+.line::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    transform: translateX(-100%);
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        color-mix(in srgb, var(--text-primary) 10%, transparent) 50%,
+        transparent 100%
+    );
+    animation: shimmer 1.6s infinite;
+}
+
+@keyframes shimmer {
+    100% { transform: translateX(100%); }
+}
+
+/* ================= HEADER ================= */
+.header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+.backLink {
+    width: 100px;
+    height: 14px;
+}
+
+.headerTitle {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.title {
+    width: 150px;
+    height: 32px;
+}
+
+.badge {
+    width: 80px;
+    height: 24px;
+    border-radius: var(--radius-full);
+}
+
+/* ================= INVOICE CONTAINER ================= */
+.invoiceContainer {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: var(--space-xl);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+}
+
+/* ================= TOP INFO GRID ================= */
+.topGrid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-sm);
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: var(--space-lg);
+}
+
+@media (min-width: 600px) {
+    .topGrid {
+        grid-template-columns: 1fr 1fr;
+        column-gap: var(--space-2xl);
+    }
+}
+
+.gridRow {
+    display: grid;
+    grid-template-columns: 130px 1fr;
+    gap: var(--space-sm);
+    padding: 6px 0;
+    border-bottom: 1px dotted var(--border-color);
+}
+
+.gridRow:last-child, .gridRow:nth-last-child(2) {
+    border-bottom: none;
+}
+
+.label {
+    height: 14px;
+    width: 80%;
+}
+
+.value {
+    height: 14px;
+    width: 60%;
+}
+
+/* ================= CUSTOMER ROW ================= */
+.customerRow {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: var(--space-lg);
+}
+
+@media (min-width: 768px) {
+    .customerRow {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: flex-end;
+    }
+}
+
+.customerInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1;
+}
+
+.sectionTitle {
+    width: 120px;
+    height: 14px;
+    margin-bottom: 8px;
+}
+
+.infoLine {
+    width: 250px;
+    height: 14px;
+}
+
+.infoLineLong {
+    width: 400px;
+    height: 14px;
+}
+
+.actionButtons {
+    display: flex;
+    gap: var(--space-sm);
+}
+
+.btn {
+    width: 140px;
+    height: 38px;
+    border-radius: var(--radius-sm);
+}
+
+/* ================= TABLE ================= */
+.tableWrap {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.tableHeader {
+    display: grid;
+    grid-template-columns: 40px 2fr 1fr 1fr 60px 1fr;
+    gap: 12px;
+    padding: 10px 8px;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.th {
+    width: 80%;
+    height: 12px;
+}
+
+.tableRow {
+    display: grid;
+    grid-template-columns: 40px 2fr 1fr 1fr 60px 1fr;
+    gap: 12px;
+    padding: 12px 8px;
+    border-bottom: 1px solid var(--border-color);
+    align-items: center;
+}
+
+.tdSm { width: 40%; height: 14px; }
+.tdMd { width: 70%; height: 14px; }
+
+/* ================= TOTALS ================= */
+.totalsWrap {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.totalsBox {
+    width: 100%;
+    max-width: 300px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.totalRow {
+    display: flex;
+    justify-content: space-between;
+}
+
+.totalLabel {
+    width: 80px;
+    height: 14px;
+}
+
+.totalValue {
+    width: 60px;
+    height: 14px;
+}
+
+.grandTotal {
+    padding-top: 8px;
+    border-top: 2px solid var(--border-color);
+}
+
+.grandTotal .totalLabel,
+.grandTotal .totalValue {
+    height: 18px;
+    width: 90px;
+}

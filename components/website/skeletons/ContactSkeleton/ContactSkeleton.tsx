@@ -2,34 +2,45 @@ import styles from "./ContactSkeleton.module.css";
 
 export default function ContactSkeleton() {
   return (
-    <div className={styles.section} aria-hidden="true">
+    <main className={styles.section} aria-hidden="true">
       <div className={styles.container}>
-        {/* Hero */}
-        <div className={styles.hero}>
-          <div className={`${styles.line} ${styles.eyebrow}`} />
-          <div className={`${styles.line} ${styles.title}`} />
-          <div className={`${styles.line} ${styles.titleShort}`} />
-          <div className={`${styles.line} ${styles.lead}`} />
-          <div className={`${styles.line} ${styles.leadShort}`} />
-        </div>
+        
+        {/* ================= HERO BANNER SKELETON ================= */}
+        <section className={styles.heroBanner}>
+          <div className={styles.heroBannerMedia}>
+            <div className={`${styles.line} ${styles.bannerImage}`} />
+            <div className={styles.heroBannerOverlay} />
+          </div>
 
-        {/* Info cards */}
-        <div className={styles.infoGrid}>
-          {Array.from({ length: 4 }).map((_, i) => (
-            <div key={i} className={styles.infoCard}>
-              <div className={`${styles.line} ${styles.infoIcon}`} />
-              <div className={`${styles.line} ${styles.infoLabel}`} />
-              <div className={`${styles.line} ${styles.infoValue}`} />
+          <div className={styles.heroInner}>
+            <div className={`${styles.line} ${styles.eyebrow}`} />
+            <div className={`${styles.line} ${styles.title}`} />
+            <div className={`${styles.line} ${styles.titleShort}`} />
+            <div className={`${styles.line} ${styles.lead}`} />
+            <div className={`${styles.line} ${styles.leadShort}`} />
+
+            <div className={styles.infoGrid}>
+              {Array.from({ length: 4 }).map((_, i) => (
+                <div key={i} className={styles.infoItem}>
+                  <div className={`${styles.line} ${styles.infoLabel}`} />
+                  <div className={`${styles.line} ${styles.infoValue}`} />
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
+          </div>
+        </section>
 
-        {/* Form section */}
-        <div className={styles.formSection}>
+        {/* ================= FORM SECTION SKELETON ================= */}
+        <section className={styles.formSection}>
           <div className={styles.formIntro}>
             <div className={`${styles.line} ${styles.heading}`} />
             <div className={`${styles.line} ${styles.para}`} />
             <div className={`${styles.line} ${styles.paraShort}`} />
+            <div className={styles.highlights}>
+              <div className={`${styles.line} ${styles.highlight}`} />
+              <div className={`${styles.line} ${styles.highlight}`} />
+              <div className={`${styles.line} ${styles.highlight}`} />
+            </div>
           </div>
 
           <div className={styles.form}>
@@ -37,16 +48,10 @@ export default function ContactSkeleton() {
               {Array.from({ length: 4 }).map((_, i) => (
                 <div
                   key={i}
-                  className={`${styles.field} ${
-                    i === 3 ? styles.fieldFull : ""
-                  }`}
+                  className={`${styles.field} ${i >= 2 ? styles.fieldFull : ""}`}
                 >
                   <div className={`${styles.line} ${styles.label}`} />
-                  <div
-                    className={`${styles.line} ${
-                      i === 3 ? styles.textarea : styles.input
-                    }`}
-                  />
+                  <div className={`${styles.line} ${i === 3 ? styles.textarea : styles.input}`} />
                 </div>
               ))}
             </div>
@@ -55,22 +60,22 @@ export default function ContactSkeleton() {
               <div className={`${styles.line} ${styles.submit}`} />
             </div>
           </div>
-        </div>
+        </section>
 
-        {/* FAQ */}
-        <div className={styles.faqSection}>
-          <div className={styles.faqHeader}>
+        {/* ================= FAQ SKELETON ================= */}
+        <section className={styles.faqSection}>
+          <header className={styles.faqHeader}>
             <div className={`${styles.line} ${styles.eyebrow}`} />
             <div className={`${styles.line} ${styles.heading}`} />
-          </div>
+          </header>
 
           <div className={styles.faqList}>
             {Array.from({ length: 4 }).map((_, i) => (
               <div key={i} className={`${styles.line} ${styles.faqItem}`} />
             ))}
           </div>
-        </div>
+        </section>
       </div>
-    </div>
+    </main>
   );
 }

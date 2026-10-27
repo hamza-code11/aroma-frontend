@@ -1,39 +1,54 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Search, Trash2, Copy, Check, Mail, Eye, X } from "lucide-react";
+import { Search, Trash2, Copy, Check, Mail, Eye, X, Loader2 } from "lucide-react";
 import { useToast } from "@/components/ui/Toast";
-import type { ContactEnquiry } from "@/types/contact";
+import type { Contact } from "@/types/contact";
 import styles from "./Contact.module.css";
 
-type Props = {
-  enquiries: ContactEnquiry[];
-};
+// Skeleton Import
+import ContactSkeleton from "@/components/admin/skeletons/ContactSkeleton/ContactSkeleton";
 
-export default function ContactList({ enquiries: initial }: Props) {
-  const [enquiries, setEnquiries] = useState(initial);
+// Hooks Import
+import { useAdminContacts, useDeleteContact } from "@/hooks/useContacts";
+
+export default function ContactList() {
   const [query, setQuery] = useState("");
-  const [deleting, setDeleting] = useState<ContactEnquiry | null>(null);
-  const [viewing, setViewing] = useState<ContactEnquiry | null>(null);
+  const [deleting, setDeleting] = useState<Contact | null>(null);
+  const [viewing, setViewing] = useState<Contact | null>(null);
   const [copiedId, setCopiedId] = useState<number | null>(null);
   const { showToast } = useToast();
 
+  // Fetch Data
+  const { data: apiData, isLoading } = useAdminContacts(1);
+  const contacts = apiData?.data || [];
+
+  // Delete Mutation
+  const deleteMutation = useDeleteContact();
+
+  // Search Filter
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
-    if (!q) return enquiries;
-    return enquiries.filter(
-      (e) =>
-        e.name.toLowerCase().includes(q) ||
-        e.email.toLowerCase().includes(q) ||
-        e.subject.toLowerCase().includes(q)
+    if (!q) return contacts;
+    return contacts.filter(
+      (c) =>
+        c.name.toLowerCase().includes(q) ||
+        c.email.toLowerCase().includes(q) ||
+        c.subject.toLowerCase().includes(q)
     );
-  }, [enquiries, query]);
+  }, [contacts, query]);
 
   const handleDelete = () => {
     if (!deleting) return;
-    setEnquiries((prev) => prev.filter((e) => e.id !== deleting.id));
-    showToast(`Message from "${deleting.name}" deleted.`);
-    setDeleting(null);
+    deleteMutation.mutate(deleting.id, {
+      onSuccess: () => {
+        showToast(`Message from "${deleting.name}" deleted.`, "success");
+        setDeleting(null);
+      },
+      onError: (err: any) => {
+        showToast(err.response?.data?.message || "Failed to delete message", "error");
+      }
+    });
   };
 
   const copyEmail = async (id: number, email: string) => {
@@ -66,6 +81,11 @@ export default function ContactList({ enquiries: initial }: Props) {
   const truncate = (s: string, n = 60) =>
     s.length > n ? s.slice(0, n) + "…" : s;
 
+  // Loading State -> Show Skeleton
+  if (isLoading) {
+    return <ContactSkeleton />;
+  }
+
   return (
     <div className={styles.page}>
       {/* HEADER */}
@@ -73,7 +93,7 @@ export default function ContactList({ enquiries: initial }: Props) {
         <div>
           <h2 className={styles.title}>Contact Messages</h2>
           <p className={styles.subtitle}>
-            {enquiries.length} message{enquiries.length === 1 ? "" : "s"} received.
+            {contacts.length} message{contacts.length === 1 ? "" : "s"} received.
           </p>
         </div>
       </header>
@@ -120,21 +140,21 @@ export default function ContactList({ enquiries: initial }: Props) {
               </tr>
             </thead>
             <tbody>
-              {filtered.map((e) => (
-                <tr key={e.id}>
+              {filtered.map((c) => (
+                <tr key={c.id}>
                   <td>
-                    <span className={styles.name}>{e.name}</span>
+                    <span className={styles.name}>{c.name}</span>
                   </td>
                   <td>
                     <div className={styles.emailCell}>
-                      <span className={styles.email}>{e.email}</span>
+                      <span className={styles.email}>{c.email}</span>
                       <button
                         type="button"
                         className={styles.copyBtn}
-                        onClick={() => copyEmail(e.id, e.email)}
+                        onClick={() => copyEmail(c.id, c.email)}
                         aria-label="Copy email"
                       >
-                        {copiedId === e.id ? (
+                        {copiedId === c.id ? (
                           <Check size={13} strokeWidth={2} />
                         ) : (
                           <Copy size={13} strokeWidth={1.7} />
@@ -142,31 +162,31 @@ export default function ContactList({ enquiries: initial }: Props) {
                       </button>
                     </div>
                   </td>
-                  <td className={styles.subject}>{e.subject || "—"}</td>
+                  <td className={styles.subject}>{c.subject || "—"}</td>
                   <td className={styles.messageCell}>
                     <span
                       className={styles.messagePreview}
-                      title={e.message}
+                      title={c.message}
                     >
-                      {truncate(e.message, 60)}
+                      {truncate(c.message, 60)}
                     </span>
                   </td>
-                  <td className={styles.date}>{formatDate(e.created_at)}</td>
+                  <td className={styles.date}>{formatDate(c.created_at)}</td>
                   <td className={styles.tdRight}>
                     <div className={styles.actions}>
                       <button
                         type="button"
                         className={styles.iconBtn}
-                        onClick={() => setViewing(e)}
-                        aria-label={`View message from ${e.name}`}
+                        onClick={() => setViewing(c)}
+                        aria-label={`View message from ${c.name}`}
                       >
                         <Eye size={15} strokeWidth={1.7} />
                       </button>
                       <button
                         type="button"
                         className={`${styles.iconBtn} ${styles.iconBtnDanger}`}
-                        onClick={() => setDeleting(e)}
-                        aria-label={`Delete message from ${e.name}`}
+                        onClick={() => setDeleting(c)}
+                        aria-label={`Delete message from ${c.name}`}
                       >
                         <Trash2 size={15} strokeWidth={1.7} />
                       </button>
@@ -231,14 +251,6 @@ export default function ContactList({ enquiries: initial }: Props) {
             </div>
 
             <div className={styles.dialogActions}>
-              <a
-                href={`mailto:${viewing.email}?subject=Re: ${encodeURIComponent(
-                  viewing.subject || ""
-                )}`}
-                className={styles.primaryBtn}
-              >
-                Reply
-              </a>
               <button
                 type="button"
                 className={styles.cancelBtn}
@@ -269,6 +281,7 @@ export default function ContactList({ enquiries: initial }: Props) {
                 type="button"
                 className={styles.cancelBtn}
                 onClick={() => setDeleting(null)}
+                disabled={deleteMutation.isPending}
               >
                 Cancel
               </button>
@@ -276,9 +289,14 @@ export default function ContactList({ enquiries: initial }: Props) {
                 type="button"
                 className={styles.dangerBtn}
                 onClick={handleDelete}
+                disabled={deleteMutation.isPending}
                 autoFocus
               >
-                Delete
+                {deleteMutation.isPending ? (
+                  <><Loader2 size={14} className="animate-spin" /> Deleting...</>
+                ) : (
+                  "Delete"
+                )}
               </button>
             </div>
           </div>
@@ -287,3 +305,4 @@ export default function ContactList({ enquiries: initial }: Props) {
     </div>
   );
 }
+
